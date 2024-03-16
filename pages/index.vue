@@ -1,12 +1,13 @@
 <template>
+  <BgAnimations/>
   <div>
     <div class="home-section-1">
       <div class="left-content">
         <h1 class="title">Health+</h1>
         <p class="description">Your ultimate destination for achieving your fitness goals</p>
         <div class="buttons">
-          <button class="get-started-button">Get Started</button>
-          <button class="learn-more-button" @click="scrollToSection2">Learn More</button>
+          <button class="get-started-button" @click="scrollToSection2">Get Started</button>
+          <button class="learn-more-button" @click="scrollToSection4">Learn More</button>
         </div>
       </div>
       <div class="right-content">
@@ -16,22 +17,24 @@
     <div class="separator"></div>
     <!-- Section 2 -->
     <div id="section-2" class="home-section-2">
+      <BgAnimations/>
       <div class="program-box">
-        <img src="~/assets/images/program1.jpg" alt="Program 1" class="program-image">
+        <img src="~/assets/images/program2.jpg" alt="Program 1" class="program-image">
         <h2 class="program-title">Bulk Edition</h2>
-        <p class="program-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        <button class="get-started-button">Get Started</button>
+        <p class="program-description">Bulk Edition Description</p>
+        <router-link :to="{ path: '/form/bulk/qst1' }" class="get-started-button">Get Started</router-link>
       </div>
       <div class="program-box">
         <img src="~/assets/images/program2.jpg" alt="Program 2" class="program-image">
         <h2 class="program-title">Cut Edition</h2>
-        <p class="program-description">Suspendisse potenti. Vestibulum venenatis libero et metus consectetur.</p>
-        <button class="get-started-button">Get Started</button>
+        <p class="program-description">Cut Edition Description</p>
+        <router-link :to="{ path: '/form/cut/qst1' }" class="get-started-button">Get Started</router-link>
       </div>
     </div>
     <div class="separator"></div>
     <!-- Section 3 -->
     <div id="section-3" class="home-section-3">
+      <BgAnimations/>
       <div class="program-box">
         <img src="~/assets/images/program3.jpg" alt="Program 3" class="program-image">
         <div class="description-container">
@@ -66,7 +69,8 @@
     </div>
 
     <!-- FAQ Section -->
-    <div class="faq-section">
+    <div id="faq-section" class="faq-section">
+      <BgAnimations/>
       <h2 class="faq-title">Frequently Asked Questions</h2>
       <div class="faq-item">
         <h3 class="question">Question 1: What are the benefits of regular exercise?</h3>
@@ -123,7 +127,6 @@ export default defineComponent({
           title: 'Nutrition Guidance',
           description: 'Receive expert guidance on nutrition to complement your fitness journey.'
         },
-        // Add more carousel items as needed
       ]
     };
   },
@@ -131,6 +134,10 @@ export default defineComponent({
     scrollToSection2() {
       const section2 = document.getElementById('section-2');
       section2.scrollIntoView({ behavior: 'smooth' });
+    },
+    scrollToSection4() {
+      const section4 = document.getElementById('faq-section');
+      section4.scrollIntoView({ behavior: 'smooth' });
     }
   }
 })
@@ -170,28 +177,33 @@ export default defineComponent({
   padding: 12px 24px;
   font-size: 1.2rem;
   border: none;
-  border-radius: 25px;
+  border-radius: 27px;
   margin-right: 20px;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .get-started-button {
+  background-color: transparent;
   background-color: #2ecc71;
   color: #fff;
 }
 
 .learn-more-button {
   background-color: transparent;
-  color: #2ecc71;
-  border: 2px solid #2ecc71;
+  color: black;
+  border: 1.5px solid black;
 }
 
-.get-started-button:hover,
-.learn-more-button:hover {
+.get-started-button:hover{
   background-color: #27ae60;
   border-color: #27ae60;
   color: #fff;
+}
+.learn-more-button:hover {
+  background-color: white;
+  border-color: #27ae60;
+  color: #27ae60;
 }
 
 .right-content {
@@ -237,7 +249,7 @@ export default defineComponent({
 
 .program-image {
   width: 100%;
-  max-height: 300px; /* Adjusted height */
+  max-height: 300px; 
   object-fit: cover;
   border-radius: 10px;
   margin-bottom: 20px;
@@ -246,8 +258,7 @@ export default defineComponent({
 .program-title {
   font-size: 2rem;
   font-weight: bold;
-  color: #000; /* Changed color to black */
-  margin-bottom: 10px;
+  color: #000; 
 }
 
 /* Styles for Section 3 */
@@ -292,7 +303,7 @@ export default defineComponent({
 /* Styles for Carousel */
 .carousel-image {
   width: 100%;
-  max-height: 200px; /* Adjusted height */
+  max-height: 200px; 
   object-fit: cover;
   border-radius: 10px;
   margin-bottom: 10px;
@@ -334,7 +345,7 @@ export default defineComponent({
 .question {
   font-size: 1.8rem;
   font-weight: bold;
-  color: #000; /* Changed color to black */
+  color: #000; 
   margin-bottom: 10px;
 }
 

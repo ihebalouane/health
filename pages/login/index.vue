@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <button @click="goBack" class="go-back-btn">Go Back</button>
+    <BgAnimations/>
     <div class="login-form">
       <h2>Login</h2>
       <form @submit.prevent="login">
@@ -20,6 +20,7 @@
         <p>Don't have an account? </p>
         <router-link to="/signup" class="register-link">Register here</router-link>
       </div>
+      <button @click="goBack" class="go-back-button">Go Back</button>
     </div>
   </div>
 </template>
@@ -66,22 +67,6 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100vh;
-}
-
-.go-back-btn {
-  margin-bottom: 20px; 
-  background-color: #ccc;
-  color: #333;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  outline: none;
-}
-
-.go-back-btn:hover {
-  background-color: #bbb; 
 }
 
 .login-form {
@@ -156,9 +141,19 @@ button[type="button"]:hover {
   text-decoration: underline;
 }
 
-.error-message {
-  color: red;
-  margin-top: 10px;
-  text-align: center;
+.go-back-button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.go-back-button:hover {
+  background-color: #2980b9;
 }
 </style>

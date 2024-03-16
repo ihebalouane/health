@@ -1,5 +1,6 @@
 <template>
   <div class="signup-container">
+    <BgAnimations/>
     <div class="signup-form">
       <h2>Sign Up</h2>
       <form @submit.prevent="handleSubmit">
@@ -14,7 +15,7 @@
         </div>
         <button type="submit">Sign Up</button>
         <div class="login-link">
-          <p>Already have an account? <a href="/login">Log in</a></p>
+          <p>Already have an account? <router-link to="/login">Log in</router-link></p>
         </div>
       </form>
       <button @click="goBack" class="go-back-button">Go Back</button>
@@ -25,6 +26,7 @@
 <script>
 import { ref } from 'vue';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { useRouter } from 'vue-router'; 
 import { projectFirestore } from '@/firebase/config'; 
 
 export default {
@@ -33,6 +35,7 @@ export default {
     const email = ref('');
     const password = ref('');
     const confirmPassword = ref('');
+    const router = useRouter(); 
 
     const handleSubmit = async () => {
       try {
@@ -44,13 +47,14 @@ export default {
         const auth = getAuth();
         const userCredential = await createUserWithEmailAndPassword(auth, email.value, password.value);
         console.log('User signed up:', userCredential.user.email);
+        router.push('/login');
       } catch (error) {
         console.error('Error signing up:', error.message);
       }
     };
 
     const goBack = () => {
-      this.$router.go(-1);
+      router.go(-1); 
     };
 
     return { email, password, confirmPassword, handleSubmit, goBack };
