@@ -20,27 +20,44 @@
 </template>
 
 <script>
+import { projectFirestore } from '../../../firebase/config'; // Make sure the path is correct
+import { collection, addDoc } from 'firebase/firestore';
+
 export default {
-data() {
-  return {
-    selectedOption: '',
-    options: [
-      { value: 'Never', label: 'Never' },
-      { value: 'Occasionally', label: 'Occasionally' },
-      { value: 'Regularly', label: 'Regularly' },
-      { value: 'Frequently', label: 'Frequently' }
-    ]
-  };
-},
-methods: {
-  submitForm() {
-    // Perform any necessary processing here
-    // Navigate to the next page
-    this.$router.push('/form/bulk/qst9');
+  data() {
+    return {
+      selectedOption: '',
+      options: [
+        { value: 'Never', label: 'Never' },
+        { value: 'Occasionally', label: 'Occasionally' },
+        { value: 'Regularly', label: 'Regularly' },
+        { value: 'Frequently', label: 'Frequently' }
+      ]
+    };
+  },
+  methods: {
+    async submitForm() {
+      if (!this.selectedOption) {
+        alert('Please select how often you consume alcohol.');
+        return;
+      }
+
+      try {
+        await addDoc(collection(projectFirestore, "alcoholConsumption"), {
+          frequency: this.selectedOption,
+          timestamp: new Date()
+        });
+        console.log("Alcohol consumption frequency saved!");
+        this.$router.push('/form/bulk/qst9');
+      } catch (error) {
+        console.error("Error saving alcohol consumption frequency: ", error);
+        alert('There was an error saving your selection. Please try again.');
+      }
+    }
   }
-}
 };
 </script>
+
 
 <style scoped>
 

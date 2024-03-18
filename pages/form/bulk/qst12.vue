@@ -24,6 +24,9 @@
 </template>
 
 <script>
+import { projectFirestore } from '../../../firebase/config'; // Update this path
+import { collection, addDoc } from 'firebase/firestore';
+
 export default {
   data() {
     return {
@@ -42,21 +45,42 @@ export default {
     };
   },
   methods: {
-    submitForm() {
-      this.$router.push('/form/bulk/qst13');
+    async submitForm() {
+      // Validate input
+      if (this.selectedOptions.length === 0 || (this.selectedOptions.includes('Other') && this.otherReason.trim() === '')) {
+        alert('Please make a selection or specify a reason.');
+        return;
+      }
+      
+      // Prepare data for Firestore
+      const formData = {
+        reasons: this.selectedOptions,
+        ...(this.selectedOptions.includes('Other') && { otherReason: this.otherReason }),
+        timestamp: new Date()
+      };
+
+      try {
+        // Save the form data to Firestore
+        await addDoc(collection(projectFirestore, "weightGainReasons"), formData);
+        console.log("Form data saved successfully!");
+        this.$router.push('/form/bulk/qst13'); // Navigate to the next question
+      } catch (error) {
+        console.error("Error saving form data: ", error);
+        alert('There was an error submitting your form. Please try again.');
+      }
     },
     checkValidity() {
-      if (this.selectedOptions.includes('Other') && this.otherReason.trim() === '') {
-        return; 
-      }
+      // Additional method to handle form validation if needed
+      // Adjusted to enable/disable the submit button based on form data
       const submitButton = this.$refs.submitButton;
       if (submitButton) {
-        submitButton.removeAttribute('disabled'); 
+        submitButton.disabled = this.selectedOptions.includes('Other') && this.otherReason.trim() === '';
       }
     }
   }
 };
 </script>
+
 
 <style scoped>
 .form-container {

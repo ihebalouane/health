@@ -20,6 +20,9 @@
 </template>
 
 <script>
+import { projectFirestore } from '../../../firebase/config'; // Ensure the path is correct
+import { collection, addDoc } from 'firebase/firestore';
+
 export default {
   data() {
     return {
@@ -38,12 +41,29 @@ export default {
     };
   },
   methods: {
-    submitForm() {
-      this.$router.push('/form/bulk/qst11');
+    async submitForm() {
+      if (!this.hoursOfSleep) {
+        alert('Please select your typical hours of sleep.');
+        return;
+      }
+
+      try {
+        await addDoc(collection(projectFirestore, "sleepData"), {
+          hoursOfSleep: this.hoursOfSleep,
+          timestamp: new Date()
+        });
+        console.log("Sleep data saved!");
+        this.$router.push('/form/bulk/qst11');
+      } catch (error) {
+        console.error("Error saving sleep data: ", error);
+        alert('There was an error saving your sleep data. Please try again.');
+      }
     }
   }
 };
 </script>
+
+
 
 <style scoped>
 .form-container {

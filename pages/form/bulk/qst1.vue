@@ -27,14 +27,29 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { projectFirestore } from '../../../firebase/config'; // Adjust the import path as necessary
+import { collection, addDoc } from 'firebase/firestore';
 
 const selectedGender = ref(null);
 const router = useRouter();
 
-const selectGender = (gender) => {
+// Function to select gender and save it to Firestore
+const selectGender = async (gender) => {
   selectedGender.value = gender;
+  try {
+    await addDoc(collection(projectFirestore, "userSelections"), {
+      gender: gender,
+      timestamp: new Date() // Optional: Track when the selection was made
+    });
+    console.log("Gender selection saved!");
+    router.push('/form/bulk/qst2'); // Navigate to the next question
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
 };
+
 </script>
+
 
 <style lang="scss" scoped>
 .gender-question {

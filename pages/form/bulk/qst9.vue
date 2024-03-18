@@ -26,6 +26,9 @@
 </template>
 
 <script>
+import { projectFirestore } from '../../../firebase/config'; // Ensure the path is correct
+import { collection, addDoc } from 'firebase/firestore';
+
 export default {
   data() {
     return {
@@ -33,14 +36,28 @@ export default {
     };
   },
   methods: {
-    submitForm() {
-      // Perform any necessary processing here
-      // Navigate to the next page
-      this.$router.push('/form/bulk/qst10');
+    async submitForm() {
+      if (!this.smokeStatus) {
+        alert('Please select an option.');
+        return;
+      }
+
+      try {
+        await addDoc(collection(projectFirestore, "tobaccoUse"), {
+          smokeStatus: this.smokeStatus,
+          timestamp: new Date()
+        });
+        console.log("Tobacco use information saved!");
+        this.$router.push('/form/bulk/qst10');
+      } catch (error) {
+        console.error("Error saving tobacco use information: ", error);
+        alert('There was an error saving your selection. Please try again.');
+      }
     }
   }
 };
 </script>
+
 
 <style scoped>
 .form-container {

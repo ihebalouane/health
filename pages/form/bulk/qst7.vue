@@ -20,31 +20,48 @@
 </template>
 
 <script>
+import { projectFirestore } from '../../../firebase/config'; // Ensure the path is correct
+import { collection, addDoc } from 'firebase/firestore';
+
 export default {
-data() {
-  return {
-    selectedBloodType: '',
-    options: [
-      { value: 'A+', label: 'A+' },
-      { value: 'A-', label: 'A-' },
-      { value: 'B+', label: 'B+' },
-      { value: 'B-', label: 'B-' },
-      { value: 'AB+', label: 'AB+' },
-      { value: 'AB-', label: 'AB-' },
-      { value: 'O+', label: 'O+' },
-      { value: 'O-', label: 'O-' }
-    ]
-  };
-},
-methods: {
-  submitForm() {
-    // Perform any necessary processing here
-    // Navigate to the next page
-    this.$router.push('/form/bulk/qst8');
+  data() {
+    return {
+      selectedBloodType: '',
+      options: [
+        { value: 'A+', label: 'A+' },
+        { value: 'A-', label: 'A-' },
+        { value: 'B+', label: 'B+' },
+        { value: 'B-', label: 'B-' },
+        { value: 'AB+', label: 'AB+' },
+        { value: 'AB-', label: 'AB-' },
+        { value: 'O+', label: 'O+' },
+        { value: 'O-', label: 'O-' }
+      ]
+    };
+  },
+  methods: {
+    async submitForm() {
+      if (!this.selectedBloodType) {
+        alert('Please select a blood type.');
+        return;
+      }
+
+      try {
+        await addDoc(collection(projectFirestore, "bloodTypes"), {
+          bloodType: this.selectedBloodType,
+          timestamp: new Date()
+        });
+        console.log("Blood type saved!");
+        this.$router.push('/form/bulk/qst8');
+      } catch (error) {
+        console.error("Error saving blood type: ", error);
+        alert('There was an error saving your blood type. Please try again.');
+      }
+    }
   }
-}
 };
 </script>
+
 
 <style scoped>
 .form-container {

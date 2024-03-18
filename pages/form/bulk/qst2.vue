@@ -23,8 +23,10 @@
 </template>
 
 <script>
+import { projectFirestore } from '../../../firebase/config'; // Make sure the path is correct
+import { collection, addDoc } from 'firebase/firestore';
+
 export default {
-  layout: 'bgAnimations',
   data() {
     return {
       height: null,
@@ -32,15 +34,25 @@ export default {
     };
   },
   methods: {
-    handleSubmit() {
+    async handleSubmit() {
+      await this.saveFormData({
+        height: this.height,
+        weight: this.weight
+      });
       this.$router.push('/form/bulk/qst3');
     },
-    handleSvgButtonClick() {
-      console.log('SVG button clicked');
+    async saveFormData(data) {
+      try {
+        await addDoc(collection(projectFirestore, "userHealthData"), data);
+        console.log('Data saved to Firestore');
+      } catch (error) {
+        console.error("Error saving data to Firestore: ", error);
+      }
     }
   }
 };
 </script>
+
 
 <style scoped>
 .page-container {

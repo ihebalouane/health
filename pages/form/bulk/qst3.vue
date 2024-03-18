@@ -24,6 +24,9 @@
 </template>
 
 <script>
+import { projectFirestore } from '../../../firebase/config'; // Update the path as necessary
+import { collection, addDoc } from 'firebase/firestore';
+
 export default {
   data() {
     return {
@@ -31,13 +34,30 @@ export default {
     };
   },
   methods: {
-    submitForm() {
-      alert('Selected age range: ' + this.selectedAge);
-      this.$router.push('/form/bulk/qst4');
+    async submitForm() {
+      // Ensure there's a selected age before proceeding
+      if (this.selectedAge === '') {
+        alert('Please select an age range.');
+        return;
+      }
+
+      try {
+        // Save the selected age range to Firestore
+        await addDoc(collection(projectFirestore, "ageRanges"), {
+          ageRange: this.selectedAge,
+          timestamp: new Date()
+        });
+        console.log("Age range selection saved!");
+        this.$router.push('/form/bulk/qst4');
+      } catch (error) {
+        console.error("Error saving age range: ", error);
+        alert('There was an error saving your age range. Please try again.');
+      }
     }
   }
 };
 </script>
+
 
 <style scoped>
 .container {

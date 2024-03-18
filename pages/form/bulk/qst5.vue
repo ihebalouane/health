@@ -22,6 +22,9 @@
 </template>
 
 <script>
+import { projectFirestore } from '../../../firebase/config'; // Adjust the path as necessary
+import { collection, addDoc } from 'firebase/firestore';
+
 export default {
   data() {
     return {
@@ -34,9 +37,29 @@ export default {
         { value: '5+', label: '5+' }
       ]
     };
+  },
+  methods: {
+    async submitForm() {
+      if (!this.exerciseFrequency) {
+        alert('Please select an option.');
+        return;
+      }
+      try {
+        await addDoc(collection(projectFirestore, "exerciseFrequencies"), {
+          frequency: this.exerciseFrequency,
+          timestamp: new Date()
+        });
+        console.log("Exercise frequency saved!");
+        this.$router.push('/form/bulk/qst6');
+      } catch (error) {
+        console.error("Error saving exercise frequency: ", error);
+        alert('There was an error saving your exercise frequency. Please try again.');
+      }
+    }
   }
 };
 </script>
+
 
 <style scoped>
 .form-container {

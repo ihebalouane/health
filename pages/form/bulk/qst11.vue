@@ -24,6 +24,9 @@
 </template>
 
 <script>
+import { projectFirestore } from '../../../firebase/config';
+import { collection, addDoc } from 'firebase/firestore';
+
 export default {
   data() {
     return {
@@ -42,27 +45,46 @@ export default {
     };
   },
   methods: {
-    submitForm() {
-      this.$router.push('/form/bulk/qst12');
+    async submitForm() {
+      const dietDescription = this.selectedOption === 'Other' ? this.otherDescription : this.selectedOption;
+
+      if (!dietDescription.trim()) {
+        alert('Please select or specify your diet.');
+        return;
+      }
+
+      try {
+        await addDoc(collection(projectFirestore, "dietDescriptions"), {
+          diet: dietDescription,
+          timestamp: new Date()
+        });
+        console.log("Diet description saved!");
+        this.$router.push('/form/bulk/qst12');
+      } catch (error) {
+        console.error("Error saving diet description: ", error);
+        alert('There was an error saving your diet description. Please try again.');
+      }
     },
     handleRadioClick(option) {
       if (option.value !== 'Other') {
-        this.otherDescription = ''; // Clear other description if a non-Other option is selected
+        this.otherDescription = ''; // Clear the otherDescription if a non-Other option is selected
       }
     },
     checkValidity() {
       if (this.selectedOption !== 'Other') {
         return; // No need to check validity if other option is not selected
       }
-      if (this.otherDescription.trim() !== '') {
-        this.$refs.submitButton.removeAttribute('disabled'); // Enable submit button if text is entered
+      const submitButton = this.$refs.submitButton;
+      if (submitButton && this.otherDescription.trim() !== '') {
+        submitButton.removeAttribute('disabled'); // Enable submit button if text is entered
       } else {
-        this.$refs.submitButton.setAttribute('disabled', 'disabled'); // Disable submit button if text is empty
+        submitButton.setAttribute('disabled', 'true'); // Disable submit button if text is empty
       }
     }
   }
 };
 </script>
+
 
 <style scoped>
 .form-container {

@@ -21,6 +21,9 @@
 </template>
 
 <script>
+import { projectFirestore } from '../../../firebase/config'; // Make sure the path is correct
+import { collection, addDoc } from 'firebase/firestore';
+
 export default {
   data() {
     return {
@@ -28,16 +31,28 @@ export default {
     };
   },
   methods: {
-    submitForm() {
+    async submitForm() {
       if (!this.weight || this.weight <= 0) {
         alert('Please enter a valid weight.');
         return;
       }
-      this.$router.push('/form/bulk/qst5');
+
+      try {
+        await addDoc(collection(projectFirestore, "goalWeights"), {
+          weight: this.weight,
+          timestamp: new Date()
+        });
+        console.log("Goal weight saved!");
+        this.$router.push('/form/bulk/qst5');
+      } catch (error) {
+        console.error("Error saving goal weight: ", error);
+        alert('There was an error saving your goal weight. Please try again.');
+      }
     }
   }
 };
 </script>
+
 
 <style scoped>
 .page-container {

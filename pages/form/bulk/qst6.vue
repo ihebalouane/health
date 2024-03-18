@@ -20,6 +20,9 @@
 </template>
 
 <script>
+import { projectFirestore } from '../../../firebase/config'; // Adjust the path as necessary
+import { collection, addDoc } from 'firebase/firestore';
+
 export default {
   data() {
     return {
@@ -35,14 +38,28 @@ export default {
     };
   },
   methods: {
-    submitForm() {
-      // Perform any necessary processing here
-      // Navigate to the next page
-      this.$router.push('/form/bulk/qst7');
+    async submitForm() {
+      if (this.selectedOptions.length === 0) {
+        alert('Please select at least one option.');
+        return;
+      }
+      
+      try {
+        await addDoc(collection(projectFirestore, "riskFactors"), {
+          selectedOptions: this.selectedOptions,
+          timestamp: new Date()
+        });
+        console.log("Risk factors saved!");
+        this.$router.push('/form/bulk/qst7');
+      } catch (error) {
+        console.error("Error saving risk factors: ", error);
+        alert('There was an error saving your selections. Please try again.');
+      }
     }
   }
 };
 </script>
+
 
 <style scoped>
 .form-container {
