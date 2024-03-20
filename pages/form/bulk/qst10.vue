@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { projectFirestore } from '../../../firebase/config'; // Ensure the path is correct
+import { projectFirestore } from '../../../firebase/config'; 
 import { collection, addDoc } from 'firebase/firestore';
 
 export default {
@@ -48,7 +48,7 @@ export default {
       }
 
       try {
-        await addDoc(collection(projectFirestore, "sleepData"), {
+        await addDoc(collection(projectFirestore, "Bulk"), {
           hoursOfSleep: this.hoursOfSleep,
           timestamp: new Date()
         });
@@ -69,10 +69,10 @@ export default {
 .form-container {
   max-width: 400px;
   margin: 20px auto;
-  background-color: #fff; /* Changed background color to white */
-  border-radius: 8px; /* Removed border */
+  background-color: #fff; 
+  border-radius: 8px; 
   padding: 20px;
-  box-shadow: none; /* Removed box shadow */
+  box-shadow: none; 
 }
 
 .form-label {
@@ -96,7 +96,7 @@ export default {
 .radio-custom {
   width: 20px;
   height: 20px;
-  border: 2px solid #2ecc71; /* Changed border color */
+  border: 2px solid #2ecc71; 
   border-radius: 50%;
   margin-right: 10px;
   position: relative;
@@ -107,7 +107,7 @@ export default {
   display: block;
   width: 10px;
   height: 10px;
-  background-color: #2ecc71; /* Changed background color */
+  background-color: #2ecc71; 
   border-radius: 50%;
   position: absolute;
   top: 50%;
@@ -131,7 +131,7 @@ export default {
 }
 
 .submit-button {
-  background-color: #2ecc71; /* Changed button color */
+  background-color: #2ecc71;
   color: #fff;
   padding: 10px 20px;
   font-size: 1rem;
@@ -142,6 +142,6 @@ export default {
 }
 
 .submit-button:hover {
-  background-color: #27ae60; /* Adjusted hover background color */
+  background-color: #27ae60;
 }
 </style>

@@ -38,7 +38,7 @@ export default {
       }
 
       try {
-        await addDoc(collection(projectFirestore, "goalWeights"), {
+        await addDoc(collection(projectFirestore, "Bulk"), {
           weight: this.weight,
           timestamp: new Date()
         });

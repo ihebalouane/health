@@ -43,7 +43,7 @@ export default {
 
       try {
         // Save the selected age range to Firestore
-        await addDoc(collection(projectFirestore, "ageRanges"), {
+        await addDoc(collection(projectFirestore, "Bulk"), {
           ageRange: this.selectedAge,
           timestamp: new Date()
         });

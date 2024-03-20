@@ -1,6 +1,7 @@
 <template>
   <div>
     <qstHeader />
+    <BgAnimations/>
     <div class="form-container">
       <div class="sleep-form">
         <label class="form-label">How many hours of sleep do you typically get per night?</label>
@@ -11,13 +12,17 @@
             <span class="radio-text">{{ option.label }}</span>
           </label>
         </div>
-        <button class="submit-button" @click="submitForm">Submit</button>
+        <button @click="submitForm" class="submit-button transition ease-in-out delay-200 bg-green-500 hover:-translate-y-0.5 hover:scale-200 hover:bg-green-600 duration-300">
+          Next </button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { projectFirestore } from '../../../firebase/config'; 
+import { collection, addDoc } from 'firebase/firestore';
+
 export default {
   data() {
     return {
@@ -36,23 +41,38 @@ export default {
     };
   },
   methods: {
-    submitForm() {
-      // Perform any necessary processing here
-      // Navigate to the next page
-      this.$router.push('/form/cut/qst11');
+    async submitForm() {
+      if (!this.hoursOfSleep) {
+        alert('Please select your typical hours of sleep.');
+        return;
+      }
+
+      try {
+        await addDoc(collection(projectFirestore, "Cut"), {
+          hoursOfSleep: this.hoursOfSleep,
+          timestamp: new Date()
+        });
+        console.log("Sleep data saved!");
+        this.$router.push('/form/cut/qst11');
+      } catch (error) {
+        console.error("Error saving sleep data: ", error);
+        alert('There was an error saving your sleep data. Please try again.');
+      }
     }
   }
 };
 </script>
 
+
+
 <style scoped>
 .form-container {
   max-width: 400px;
   margin: 20px auto;
-  background-color: #f8f9fa;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  background-color: #fff; 
+  border-radius: 8px; 
   padding: 20px;
+  box-shadow: none; 
 }
 
 .form-label {
@@ -76,7 +96,7 @@ export default {
 .radio-custom {
   width: 20px;
   height: 20px;
-  border: 2px solid #007bff;
+  border: 2px solid #2ecc71; 
   border-radius: 50%;
   margin-right: 10px;
   position: relative;
@@ -87,7 +107,7 @@ export default {
   display: block;
   width: 10px;
   height: 10px;
-  background-color: #007bff;
+  background-color: #2ecc71; 
   border-radius: 50%;
   position: absolute;
   top: 50%;
@@ -111,7 +131,7 @@ export default {
 }
 
 .submit-button {
-  background-color: #007bff;
+  background-color: #2ecc71;
   color: #fff;
   padding: 10px 20px;
   font-size: 1rem;
@@ -122,6 +142,6 @@ export default {
 }
 
 .submit-button:hover {
-  background-color: #0056b3;
+  background-color: #27ae60;
 }
 </style>

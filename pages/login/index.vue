@@ -8,7 +8,7 @@
           <input type="email" v-model="email" placeholder="Email" required>
         </div>
         <div class="form-group">
-          <input type="password" v-model="password" placeholder="Password" required>
+          <input type="password" v-model="password" placeholder="Password" required autocomplete="current-password">
         </div>
         <div class="forgot-password">
           <a href="#">Forgot Password?</a>
@@ -24,6 +24,7 @@
     </div>
   </div>
 </template>
+
 
 <script>
 import { ref } from 'vue';

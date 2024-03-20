@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { projectFirestore } from '../../../firebase/config'; // Make sure the path is correct
+import { projectFirestore } from '../../../firebase/config'; 
 import { collection, addDoc } from 'firebase/firestore';
 
 export default {
@@ -43,7 +43,7 @@ export default {
       }
 
       try {
-        await addDoc(collection(projectFirestore, "alcoholConsumption"), {
+        await addDoc(collection(projectFirestore, "Bulk"), {
           frequency: this.selectedOption,
           timestamp: new Date()
         });

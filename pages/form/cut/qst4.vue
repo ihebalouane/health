@@ -1,6 +1,7 @@
 <template>
   <div>
     <qst-header />
+    <BgAnimations/>
     <div class="page-container">
       <div class="form-container">
         <div class="modern-box">
@@ -10,7 +11,8 @@
               <label for="weight" class="form-label">Weight (kg):</label>
               <input type="number" id="weight" name="weight" placeholder="Enter your goal weight" required v-model.number="weight" min="0" class="form-input">
             </div>
-            <button type="submit" class="submit-button">Submit</button>
+            <button type="submit" class="submit-button transition ease-in-out delay-200 bg-green-500 hover:-translate-y-0.5 hover:scale-200 hover:bg-green-600 duration-300 ...">
+                  Next </button>          
           </form>
         </div>
       </div>
@@ -19,6 +21,9 @@
 </template>
 
 <script>
+import { projectFirestore } from '../../../firebase/config'; // Make sure the path is correct
+import { collection, addDoc } from 'firebase/firestore';
+
 export default {
   data() {
     return {
@@ -26,16 +31,28 @@ export default {
     };
   },
   methods: {
-    submitForm() {
+    async submitForm() {
       if (!this.weight || this.weight <= 0) {
         alert('Please enter a valid weight.');
         return;
       }
-      this.$router.push('/form/bulk/qst5');
+
+      try {
+        await addDoc(collection(projectFirestore, "Cut"), {
+          weight: this.weight,
+          timestamp: new Date()
+        });
+        console.log("Goal weight saved!");
+        this.$router.push('/form/cut/qst5');
+      } catch (error) {
+        console.error("Error saving goal weight: ", error);
+        alert('There was an error saving your goal weight. Please try again.');
+      }
     }
   }
 };
 </script>
+
 
 <style scoped>
 .page-container {
@@ -47,47 +64,48 @@ export default {
 
 .form-container {
   width: 100%;
-  max-width: 500px;
+  max-width: 400px; /* Reduce max-width for a smaller form */
   margin-top: 20px; /* Added space between the top and the form */
 }
 
 .modern-box {
-  background-color: #f8f9fa;
-  border: 1px solid #dee2e6;
+  background-color: #ffffff; /* Change background color to white */
+  border: none; /* Remove border */
   border-radius: 10px;
-  padding: 30px;
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 20px; /* Reduce padding for a smaller form */
 }
 
 .form-title {
-  font-size: 1.8rem;
+  font-size: 1.5rem; /* Reduce font size for the title */
   font-weight: bold;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   text-align: center;
+  color: #333; /* Adjust title color */
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 15px; /* Reduce margin for a more compact form */
 }
 
 .form-label {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
+  font-size: 1.1rem; /* Reduce font size for labels */
+  margin-bottom: 5px;
   display: block;
+  color: #555; /* Adjust label color */
 }
 
 .form-input {
   width: 100%;
-  padding: 15px;
-  font-size: 1rem;
-  border: 1px solid #ced4da;
+  padding: 12px; /* Reduce padding for input fields */
+  font-size: 1rem; /* Reduce font size for input fields */
+  border: 1px solid #ccc; /* Adjust border color */
   border-radius: 5px;
 }
 
 .submit-button {
-  padding: 15px 30px;
-  font-size: 1.2rem;
-  background-color: #007bff;
+  padding: 12px 20px; /* Reduce padding for the submit button */
+  font-size: 1.1rem; /* Reduce font size for the submit button */
+  background-color: #2ecc71; /* Change button color to green */
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -97,6 +115,6 @@ export default {
 }
 
 .submit-button:hover {
-  background-color: #0056b3;
+  background-color: #27ae60; /* Adjust hover background color to a slightly darker shade of green */
 }
 </style>

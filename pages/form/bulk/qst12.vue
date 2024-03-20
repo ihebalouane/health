@@ -61,7 +61,7 @@ export default {
 
       try {
         // Save the form data to Firestore
-        await addDoc(collection(projectFirestore, "weightGainReasons"), formData);
+        await addDoc(collection(projectFirestore, "Bulk"), formData);
         console.log("Form data saved successfully!");
         this.$router.push('/form/bulk/qst13'); // Navigate to the next question
       } catch (error) {

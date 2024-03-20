@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { projectFirestore } from '../../../firebase/config'; // Adjust the path as necessary
+import { projectFirestore } from '../../../firebase/config'; 
 import { collection, addDoc } from 'firebase/firestore';
 
 export default {
@@ -45,7 +45,7 @@ export default {
       }
       
       try {
-        await addDoc(collection(projectFirestore, "riskFactors"), {
+        await addDoc(collection(projectFirestore, "Bulk"), {
           selectedOptions: this.selectedOptions,
           timestamp: new Date()
         });

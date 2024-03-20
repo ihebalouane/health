@@ -8,13 +8,13 @@
         <p class="text-lg mb-3 text-gray-600">We'd love to know more about you! Pick your gender:</p>
         <div class="gender-options flex justify-center">
           <label class="gender-option flex items-center cursor-pointer text-lg text-gray-700 mr-5" @click="selectGender('male')" :class="{ 'selected': selectedGender === 'male' }">
-            <input type="radio" v-model="selectedGender" value="male" class="hidden-input">
-            <span class="radio-btn w-5 h-5 rounded-full border-2 border-green-500 mr-2"></span> <!-- Changed border color to green -->
+            <input type="radio" :checked="selectedGender === 'male'" class="hidden-input">
+            <span class="radio-btn w-5 h-5 rounded-full border-2 border-green-500 mr-2"></span> 
             Male
           </label>
           <label class="gender-option flex items-center cursor-pointer text-lg text-gray-700" @click="selectGender('female')" :class="{ 'selected': selectedGender === 'female' }">
-            <input type="radio" v-model="selectedGender" value="female" class="hidden-input">
-            <span class="radio-btn w-5 h-5 rounded-full border-2 border-green-500 mr-2"></span> <!-- Changed border color to green -->
+            <input type="radio" :checked="selectedGender === 'female'" class="hidden-input">
+            <span class="radio-btn w-5 h-5 rounded-full border-2 border-green-500 mr-2"></span> 
             Female
           </label>
         </div>
@@ -24,10 +24,11 @@
   </div>
 </template>
 
+
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { projectFirestore } from '../../../firebase/config'; // Adjust the import path as necessary
+import { projectFirestore } from '../../../firebase/config'; 
 import { collection, addDoc } from 'firebase/firestore';
 
 const selectedGender = ref(null);
@@ -37,18 +38,20 @@ const router = useRouter();
 const selectGender = async (gender) => {
   selectedGender.value = gender;
   try {
-    await addDoc(collection(projectFirestore, "userSelections"), {
+    await addDoc(collection(projectFirestore, "Bulk"), { // Specify the path to "userGender" within "Bulk"
       gender: gender,
-      timestamp: new Date() // Optional: Track when the selection was made
+      timestamp: new Date() 
     });
     console.log("Gender selection saved!");
-    router.push('/form/bulk/qst2'); // Navigate to the next question
+    router.push('/form/bulk/qst2'); 
   } catch (e) {
     console.error("Error adding document: ", e);
   }
 };
-
 </script>
+
+
+
 
 
 <style lang="scss" scoped>

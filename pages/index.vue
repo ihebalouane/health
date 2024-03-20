@@ -1,6 +1,7 @@
 <template>
-  <BgAnimations/>
+  <div class="page">
   <div>
+    <BgAnimations/>
     <div class="home-section-1">
       <div class="left-content">
         <h1 class="title">Health+</h1>
@@ -17,7 +18,6 @@
     <div class="separator"></div>
     <!-- Section 2 -->
     <div id="section-2" class="home-section-2">
-      <BgAnimations/>
       <div class="program-box">
         <img src="~/assets/images/program2.jpg" alt="Program 1" class="program-image">
         <h2 class="program-title">Bulk Edition</h2>
@@ -34,7 +34,6 @@
     <div class="separator"></div>
     <!-- Section 3 -->
     <div id="section-3" class="home-section-3">
-      <BgAnimations/>
       <div class="program-box">
         <img src="~/assets/images/program3.jpg" alt="Program 3" class="program-image">
         <div class="description-container">
@@ -47,6 +46,7 @@
         </div>
       </div>
     </div>
+  </div>
     <div class="separator"></div>
 
     <!--Section 4 carousel-->
@@ -70,7 +70,6 @@
 
     <!-- FAQ Section -->
     <div id="faq-section" class="faq-section">
-      <BgAnimations/>
       <h2 class="faq-title">Frequently Asked Questions</h2>
       <div class="faq-item">
         <h3 class="question">Question 1: What are the benefits of regular exercise?</h3>
@@ -144,6 +143,10 @@ export default defineComponent({
 </script>
 
 <style scoped>
+
+.page {
+  overflow-x: hidden;
+}
 /* Styles for Section 1 */
 .home-section-1 {
   display: flex;

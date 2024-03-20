@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
+import { getAuth, onAuthStateChanged, signOut  } from 'firebase/auth';
 // Import Firestore
 
 
@@ -12,10 +13,22 @@ const firebaseConfig = {
   appId: "1:608690624502:web:d3e4c92feaf11661b699d7"
 };
 
-// Initialize Firebase app
 const firebaseApp = initializeApp(firebaseConfig);
-
-// Get the Firestore instance
 const projectFirestore = getFirestore(firebaseApp);
+const auth = getAuth(firebaseApp);
 
-export { projectFirestore };
+let isAuthenticated = false;
+
+onAuthStateChanged(auth, (user) => {
+  isAuthenticated = !!user;
+});
+
+const logout = async () => {
+  try {
+    await signOut(auth);
+  } catch (error) {
+    console.error('Error signing out:', error.message);
+  }
+};
+
+export { projectFirestore, auth, isAuthenticated, logout }; 

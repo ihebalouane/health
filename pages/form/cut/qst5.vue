@@ -1,6 +1,7 @@
 <template>
   <div>
     <qstHeader />
+    <BgAnimations/>
     <div class="form-container">
       <div class="exercise-form">
         <label class="form-label">How often do you exercise per week?</label>
@@ -11,8 +12,9 @@
             <span class="radio-text">{{ option.label }}</span>
           </label>
         </div>
-        <router-link :to="'/form/bulk/qst6'">
-          <button class="submit-button">Submit</button>
+        <router-link :to="'/form/cut/qst6'">
+          <button type="submit" class="submit-button transition ease-in-out delay-200 bg-green-500 hover:-translate-y-0.5 hover:scale-200 hover:bg-green-600 duration-300 ...">
+                  Next </button>
         </router-link>
       </div>
     </div>
@@ -20,6 +22,9 @@
 </template>
 
 <script>
+import { projectFirestore } from '../../../firebase/config'; 
+import { collection, addDoc } from 'firebase/firestore';
+
 export default {
   data() {
     return {
@@ -32,28 +37,46 @@ export default {
         { value: '5+', label: '5+' }
       ]
     };
+  },
+  methods: {
+    async submitForm() {
+      if (!this.exerciseFrequency) {
+        alert('Please select an option.');
+        return;
+      }
+      try {
+        await addDoc(collection(projectFirestore, "Cut"), {
+          exerciseFrequency: this.exerciseFrequency,
+          timestamp: new Date()
+        });
+        console.log("Exercise frequency saved!");
+        this.$router.push('/form/cut/qst6');
+      } catch (error) {
+        console.error("Error saving exercise frequency: ", error);
+        alert('There was an error saving your exercise frequency. Please try again.');
+      }
+    }
   }
 };
 </script>
 
+
+
 <style scoped>
 .form-container {
-  max-width: 400px;
-  margin: 20px auto; /* Added space between the top and the form */
-  background-color: #f8f9fa;
-  border: 1px solid #ddd;
+  max-width: 400px; 
+  margin: 20px auto; 
+  background-color: #ffffff; 
+  border: none; 
   border-radius: 8px;
   padding: 20px;
 }
 
-.exercise-form {
-  /* No changes needed */
-}
-
 .form-label {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
+  font-size: 1.4rem;
+  margin-bottom: 15px; 
   display: block;
+  color: #333; 
 }
 
 .radio-group {
@@ -64,25 +87,25 @@ export default {
 .radio-label {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 15px; /* Increased margin */
   cursor: pointer;
 }
 
 .radio-custom {
-  width: 20px;
-  height: 20px;
-  border: 2px solid #007bff;
+  width: 24px; /* Increased size */
+  height: 24px; /* Increased size */
+  border: 2px solid #2ecc71; /* Changed border color */
   border-radius: 50%;
-  margin-right: 10px;
+  margin-right: 12px; /* Increased margin */
   position: relative;
 }
 
 .radio-custom::after {
   content: '';
   display: block;
-  width: 10px;
-  height: 10px;
-  background-color: #007bff;
+  width: 12px; /* Increased size */
+  height: 12px; /* Increased size */
+  background-color: #2ecc71; /* Changed background color */
   border-radius: 50%;
   position: absolute;
   top: 50%;
@@ -92,7 +115,7 @@ export default {
 }
 
 .radio-text {
-  font-size: 1rem;
+  font-size: 1.2rem; /* Increased font size */
 }
 
 input[type="radio"] {
@@ -106,10 +129,10 @@ input[type="radio"]:checked + .radio-custom::after {
 }
 
 .submit-button {
-  background-color: #007bff;
+  background-color: #2ecc71; /* Changed button color */
   color: #fff;
-  padding: 10px 20px;
-  font-size: 1rem;
+  padding: 12px 24px; /* Increased padding */
+  font-size: 1.2rem; /* Increased font size */
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -117,6 +140,6 @@ input[type="radio"]:checked + .radio-custom::after {
 }
 
 .submit-button:hover {
-  background-color: #0056b3;
+  background-color: #27ae60; /* Adjusted hover background color */
 }
 </style>

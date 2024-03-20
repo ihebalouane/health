@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { projectFirestore } from '../../../firebase/config'; // Make sure the path is correct
+import { projectFirestore } from '../../../firebase/config'; 
 import { collection, addDoc } from 'firebase/firestore';
 
 export default {
@@ -43,7 +43,7 @@ export default {
     },
     async saveFormData(data) {
       try {
-        await addDoc(collection(projectFirestore, "userHealthData"), data);
+        await addDoc(collection(projectFirestore, "Bulk"), data);
         console.log('Data saved to Firestore');
       } catch (error) {
         console.error("Error saving data to Firestore: ", error);
@@ -58,7 +58,7 @@ export default {
 .page-container {
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Align items to the top of the page */
+  align-items: flex-start; 
   height: 100vh;
 }
 
@@ -68,7 +68,7 @@ export default {
   left: 20px;
   padding: 10px 20px;
   font-size: 1rem;
-  background-color: #2ecc71; /* Adjust color to green */
+  background-color: #2ecc71; 
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -87,27 +87,27 @@ export default {
 .svg-icon {
   fill: none;
   stroke-width: 1.5;
-  stroke: #2ecc71; /* Adjust color to green */
+  stroke: #2ecc71;
 }
 
 .svg-button:hover .svg-icon {
-  stroke: #27ae60; /* Adjust hover color to a slightly darker shade of green */
+  stroke: #27ae60; 
 }
 
 .form-container {
   width: 80%;
   max-width: 400px;
   padding: 20px;
-  margin-top: 50px; /* Adjust margin top to move the form closer to the top */
-  background-color: #ffffff; /* Change to white background */
-  text-align: center; /* Center the form content */
+  margin-top: 50px; 
+  background-color: #ffffff; 
+  text-align: center;
 }
 
 .form-title {
   font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 20px;
-  color: #333; /* Adjust title color */
+  color: #333; 
 }
 
 .height-weight-form {
@@ -122,7 +122,7 @@ export default {
 label {
   font-size: 1.2rem;
   margin-bottom: 5px;
-  color: #555; /* Adjust label color */
+  color: #555; 
 }
 
 input[type="number"] {
@@ -131,22 +131,22 @@ input[type="number"] {
   border: 1px solid #ccc;
   border-radius: 5px;
   width: 100%;
-  outline: none; /* Remove input outline */
+  outline: none; 
 }
 
 .submit-button {
   padding: 10px 20px;
   font-size: 1.2rem;
-  background-color: #2ecc71; /* Adjust button color to green */
+  background-color: #2ecc71; 
   color: #fff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  outline: none; /* Remove button outline */
+  outline: none; 
 }
 
 .submit-button:hover {
-  background-color: #27ae60; /* Adjust hover background color to a slightly darker shade of green */
+  background-color: #27ae60; 
 }
 </style>

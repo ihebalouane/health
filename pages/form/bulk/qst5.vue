@@ -13,8 +13,10 @@
           </label>
         </div>
         <router-link :to="'/form/bulk/qst6'">
-          <button type="submit" class="submit-button transition ease-in-out delay-200 bg-green-500 hover:-translate-y-0.5 hover:scale-200 hover:bg-green-600 duration-300 ...">
-                  Next </button>
+          <button @click="submitForm" class="submit-button transition ease-in-out delay-200 bg-green-500 hover:-translate-y-0.5 hover:scale-200 hover:bg-green-600 duration-300 ...">
+  Next
+</button>
+
         </router-link>
       </div>
     </div>
@@ -22,7 +24,7 @@
 </template>
 
 <script>
-import { projectFirestore } from '../../../firebase/config'; // Adjust the path as necessary
+import { projectFirestore } from '../../../firebase/config'; 
 import { collection, addDoc } from 'firebase/firestore';
 
 export default {
@@ -45,8 +47,8 @@ export default {
         return;
       }
       try {
-        await addDoc(collection(projectFirestore, "exerciseFrequencies"), {
-          frequency: this.exerciseFrequency,
+        await addDoc(collection(projectFirestore, "Bulk"), {
+          exerciseFrequency: this.exerciseFrequency,
           timestamp: new Date()
         });
         console.log("Exercise frequency saved!");
@@ -61,21 +63,22 @@ export default {
 </script>
 
 
+
 <style scoped>
 .form-container {
-  max-width: 400px; /* Increased the max-width for a larger form */
+  max-width: 400px; 
   margin: 20px auto; 
-  background-color: #ffffff; /* Changed background color to white */
-  border: none; /* Removed border */
+  background-color: #ffffff; 
+  border: none; 
   border-radius: 8px;
   padding: 20px;
 }
 
 .form-label {
-  font-size: 1.4rem; /* Increased font size */
-  margin-bottom: 15px; /* Increased margin */
+  font-size: 1.4rem;
+  margin-bottom: 15px; 
   display: block;
-  color: #333; /* Adjusted label color */
+  color: #333; 
 }
 
 .radio-group {

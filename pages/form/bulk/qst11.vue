@@ -54,7 +54,7 @@ export default {
       }
 
       try {
-        await addDoc(collection(projectFirestore, "dietDescriptions"), {
+        await addDoc(collection(projectFirestore, "Bulk"), {
           diet: dietDescription,
           timestamp: new Date()
         });

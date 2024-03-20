@@ -1,6 +1,7 @@
 <template>
   <div>
     <qst-header/>
+    <BgAnimations/>
     <div class="container">
       <div class="age-form">
         <h2 class="form-title">Select Your Age Range:</h2>
@@ -15,13 +16,17 @@
             <option value="60s">60s</option>
           </select>
         </div>
-        <button @click="submitForm" class="submit-button">Submit</button>
+        <button @click="submitForm" class="submit-button transition ease-in-out delay-200 bg-green-500 hover:-translate-y-0.5 hover:scale-200 hover:bg-green-600 duration-300 ...">
+          Next </button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { projectFirestore } from '../../../firebase/config'; // Update the path as necessary
+import { collection, addDoc } from 'firebase/firestore';
+
 export default {
   data() {
     return {
@@ -29,14 +34,30 @@ export default {
     };
   },
   methods: {
-    submitForm() {
-      alert('Selected age range: ' + this.selectedAge);
-      // Navigate to the desired route
-      this.$router.push('/form/cut/qst4');
+    async submitForm() {
+      // Ensure there's a selected age before proceeding
+      if (this.selectedAge === '') {
+        alert('Please select an age range.');
+        return;
+      }
+
+      try {
+        // Save the selected age range to Firestore
+        await addDoc(collection(projectFirestore, "Cut"), {
+          ageRange: this.selectedAge,
+          timestamp: new Date()
+        });
+        console.log("Age range selection saved!");
+        this.$router.push('/form/cut/qst4');
+      } catch (error) {
+        console.error("Error saving age range: ", error);
+        alert('There was an error saving your age range. Please try again.');
+      }
     }
   }
 };
 </script>
+
 
 <style scoped>
 .container {
@@ -52,8 +73,7 @@ export default {
   max-width: 400px;
   padding: 30px;
   border-radius: 10px;
-  background-color: #f0f0f0;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff; /* Change background color to white */
 }
 
 .form-title {
@@ -88,7 +108,7 @@ export default {
   display: block;
   width: 100%;
   padding: 12px;
-  background-color: #007bff;
+  background-color: #2ecc71; /* Change button color to green */
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -97,6 +117,6 @@ export default {
 }
 
 .submit-button:hover {
-  background-color: #0056b3;
+  background-color: #27ae60; /* Adjust hover background color to a slightly darker shade of green */
 }
 </style>
