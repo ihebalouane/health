@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { projectFirestore } from '../../../firebase/config'; // Update this path
+import { projectFirestore, auth } from '../../../firebase/config'; // Update this path
 import { collection, addDoc } from 'firebase/firestore';
 
 export default {
@@ -61,7 +61,17 @@ export default {
 
       try {
         // Save the form data to Firestore
-        await addDoc(collection(projectFirestore, "Bulk"), formData);
+        const user = auth.currentUser;
+        if (!user) {
+          console.error("User not logged in.");
+          // Handle user not logged in
+          return;
+        }
+        
+        await addDoc(collection(projectFirestore, "Bulk"), {
+          ...formData,
+          userEmail: user.email
+        });
         console.log("Form data saved successfully!");
         this.$router.push('/form/bulk/qst13'); // Navigate to the next question
       } catch (error) {

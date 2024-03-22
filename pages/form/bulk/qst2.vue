@@ -14,8 +14,9 @@
             <label for="weight">Weight (kg):</label>
             <input type="number" id="weight" name="weight" placeholder="Enter weight" required v-model="weight">
           </div>
-          <button type="submit" class="submit-button transition ease-in-out delay-200 bg-green-500 hover:-translate-y-0.5 hover:scale-200 hover:bg-green-600 duration-300 ...">
-                  Next </button>
+          <button type="submit" class="submit-button transition ease-in-out delay-200 bg-green-500 hover:-translate-y-0.5 hover:scale-200 hover:bg-green-600 duration-300">
+            Next
+          </button>
         </form>
       </div>
     </div>
@@ -23,7 +24,7 @@
 </template>
 
 <script>
-import { projectFirestore } from '../../../firebase/config'; 
+import { projectFirestore, auth } from '../../../firebase/config'; 
 import { collection, addDoc } from 'firebase/firestore';
 
 export default {
@@ -35,18 +36,28 @@ export default {
   },
   methods: {
     async handleSubmit() {
-      await this.saveFormData({
-        height: this.height,
-        weight: this.weight
-      });
-      this.$router.push('/form/bulk/qst3');
-    },
-    async saveFormData(data) {
+      // Check if user is logged in
+      const user = auth.currentUser;
+      if (!user) {
+        console.error("User not logged in.");
+        // Handle user not logged in
+        return;
+      }
+      
       try {
-        await addDoc(collection(projectFirestore, "Bulk"), data);
+        // Save form data to Firestore
+        await addDoc(collection(projectFirestore, "Bulk"), {
+          height: this.height,
+          weight: this.weight,
+          userEmail: user.email,
+          timestamp: new Date()
+        });
         console.log('Data saved to Firestore');
+        // Redirect to the next question
+        this.$router.push('/form/bulk/qst3');
       } catch (error) {
         console.error("Error saving data to Firestore: ", error);
+        // Handle error
       }
     }
   }

@@ -18,40 +18,50 @@
             Female
           </label>
         </div>
-        <router-link v-if="selectedGender" :to="`/form/bulk/qst2`" class="next-button inline-block mt-8 px-4 py-2 text-lg bg-green-500 text-white border-2 border-green-500 rounded-md transition duration-300 hover:bg-green-600 hover:border-green-600">Next →</router-link> <!-- Changed background and border colors to green -->
+        <button v-if="selectedGender" @click="submitGender" class="next-button inline-block mt-8 px-4 py-2 text-lg bg-green-500 text-white border-2 border-green-500 rounded-md transition duration-300 hover:bg-green-600 hover:border-green-600">Next →</button> <!-- Changed to button element -->
       </div>
     </div>
   </div>
 </template>
 
-
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { projectFirestore } from '../../../firebase/config'; 
+import { projectFirestore, auth } from '../../../firebase/config'; // Import auth from Firebase config
 import { collection, addDoc } from 'firebase/firestore';
 
 const selectedGender = ref(null);
 const router = useRouter();
 
-// Function to select gender and save it to Firestore
-const selectGender = async (gender) => {
+// Function to select gender
+const selectGender = (gender) => {
   selectedGender.value = gender;
+};
+
+// Function to submit gender
+const submitGender = async () => {
   try {
-    await addDoc(collection(projectFirestore, "Bulk"), { // Specify the path to "userGender" within "Bulk"
-      gender: gender,
-      timestamp: new Date() 
-    });
-    console.log("Gender selection saved!");
-    router.push('/form/bulk/qst2'); 
+    const user = auth.currentUser;
+    const userGender = selectedGender.value;
+    
+    // Ensure user is logged in
+    if (user) {
+      await addDoc(collection(projectFirestore, "Bulk"), {
+        gender: userGender,
+        userEmail: user.email, // Include user email
+        timestamp: new Date() 
+      });
+      console.log("Gender selection saved!");
+      router.push('/form/bulk/qst2'); 
+    } else {
+      console.error("User not logged in.");
+      // Handle user not logged in
+    }
   } catch (e) {
     console.error("Error adding document: ", e);
   }
 };
 </script>
-
-
-
 
 
 <style lang="scss" scoped>

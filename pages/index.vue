@@ -17,20 +17,25 @@
     </div>
     <div class="separator"></div>
     <!-- Section 2 -->
-    <div id="section-2" class="home-section-2">
-      <div class="program-box">
-        <img src="~/assets/images/program2.jpg" alt="Program 1" class="program-image">
-        <h2 class="program-title">Bulk Edition</h2>
-        <p class="program-description">Bulk Edition Description</p>
-        <router-link :to="{ path: '/form/bulk/qst1' }" class="get-started-button">Get Started</router-link>
-      </div>
-      <div class="program-box">
-        <img src="~/assets/images/program2.jpg" alt="Program 2" class="program-image">
-        <h2 class="program-title">Cut Edition</h2>
-        <p class="program-description">Cut Edition Description</p>
-        <router-link :to="{ path: '/form/cut/qst1' }" class="get-started-button">Get Started</router-link>
-      </div>
-    </div>
+<div id="section-2" class="home-section-2">
+  <div class="program-box">
+    <img src="~/assets/images/program2.jpg" alt="Program 1" class="program-image">
+    <h2 class="program-title">Bulk Edition</h2>
+    <p class="program-description">Bulk Edition Description</p>
+    <!-- Update router-link to conditionally render based on authentication status -->
+    <router-link v-if="isAuthenticated" :to="{ path: '/form/bulk/qst1' }" class="get-started-button">Get Started</router-link>
+    <router-link v-else to="/login" class="get-started-button">Get Started</router-link>
+  </div>
+  <div class="program-box">
+    <img src="~/assets/images/program2.jpg" alt="Program 2" class="program-image">
+    <h2 class="program-title">Cut Edition</h2>
+    <p class="program-description">Cut Edition Description</p>
+    <!-- Update router-link to conditionally render based on authentication status -->
+    <router-link v-if="isAuthenticated" :to="{ path: '/form/cut/qst1' }" class="get-started-button">Get Started</router-link>
+    <router-link v-else to="/login" class="get-started-button">Get Started</router-link>
+  </div>
+</div>
+
     <div class="separator"></div>
     <!-- Section 3 -->
     <div id="section-3" class="home-section-3">
@@ -98,6 +103,7 @@
 <script>
 import { defineComponent } from 'vue'
 import { Carousel, Navigation, Slide } from 'vue3-carousel'
+import { isAuthenticated } from '@/firebase/config';
 
 import 'vue3-carousel/dist/carousel.css'
 
@@ -110,6 +116,7 @@ export default defineComponent({
   },
   data() {
     return {
+      isAuthenticated: isAuthenticated,
       carouselItems: [
         {
           image: '/coach1.jpg',
@@ -126,6 +133,7 @@ export default defineComponent({
           title: 'Nutrition Guidance',
           description: 'Receive expert guidance on nutrition to complement your fitness journey.'
         },
+        
       ]
     };
   },

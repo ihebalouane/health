@@ -28,6 +28,7 @@ import { ref } from 'vue';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from 'vue-router'; 
 import { projectFirestore } from '@/firebase/config'; 
+import { collection, addDoc } from 'firebase/firestore'; // Import Firestore functions
 
 export default {
   layout: 'empty',
@@ -46,6 +47,10 @@ export default {
 
         const auth = getAuth();
         const userCredential = await createUserWithEmailAndPassword(auth, email.value, password.value);
+
+        // Add user to Firestore collection
+        await addDoc(collection(projectFirestore, "users"), { email: userCredential.user.email });
+
         console.log('User signed up:', userCredential.user.email);
         router.push('/login');
       } catch (error) {

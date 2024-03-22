@@ -13,14 +13,15 @@
           </label>
         </div>
         <button @click="submitForm" class="submit-button transition ease-in-out delay-200 bg-green-500 hover:-translate-y-0.5 hover:scale-200 hover:bg-green-600 duration-300">
-                Next </button>
+          Next
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { projectFirestore } from '../../../firebase/config'; 
+import { projectFirestore, auth } from '../../../firebase/config'; // Make sure the path is correct
 import { collection, addDoc } from 'firebase/firestore';
 
 export default {
@@ -43,8 +44,16 @@ export default {
       }
 
       try {
+        const user = auth.currentUser;
+        if (!user) {
+          console.error("User not logged in.");
+          // Handle user not logged in
+          return;
+        }
+
         await addDoc(collection(projectFirestore, "Bulk"), {
           frequency: this.selectedOption,
+          userEmail: user.email,
           timestamp: new Date()
         });
         console.log("Alcohol consumption frequency saved!");

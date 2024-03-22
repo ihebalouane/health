@@ -11,8 +11,9 @@
               <label for="weight" class="form-label">Weight (kg):</label>
               <input type="number" id="weight" name="weight" placeholder="Enter your goal weight" required v-model.number="weight" min="0" class="form-input">
             </div>
-            <button type="submit" class="submit-button transition ease-in-out delay-200 bg-green-500 hover:-translate-y-0.5 hover:scale-200 hover:bg-green-600 duration-300 ...">
-                  Next </button>          
+            <button type="submit" class="submit-button transition ease-in-out delay-200 bg-green-500 hover:-translate-y-0.5 hover:scale-200 hover:bg-green-600 duration-300">
+                  Next
+            </button>          
           </form>
         </div>
       </div>
@@ -21,7 +22,7 @@
 </template>
 
 <script>
-import { projectFirestore } from '../../../firebase/config'; // Make sure the path is correct
+import { projectFirestore, auth } from '../../../firebase/config'; // Make sure the path is correct
 import { collection, addDoc } from 'firebase/firestore';
 
 export default {
@@ -38,8 +39,16 @@ export default {
       }
 
       try {
+        const user = auth.currentUser;
+        if (!user) {
+          console.error("User not logged in.");
+          // Handle user not logged in
+          return;
+        }
+
         await addDoc(collection(projectFirestore, "Bulk"), {
           weight: this.weight,
+          userEmail: user.email,
           timestamp: new Date()
         });
         console.log("Goal weight saved!");

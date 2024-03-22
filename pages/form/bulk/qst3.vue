@@ -1,7 +1,7 @@
 <template>
   <div>
-    <qst-header/>
     <BgAnimations/>
+    <qst-header/>
     <div class="container">
       <div class="age-form">
         <h2 class="form-title">Select Your Age Range:</h2>
@@ -24,8 +24,9 @@
 </template>
 
 <script>
-import { projectFirestore } from '../../../firebase/config'; // Update the path as necessary
+import { projectFirestore, auth } from '../../../firebase/config'; // Update the path as necessary
 import { collection, addDoc } from 'firebase/firestore';
+import { ref } from 'vue';
 
 export default {
   data() {
@@ -42,9 +43,14 @@ export default {
       }
 
       try {
-        // Save the selected age range to Firestore
+        // Get the currently logged-in user's email
+        const user = auth.currentUser;
+        const userEmail = user ? user.email : 'Unknown'; // Default to 'Unknown' if user is not logged in
+
+        // Save the selected age range to Firestore along with the user's email
         await addDoc(collection(projectFirestore, "Bulk"), {
           ageRange: this.selectedAge,
+          userEmail: userEmail, // Include the user's email in the form submission
           timestamp: new Date()
         });
         console.log("Age range selection saved!");
@@ -57,7 +63,6 @@ export default {
   }
 };
 </script>
-
 
 <style scoped>
 .container {

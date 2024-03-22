@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { projectFirestore } from '../../../firebase/config';
+import { projectFirestore, auth } from '../../../firebase/config';
 import { collection, addDoc } from 'firebase/firestore';
 
 export default {
@@ -54,8 +54,16 @@ export default {
       }
 
       try {
+        const user = auth.currentUser;
+        if (!user) {
+          console.error("User not logged in.");
+          // Handle user not logged in
+          return;
+        }
+
         await addDoc(collection(projectFirestore, "Bulk"), {
           diet: dietDescription,
+          userEmail: user.email,
           timestamp: new Date()
         });
         console.log("Diet description saved!");
