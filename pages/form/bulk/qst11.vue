@@ -25,7 +25,7 @@
 
 <script>
 import { projectFirestore, auth } from '../../../firebase/config';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
 
 export default {
   data() {
@@ -57,16 +57,29 @@ export default {
         const user = auth.currentUser;
         if (!user) {
           console.error("User not logged in.");
-          // Handle user not logged in
           return;
         }
 
-        await addDoc(collection(projectFirestore, "Bulk"), {
-          diet: dietDescription,
-          userEmail: user.email,
-          timestamp: new Date()
-        });
-        console.log("Diet description saved!");
+        const userDocRef = doc(projectFirestore, 'users', user.uid);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (userDocSnap.exists()) {
+          // If document exists, update it with the new data
+          await updateDoc(userDocRef, {
+            diet: dietDescription,
+            timestamp: new Date()
+          });
+          console.log("Diet description updated!");
+        } else {
+          // If document doesn't exist, create a new one with the provided data
+          await addDoc(collection(projectFirestore, "Bulk"), {
+            diet: dietDescription,
+            userEmail: user.email,
+            timestamp: new Date()
+          });
+          console.log("New diet description saved!");
+        }
+
         this.$router.push('/form/bulk/qst12');
       } catch (error) {
         console.error("Error saving diet description: ", error);
@@ -93,15 +106,14 @@ export default {
 };
 </script>
 
-
 <style scoped>
 .form-container {
   max-width: 400px;
   margin: 20px auto;
-  background-color: #fff; /* Changed background color to white */
-  border-radius: 8px; /* Removed border */
+  background-color: #fff;
+  border-radius: 8px;
   padding: 20px;
-  box-shadow: none; /* Removed box shadow */
+  box-shadow: none;
 }
 
 .form-label {
@@ -125,7 +137,7 @@ export default {
 .radio-custom {
   width: 20px;
   height: 20px;
-  border: 2px solid #2ecc71; /* Changed border color */
+  border: 2px solid #2ecc71;
   border-radius: 50%;
   margin-right: 10px;
   position: relative;
@@ -136,7 +148,7 @@ export default {
   display: block;
   width: 10px;
   height: 10px;
-  background-color: #2ecc71; /* Changed background color */
+  background-color: #2ecc71;
   border-radius: 50%;
   position: absolute;
   top: 50%;
@@ -174,7 +186,7 @@ export default {
 }
 
 .submit-button {
-  background-color: #2ecc71; /* Changed button color */
+  background-color: #2ecc71;
   color: #fff;
   padding: 10px 20px;
   font-size: 1rem;
@@ -185,6 +197,6 @@ export default {
 }
 
 .submit-button:hover {
-  background-color: #27ae60; /* Adjusted hover background color */
+  background-color: #27ae60;
 }
 </style>

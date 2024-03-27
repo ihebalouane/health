@@ -22,7 +22,7 @@
 
 <script>
 import { projectFirestore, auth } from '../../../firebase/config'; 
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, query, where, getDocs, updateDoc } from 'firebase/firestore';
 
 export default {
   data() {
@@ -52,16 +52,29 @@ export default {
         const user = auth.currentUser;
         if (!user) {
           console.error("User not logged in.");
-          // Handle user not logged in
           return;
         }
 
-        await addDoc(collection(projectFirestore, "Bulk"), {
-          hoursOfSleep: this.hoursOfSleep,
-          userEmail: user.email,
-          timestamp: new Date()
-        });
-        console.log("Sleep data saved!");
+        const userDocRef = collection(projectFirestore, "users");
+        const q = query(userDocRef, where("userEmail", "==", user.email));
+        const querySnapshot = await getDocs(q);
+        
+        if (!querySnapshot.empty) {
+          const doc = querySnapshot.docs[0];
+          await updateDoc(doc.ref, {
+            hoursOfSleep: this.hoursOfSleep,
+            timestamp: new Date()
+          });
+          console.log('Data updated in Firestore');
+        } else {
+          await addDoc(collection(projectFirestore, "users"), {
+            userEmail: user.email,
+            hoursOfSleep: this.hoursOfSleep,
+            timestamp: new Date()
+          });
+          console.log('New document created in Firestore');
+        }
+
         this.$router.push('/form/bulk/qst11');
       } catch (error) {
         console.error("Error saving sleep data: ", error);

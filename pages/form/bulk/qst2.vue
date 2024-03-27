@@ -25,7 +25,7 @@
 
 <script>
 import { projectFirestore, auth } from '../../../firebase/config'; 
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, updateDoc } from 'firebase/firestore';
 
 export default {
   data() {
@@ -36,27 +36,39 @@ export default {
   },
   methods: {
     async handleSubmit() {
-      // Check if user is logged in
-      const user = auth.currentUser;
-      if (!user) {
-        console.error("User not logged in.");
-        // Handle user not logged in
-        return;
-      }
-      
       try {
-        // Save form data to Firestore
-        await addDoc(collection(projectFirestore, "Bulk"), {
+        // Check if user is logged in
+        const user = auth.currentUser;
+        if (!user) {
+          console.error("User not logged in.");
+          // Handle user not logged in
+          return;
+        }
+
+        // Query Firestore to find the document with the user's email
+        const userDocRef = collection(projectFirestore, "users");
+        const q = query(userDocRef, where("userEmail", "==", user.email));
+        const querySnapshot = await getDocs(q);
+        
+        if (querySnapshot.empty) {
+          console.error("User document not found.");
+          // Handle user document not found
+          return;
+        }
+
+        // Update the existing document with the new data
+        const doc = querySnapshot.docs[0];
+        await updateDoc(doc.ref, {
           height: this.height,
           weight: this.weight,
-          userEmail: user.email,
           timestamp: new Date()
         });
-        console.log('Data saved to Firestore');
+
+        console.log('Data updated in', user.email, 'account');
         // Redirect to the next question
         this.$router.push('/form/bulk/qst3');
       } catch (error) {
-        console.error("Error saving data to Firestore: ", error);
+        console.error("Error updating data in Firestore: ", error);
         // Handle error
       }
     }

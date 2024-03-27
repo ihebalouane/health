@@ -3,7 +3,7 @@
     <qstHeader />
     <BgAnimations/>
     <div class="form-container">
-      <div class="weight-loss-form">
+      <div class="weight-gain-form">
         <label class="form-label">Why do you want to gain weight?</label>
         <div class="checkbox-group">
           <label class="checkbox-label" v-for="option in options" :key="option.value">
@@ -17,7 +17,7 @@
           <input type="text" v-model="otherReason" class="other-input" @input="checkValidity">
         </div>
         <button class="submit-button transition ease-in-out delay-200 bg-green-500 hover:-translate-y-0.5 hover:scale-200 hover:bg-green-600 duration-300 ..."
-         @click="submitForm" :disabled="selectedOptions.includes('Other') && otherReason.trim() === ''">Next</button>
+         @click="submitForm" :disabled="selectedOptions.includes('Other') && otherReason.trim() === ''" ref="submitButton">Next</button>
       </div>
     </div>
   </div>
@@ -25,7 +25,7 @@
 
 <script>
 import { projectFirestore, auth } from '../../../firebase/config'; // Update this path
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
 
 export default {
   data() {
@@ -68,11 +68,26 @@ export default {
           return;
         }
         
-        await addDoc(collection(projectFirestore, "Bulk"), {
-          ...formData,
-          userEmail: user.email
-        });
-        console.log("Form data saved successfully!");
+        const userDocRef = doc(projectFirestore, 'users', user.uid);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (userDocSnap.exists()) {
+          // If document exists, update it with the new data
+          await updateDoc(userDocRef, {
+            weightGainReasons: formData,
+            timestamp: new Date()
+          });
+          console.log("Weight gain reasons updated!");
+        } else {
+          // If document doesn't exist, create a new one with the provided data
+          await addDoc(collection(projectFirestore, "Bulk"), {
+            weightGainReasons: formData,
+            userEmail: user.email,
+            timestamp: new Date()
+          });
+          console.log("New weight gain reasons saved!");
+        }
+
         this.$router.push('/form/bulk/qst13'); // Navigate to the next question
       } catch (error) {
         console.error("Error saving form data: ", error);
@@ -96,10 +111,10 @@ export default {
 .form-container {
   max-width: 400px;
   margin: 20px auto;
-  background-color: #fff; /* Changed background color to white */
-  border-radius: 8px; /* Removed border */
+  background-color: #fff;
+  border-radius: 8px; 
   padding: 20px;
-  box-shadow: none; /* Removed box shadow */
+  box-shadow: none; 
 }  
 .form-label {
   font-size: 1.2rem;
@@ -122,7 +137,7 @@ export default {
 .checkbox-custom {
   width: 20px;
   height: 20px;
-  border: 2px solid #2ecc71; /* Changed border color */
+  border: 2px solid #2ecc71; 
   border-radius: 4px;
   margin-right: 10px;
   position: relative;
@@ -133,7 +148,7 @@ export default {
   display: block;
   width: 10px;
   height: 10px;
-  background-color: #2ecc71; /* Changed background color */
+  background-color: #2ecc71; 
   border-radius: 2px;
   position: absolute;
   top: 50%;
@@ -177,7 +192,7 @@ export default {
 }
 
 .submit-button {
-  background-color: #2ecc71; /* Changed button color */
+  background-color: #2ecc71; 
   color: #fff;
   padding: 10px 20px;
   font-size: 1rem;
@@ -188,6 +203,6 @@ export default {
 }
 
 .submit-button:hover {
-  background-color: #27ae60; /* Adjusted hover background color */
+  background-color: #27ae60; 
 }
 </style>

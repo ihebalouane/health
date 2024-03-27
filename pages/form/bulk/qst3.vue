@@ -25,7 +25,7 @@
 
 <script>
 import { projectFirestore, auth } from '../../../firebase/config'; // Update the path as necessary
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, updateDoc, addDoc } from 'firebase/firestore';
 import { ref } from 'vue';
 
 export default {
@@ -47,16 +47,33 @@ export default {
         const user = auth.currentUser;
         const userEmail = user ? user.email : 'Unknown'; // Default to 'Unknown' if user is not logged in
 
-        // Save the selected age range to Firestore along with the user's email
-        await addDoc(collection(projectFirestore, "Bulk"), {
-          ageRange: this.selectedAge,
-          userEmail: userEmail, // Include the user's email in the form submission
-          timestamp: new Date()
-        });
-        console.log("Age range selection saved!");
+        // Query Firestore to find if there's an existing document with the user's email
+        const userDocRef = collection(projectFirestore, "users");
+        const q = query(userDocRef, where("userEmail", "==", userEmail));
+        const querySnapshot = await getDocs(q);
+        
+        if (!querySnapshot.empty) {
+          // If document exists, update it with the new data
+          const doc = querySnapshot.docs[0];
+          await updateDoc(doc.ref, {
+            ageRange: this.selectedAge,
+            timestamp: new Date()
+          });
+          console.log('Data updated in Firestore');
+        } else {
+          // If document doesn't exist, create a new one with the provided data
+          await addDoc(collection(projectFirestore, "users"), {
+            userEmail: userEmail,
+            ageRange: this.selectedAge,
+            timestamp: new Date()
+          });
+          console.log('New document created in Firestore');
+        }
+
+        // Redirect to the next question
         this.$router.push('/form/bulk/qst4');
       } catch (error) {
-        console.error("Error saving age range: ", error);
+        console.error("Error updating data in Firestore: ", error);
         alert('There was an error saving your age range. Please try again.');
       }
     }

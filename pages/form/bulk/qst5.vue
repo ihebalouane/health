@@ -22,7 +22,7 @@
 
 <script>
 import { projectFirestore, auth } from '../../../firebase/config'; 
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, updateDoc, addDoc } from 'firebase/firestore';
 
 export default {
   data() {
@@ -52,12 +52,30 @@ export default {
           return;
         }
 
-        await addDoc(collection(projectFirestore, "Bulk"), {
-          exerciseFrequency: this.exerciseFrequency,
-          userEmail: user.email,
-          timestamp: new Date()
-        });
-        console.log("Exercise frequency saved!");
+        // Query Firestore to find if there's an existing document with the user's email
+        const userDocRef = collection(projectFirestore, "users");
+        const q = query(userDocRef, where("userEmail", "==", user.email));
+        const querySnapshot = await getDocs(q);
+        
+        if (!querySnapshot.empty) {
+          // If document exists, update it with the new data
+          const doc = querySnapshot.docs[0];
+          await updateDoc(doc.ref, {
+            exerciseFrequency: this.exerciseFrequency,
+            timestamp: new Date()
+          });
+          console.log('Data updated in Firestore');
+        } else {
+          // If document doesn't exist, create a new one with the provided data
+          await addDoc(collection(projectFirestore, "users"), {
+            userEmail: user.email,
+            exerciseFrequency: this.exerciseFrequency,
+            timestamp: new Date()
+          });
+          console.log('New document created in Firestore');
+        }
+
+        // Redirect to the next question
         this.$router.push('/form/bulk/qst6');
       } catch (error) {
         console.error("Error saving exercise frequency: ", error);

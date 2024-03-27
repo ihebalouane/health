@@ -23,7 +23,7 @@
 
 <script>
 import { projectFirestore, auth } from '../../../firebase/config'; // Make sure the path is correct
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, updateDoc, addDoc } from 'firebase/firestore';
 
 export default {
   data() {
@@ -46,12 +46,30 @@ export default {
           return;
         }
 
-        await addDoc(collection(projectFirestore, "Bulk"), {
-          weight: this.weight,
-          userEmail: user.email,
-          timestamp: new Date()
-        });
-        console.log("Goal weight saved!");
+        // Query Firestore to find if there's an existing document with the user's email
+        const userDocRef = collection(projectFirestore, "users");
+        const q = query(userDocRef, where("userEmail", "==", user.email));
+        const querySnapshot = await getDocs(q);
+        
+        if (!querySnapshot.empty) {
+          // If document exists, update it with the new data
+          const doc = querySnapshot.docs[0];
+          await updateDoc(doc.ref, {
+            goalWeight: this.weight,
+            timestamp: new Date()
+          });
+          console.log('Data updated in Firestore');
+        } else {
+          // If document doesn't exist, create a new one with the provided data
+          await addDoc(collection(projectFirestore, "users"), {
+            userEmail: user.email,
+            goalWeight: this.weight,
+            timestamp: new Date()
+          });
+          console.log('New document created in Firestore');
+        }
+
+        // Redirect to the next question
         this.$router.push('/form/bulk/qst5');
       } catch (error) {
         console.error("Error saving goal weight: ", error);
