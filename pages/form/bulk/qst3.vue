@@ -48,7 +48,7 @@ export default {
         const userEmail = user ? user.email : 'Unknown'; // Default to 'Unknown' if user is not logged in
 
         // Query Firestore to find if there's an existing document with the user's email
-        const userDocRef = collection(projectFirestore, "users");
+        const userDocRef = collection(projectFirestore, "userResponses");
         const q = query(userDocRef, where("userEmail", "==", userEmail));
         const querySnapshot = await getDocs(q);
         

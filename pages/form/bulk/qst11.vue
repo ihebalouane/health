@@ -60,7 +60,7 @@ export default {
           return;
         }
 
-        const userDocRef = doc(projectFirestore, 'users', user.uid);
+        const userDocRef = doc(projectFirestore, 'userResponses', user.uid);
         const userDocSnap = await getDoc(userDocRef);
 
         if (userDocSnap.exists()) {

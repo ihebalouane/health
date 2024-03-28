@@ -54,7 +54,7 @@ export default {
         }
 
         // Query Firestore to find if there's an existing document with the user's email
-        const userDocRef = collection(projectFirestore, "users");
+        const userDocRef = collection(projectFirestore, "userResponses");
         const q = query(userDocRef, where("userEmail", "==", user.email));
         const querySnapshot = await getDocs(q);
         

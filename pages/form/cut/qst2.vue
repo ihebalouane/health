@@ -14,8 +14,9 @@
             <label for="weight">Weight (kg):</label>
             <input type="number" id="weight" name="weight" placeholder="Enter weight" required v-model="weight">
           </div>
-          <button type="submit" class="submit-button transition ease-in-out delay-200 bg-green-500 hover:-translate-y-0.5 hover:scale-200 hover:bg-green-600 duration-300 ...">
-                  Next </button>
+          <button type="submit" class="submit-button transition ease-in-out delay-200 bg-green-500 hover:-translate-y-0.5 hover:scale-200 hover:bg-green-600 duration-300">
+            Next
+          </button>
         </form>
       </div>
     </div>
@@ -23,8 +24,8 @@
 </template>
 
 <script>
-import { projectFirestore } from '../../../firebase/config'; 
-import { collection, addDoc } from 'firebase/firestore';
+import { projectFirestore, auth } from '../../../firebase/config'; 
+import { collection, query, where, getDocs, updateDoc } from 'firebase/firestore';
 
 export default {
   data() {
@@ -35,18 +36,40 @@ export default {
   },
   methods: {
     async handleSubmit() {
-      await this.saveFormData({
-        height: this.height,
-        weight: this.weight
-      });
-      this.$router.push('/form/cut/qst3');
-    },
-    async saveFormData(data) {
       try {
-        await addDoc(collection(projectFirestore, "Cut"), data);
-        console.log('Data saved to Firestore');
+        // Check if user is logged in
+        const user = auth.currentUser;
+        if (!user) {
+          console.error("User not logged in.");
+          // Handle user not logged in
+          return;
+        }
+
+        // Query Firestore to find the document with the user's email
+        const userDocRef = collection(projectFirestore, "userResponses");
+        const q = query(userDocRef, where("userEmail", "==", user.email));
+        const querySnapshot = await getDocs(q);
+        
+        if (querySnapshot.empty) {
+          console.error("User document not found.");
+          // Handle user document not found
+          return;
+        }
+
+        // Update the existing document with the new data
+        const doc = querySnapshot.docs[0];
+        await updateDoc(doc.ref, {
+          height: this.height,
+          weight: this.weight,
+          timestamp: new Date()
+        });
+
+        console.log('Data updated in', user.email, 'account');
+        // Redirect to the next question
+        this.$router.push('/form/cut/qst3');
       } catch (error) {
-        console.error("Error saving data to Firestore: ", error);
+        console.error("Error updating data in Firestore: ", error);
+        // Handle error
       }
     }
   }

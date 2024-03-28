@@ -49,7 +49,7 @@ export default {
           return;
         }
 
-        const userDocRef = collection(projectFirestore, "users");
+        const userDocRef = collection(projectFirestore, "userResponses");
         const q = query(userDocRef, where("userEmail", "==", user.email));
         const querySnapshot = await getDocs(q);
         
@@ -61,7 +61,7 @@ export default {
           });
           console.log('Data updated in Firestore');
         } else {
-          await addDoc(collection(projectFirestore, "users"), {
+          await addDoc(collection(projectFirestore, "userResponses"), {
             userEmail: user.email,
             tobaccoUse: this.smokeStatus,
             timestamp: new Date()

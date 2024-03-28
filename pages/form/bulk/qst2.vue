@@ -46,7 +46,7 @@ export default {
         }
 
         // Query Firestore to find the document with the user's email
-        const userDocRef = collection(projectFirestore, "users");
+        const userDocRef = collection(projectFirestore, "userResponses");
         const q = query(userDocRef, where("userEmail", "==", user.email));
         const querySnapshot = await getDocs(q);
         

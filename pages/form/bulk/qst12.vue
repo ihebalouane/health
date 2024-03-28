@@ -2,7 +2,7 @@
   <div>
     <qstHeader />
     <BgAnimations/>
-    <div class="form-container">
+    <div v-if="!isLoading" class="form-container">
       <div class="weight-gain-form">
         <label class="form-label">Why do you want to gain weight?</label>
         <div class="checkbox-group">
@@ -16,20 +16,21 @@
           <label class="form-label">Please specify:</label>
           <input type="text" v-model="otherReason" class="other-input" @input="checkValidity">
         </div>
-        <button class="submit-button transition ease-in-out delay-200 bg-green-500 hover:-translate-y-0.5 hover:scale-200 hover:bg-green-600 duration-300 ..."
-         @click="submitForm" :disabled="selectedOptions.includes('Other') && otherReason.trim() === ''" ref="submitButton">Next</button>
+        <button class="submit-button" @click="submitForm" :disabled="isLoading">Next</button>
       </div>
     </div>
+    <loading-component v-if="isLoading" />
   </div>
 </template>
 
 <script>
-import { projectFirestore, auth } from '../../../firebase/config'; // Update this path
+import { projectFirestore, auth } from '../../../firebase/config';
 import { collection, addDoc, doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
 
 export default {
   data() {
     return {
+      isLoading: false,
       selectedOptions: [],
       otherReason: '',
       options: [
@@ -46,20 +47,20 @@ export default {
   },
   methods: {
     async submitForm() {
-      // Validate input
-      if (this.selectedOptions.length === 0 || (this.selectedOptions.includes('Other') && this.otherReason.trim() === '')) {
-        alert('Please make a selection or specify a reason.');
-        return;
-      }
-      
-      // Prepare data for Firestore
-      const formData = {
-        reasons: this.selectedOptions,
-        ...(this.selectedOptions.includes('Other') && { otherReason: this.otherReason }),
-        timestamp: new Date()
-      };
+      // Show loading animation
+      this.isLoading = true;
 
       try {
+        // Simulate loading for 6 seconds
+        await new Promise(resolve => setTimeout(resolve, 6000));
+
+        // Prepare data for Firestore
+        const formData = {
+          reasons: this.selectedOptions,
+          ...(this.selectedOptions.includes('Other') && { otherReason: this.otherReason }),
+          timestamp: new Date()
+        };
+
         // Save the form data to Firestore
         const user = auth.currentUser;
         if (!user) {
@@ -68,7 +69,7 @@ export default {
           return;
         }
         
-        const userDocRef = doc(projectFirestore, 'users', user.uid);
+        const userDocRef = doc(projectFirestore, 'userResponses', user.uid);
         const userDocSnap = await getDoc(userDocRef);
 
         if (userDocSnap.exists()) {
@@ -88,10 +89,15 @@ export default {
           console.log("New weight gain reasons saved!");
         }
 
-        this.$router.push('/form/bulk/qst13'); // Navigate to the next question
+        // After 6 seconds, navigate to the next page
+        this.$router.push('./plan.vue');
       } catch (error) {
+        // Handle errors
         console.error("Error saving form data: ", error);
         alert('There was an error submitting your form. Please try again.');
+      } finally {
+        // Hide loading animation after form submission logic completes
+        this.isLoading = false;
       }
     },
     checkValidity() {
@@ -106,7 +112,6 @@ export default {
 };
 </script>
 
-
 <style scoped>
 .form-container {
   max-width: 400px;
@@ -116,6 +121,7 @@ export default {
   padding: 20px;
   box-shadow: none; 
 }  
+
 .form-label {
   font-size: 1.2rem;
   margin-bottom: 10px;

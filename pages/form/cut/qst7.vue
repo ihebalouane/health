@@ -13,15 +13,16 @@
           </label>
         </div>
         <button @click="submitForm" class="submit-button transition ease-in-out delay-200 bg-green-500 hover:-translate-y-0.5 hover:scale-200 hover:bg-green-600 duration-300">
-                Next </button>
+          Next
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { projectFirestore } from '../../../firebase/config';
-import { collection, addDoc } from 'firebase/firestore';
+import { projectFirestore, auth } from '../../../firebase/config'; // Make sure the path is correct
+import { collection, query, where, getDocs, updateDoc, addDoc } from 'firebase/firestore';
 
 export default {
   data() {
@@ -47,11 +48,37 @@ export default {
       }
 
       try {
-        await addDoc(collection(projectFirestore, "Cut"), {
-          bloodType: this.selectedBloodType,
-          timestamp: new Date()
-        });
-        console.log("Blood type saved!");
+        const user = auth.currentUser;
+        if (!user) {
+          console.error("User not logged in.");
+          // Handle user not logged in
+          return;
+        }
+
+        // Query Firestore to find if there's an existing document with the user's email
+        const userDocRef = collection(projectFirestore, "userResponses");
+        const q = query(userDocRef, where("userEmail", "==", user.email));
+        const querySnapshot = await getDocs(q);
+        
+        if (!querySnapshot.empty) {
+          // If document exists, update it with the new data
+          const doc = querySnapshot.docs[0];
+          await updateDoc(doc.ref, {
+            bloodType: this.selectedBloodType,
+            timestamp: new Date()
+          });
+          console.log('Data updated in Firestore');
+        } else {
+          // If document doesn't exist, create a new one with the provided data
+          await addDoc(collection(projectFirestore, "userResponses"), {
+            userEmail: user.email,
+            bloodType: this.selectedBloodType,
+            timestamp: new Date()
+          });
+          console.log('New document created in Firestore');
+        }
+
+        // Redirect to the next question
         this.$router.push('/form/cut/qst8');
       } catch (error) {
         console.error("Error saving blood type: ", error);

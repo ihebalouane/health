@@ -50,7 +50,7 @@ const submitGender = async () => {
         timestamp: new Date() 
       });
 
-      const userDocRef = doc(projectFirestore, 'users', user.uid);
+      const userDocRef = doc(projectFirestore, 'userResponses', user.uid);
       const userDocSnap = await getDoc(userDocRef);
 
       if (userDocSnap.exists()) {

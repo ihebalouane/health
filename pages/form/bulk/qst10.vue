@@ -55,7 +55,7 @@ export default {
           return;
         }
 
-        const userDocRef = collection(projectFirestore, "users");
+        const userDocRef = collection(projectFirestore, "userResponses");
         const q = query(userDocRef, where("userEmail", "==", user.email));
         const querySnapshot = await getDocs(q);
         

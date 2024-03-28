@@ -18,38 +18,65 @@
             Female
           </label>
         </div>
-        <router-link v-if="selectedGender" :to="`/form/cut/qst2`" class="next-button inline-block mt-8 px-4 py-2 text-lg bg-green-500 text-white border-2 border-green-500 rounded-md transition duration-300 hover:bg-green-600 hover:border-green-600">Next →</router-link> <!-- Changed background and border colors to green -->
+        <button v-if="selectedGender" @click="submitGender" class="next-button inline-block mt-8 px-4 py-2 text-lg bg-green-500 text-white border-2 border-green-500 rounded-md transition duration-300 hover:bg-green-600 hover:border-green-600">Next →</button>
       </div>
     </div>
   </div>
 </template>
 
-
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { projectFirestore } from '../../../firebase/config'; 
-import { collection, addDoc } from 'firebase/firestore';
+import { projectFirestore, auth } from '../../../firebase/config';
+import { collection, addDoc, doc, getDoc, updateDoc,setDoc } from 'firebase/firestore';
 
 const selectedGender = ref(null);
 const router = useRouter();
 
-// Function to select gender and save it to Firestore
-const selectGender = async (gender) => {
+const selectGender = (gender) => {
   selectedGender.value = gender;
+};
+
+const submitGender = async () => {
   try {
-    await addDoc(collection(projectFirestore, "Cut"), { // Specify the path to "userGender" within "Bulk"
-      gender: gender,
-      timestamp: new Date() 
-    });
-    console.log("Gender selection saved!");
-    router.push('/form/cut/qst2'); 
+    const user = auth.currentUser;
+    const userGender = selectedGender.value;
+    
+    if (user) {
+      await addDoc(collection(projectFirestore, "Cut"), {
+        gender: userGender,
+        programType: 'Cut', // Set programType to 'Bulk' regardless of gender
+        userEmail: user.email,
+        timestamp: new Date() 
+      });
+
+      const userDocRef = doc(projectFirestore, 'userResponses', user.uid);
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (userDocSnap.exists()) {
+        await updateDoc(userDocRef, {
+          gender: userGender,
+          programType: 'Cut'
+        });
+        console.log("Gender selection saved!");
+      } else {
+        await setDoc(userDocRef, {
+          gender: userGender,
+          userEmail: user.email,
+          programType: 'Cut'
+        });
+        console.log("New user document created!");
+      }
+
+      router.push('/form/cut/qst2'); 
+    } else {
+      console.error("User not logged in.");
+    }
   } catch (e) {
     console.error("Error adding document: ", e);
   }
 };
 </script>
-
 
 
 

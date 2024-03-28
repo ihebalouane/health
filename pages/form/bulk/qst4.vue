@@ -47,7 +47,7 @@ export default {
         }
 
         // Query Firestore to find if there's an existing document with the user's email
-        const userDocRef = collection(projectFirestore, "users");
+        const userDocRef = collection(projectFirestore, "userResponses");
         const q = query(userDocRef, where("userEmail", "==", user.email));
         const querySnapshot = await getDocs(q);
         
@@ -61,7 +61,7 @@ export default {
           console.log('Data updated in Firestore');
         } else {
           // If document doesn't exist, create a new one with the provided data
-          await addDoc(collection(projectFirestore, "users"), {
+          await addDoc(collection(projectFirestore, "userResponses"), {
             userEmail: user.email,
             goalWeight: this.weight,
             timestamp: new Date()

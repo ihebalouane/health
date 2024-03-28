@@ -12,18 +12,17 @@
             <span class="radio-text">{{ option.label }}</span>
           </label>
         </div>
-        <router-link :to="'/form/cut/qst6'">
-          <button type="submit" class="submit-button transition ease-in-out delay-200 bg-green-500 hover:-translate-y-0.5 hover:scale-200 hover:bg-green-600 duration-300 ...">
-                  Next </button>
-        </router-link>
+        <button @click="submitForm" class="submit-button transition ease-in-out delay-200 bg-green-500 hover:-translate-y-0.5 hover:scale-200 hover:bg-green-600 duration-300">
+          Next
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { projectFirestore } from '../../../firebase/config'; 
-import { collection, addDoc } from 'firebase/firestore';
+import { projectFirestore, auth } from '../../../firebase/config'; 
+import { collection, query, where, getDocs, updateDoc, addDoc } from 'firebase/firestore';
 
 export default {
   data() {
@@ -44,12 +43,39 @@ export default {
         alert('Please select an option.');
         return;
       }
+      
       try {
-        await addDoc(collection(projectFirestore, "Cut"), {
-          exerciseFrequency: this.exerciseFrequency,
-          timestamp: new Date()
-        });
-        console.log("Exercise frequency saved!");
+        const user = auth.currentUser;
+        if (!user) {
+          console.error("User not logged in.");
+          // Handle user not logged in
+          return;
+        }
+
+        // Query Firestore to find if there's an existing document with the user's email
+        const userDocRef = collection(projectFirestore, "userResponses");
+        const q = query(userDocRef, where("userEmail", "==", user.email));
+        const querySnapshot = await getDocs(q);
+        
+        if (!querySnapshot.empty) {
+          // If document exists, update it with the new data
+          const doc = querySnapshot.docs[0];
+          await updateDoc(doc.ref, {
+            exerciseFrequency: this.exerciseFrequency,
+            timestamp: new Date()
+          });
+          console.log('Data updated in Firestore');
+        } else {
+          // If document doesn't exist, create a new one with the provided data
+          await addDoc(collection(projectFirestore, "userResponses"), {
+            userEmail: user.email,
+            exerciseFrequency: this.exerciseFrequency,
+            timestamp: new Date()
+          });
+          console.log('New document created in Firestore');
+        }
+
+        // Redirect to the next question
         this.$router.push('/form/cut/qst6');
       } catch (error) {
         console.error("Error saving exercise frequency: ", error);

@@ -13,15 +13,16 @@
           </label>
         </div>
         <button @click="submitForm" class="submit-button transition ease-in-out delay-200 bg-green-500 hover:-translate-y-0.5 hover:scale-200 hover:bg-green-600 duration-300">
-          Next </button>
+          Next
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { projectFirestore } from '../../../firebase/config'; 
-import { collection, addDoc } from 'firebase/firestore';
+import { projectFirestore, auth } from '../../../firebase/config'; 
+import { collection, addDoc, query, where, getDocs, updateDoc } from 'firebase/firestore';
 
 export default {
   data() {
@@ -48,11 +49,32 @@ export default {
       }
 
       try {
-        await addDoc(collection(projectFirestore, "Cut"), {
-          hoursOfSleep: this.hoursOfSleep,
-          timestamp: new Date()
-        });
-        console.log("Sleep data saved!");
+        const user = auth.currentUser;
+        if (!user) {
+          console.error("User not logged in.");
+          return;
+        }
+
+        const userDocRef = collection(projectFirestore, "userResponses");
+        const q = query(userDocRef, where("userEmail", "==", user.email));
+        const querySnapshot = await getDocs(q);
+        
+        if (!querySnapshot.empty) {
+          const doc = querySnapshot.docs[0];
+          await updateDoc(doc.ref, {
+            hoursOfSleep: this.hoursOfSleep,
+            timestamp: new Date()
+          });
+          console.log('Data updated in Firestore');
+        } else {
+          await addDoc(collection(projectFirestore, "userResponses"), {
+            userEmail: user.email,
+            hoursOfSleep: this.hoursOfSleep,
+            timestamp: new Date()
+          });
+          console.log('New document created in Firestore');
+        }
+
         this.$router.push('/form/cut/qst11');
       } catch (error) {
         console.error("Error saving sleep data: ", error);
@@ -62,7 +84,6 @@ export default {
   }
 };
 </script>
-
 
 
 <style scoped>
