@@ -90,7 +90,7 @@ export default {
         }
 
         // After 6 seconds, navigate to the next page
-        this.$router.push('./plan.vue');
+        this.$router.push('/plan');
       } catch (error) {
         // Handle errors
         console.error("Error saving form data: ", error);

@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col min-h-screen">
     <SiteHeader v-if="showHeaderFooter" />
-    <main class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 grow items-start w-full">
+    <main >
       <NuxtPage />
     </main>
     <SiteFooter v-if="showHeaderFooter" />
@@ -12,7 +12,7 @@
 export default {
   computed: {
     showHeaderFooter() {
-      const noHeaderFooterRoutes = ['/login', '/signup'];
+      const noHeaderFooterRoutes = ['/login', '/signup','/plan'];
       const formRoutes = '/form/';
 
       // Check if the current route path is within the form folder
