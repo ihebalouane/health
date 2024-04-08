@@ -1,7 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged, signOut  } from 'firebase/auth';
-// Import Firestore
 
 
 const firebaseConfig = {
@@ -18,9 +17,11 @@ const projectFirestore = getFirestore(firebaseApp);
 const auth = getAuth(firebaseApp);
 
 let isAuthenticated = false;
+let userEmail = null; 
 
 onAuthStateChanged(auth, (user) => {
   isAuthenticated = !!user;
+  userEmail = isAuthenticated ? user.email : null; // Update user's email
 });
 
 const logout = async () => {
@@ -31,4 +32,4 @@ const logout = async () => {
   }
 };
 
-export { projectFirestore, auth, isAuthenticated, logout }; 
+export { projectFirestore, auth, isAuthenticated, userEmail, logout };

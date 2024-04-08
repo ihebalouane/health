@@ -1,9 +1,9 @@
 <template>
   <div class="page">
-  <div>
     <BgAnimations/>
     <div class="home-section-1">
       <div class="left-content">
+        <p>welcome {{ userEmail }}</p>
         <h1 class="title">Health+</h1>
         <p class="description">Your ultimate destination for achieving your fitness goals</p>
         <div class="buttons">
@@ -17,25 +17,24 @@
     </div>
     <div class="separator"></div>
     <!-- Section 2 -->
-<div id="section-2" class="home-section-2">
-  <div class="program-box">
-    <img src="~/assets/images/program2.jpg" alt="Program 1" class="program-image">
-    <h2 class="program-title">Bulk Edition</h2>
-    <p class="program-description">Bulk Edition Description</p>
-    <!-- Update router-link to conditionally render based on authentication status -->
-    <router-link v-if="isAuthenticated" :to="{ path: '/form/bulk/qst1' }" class="get-started-button">Get Started</router-link>
-    <router-link v-else to="/login" class="get-started-button">Get Started</router-link>
-  </div>
-  <div class="program-box">
-    <img src="~/assets/images/program2.jpg" alt="Program 2" class="program-image">
-    <h2 class="program-title">Cut Edition</h2>
-    <p class="program-description">Cut Edition Description</p>
-    <!-- Update router-link to conditionally render based on authentication status -->
-    <router-link v-if="isAuthenticated" :to="{ path: '/form/cut/qst1' }" class="get-started-button">Get Started</router-link>
-    <router-link v-else to="/login" class="get-started-button">Get Started</router-link>
-  </div>
-</div>
-
+    <div id="section-2" class="home-section-2">
+      <div class="program-box">
+        <img src="~/assets/images/program2.jpg" alt="Program 1" class="program-image">
+        <h2 class="program-title">Bulk Edition</h2>
+        <p class="program-description">Bulk Edition Description</p>
+        <!-- Update router-link to conditionally render based on authentication status -->
+        <router-link v-if="isAuthenticated" :to="{ path: '/form/bulk/qst1' }" class="get-started-button">Get Started</router-link>
+        <router-link v-else to="/login" class="get-started-button">Get Started</router-link>
+      </div>
+      <div class="program-box">
+        <img src="~/assets/images/program2.jpg" alt="Program 2" class="program-image">
+        <h2 class="program-title">Cut Edition</h2>
+        <p class="program-description">Cut Edition Description</p>
+        <!-- Update router-link to conditionally render based on authentication status -->
+        <router-link v-if="isAuthenticated" :to="{ path: '/form/cut/qst1' }" class="get-started-button">Get Started</router-link>
+        <router-link v-else to="/login" class="get-started-button">Get Started</router-link>
+      </div>
+    </div>
     <div class="separator"></div>
     <!-- Section 3 -->
     <div id="section-3" class="home-section-3">
@@ -47,13 +46,13 @@
             <p class="description-title">Program Description:</p>
             <p>Aliquam erat volutpat. Nulla facilisi. Suspendisse potenti. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Morbi at varius felis.</p>
           </div>
-          <button class="get-started-button">Get Started</button>
+          <!-- Update router-link to conditionally render based on authentication status -->
+          <router-link v-if="isAuthenticated" to="/plan" class="get-started-button">Get Started</router-link>
+          <router-link v-else to="/login" class="get-started-button">Get Started</router-link>
         </div>
       </div>
     </div>
-  </div>
     <div class="separator"></div>
-
     <!--Section 4 carousel-->
     <div>
       <Carousel :items-to-show="2" :wrap-around="true">
@@ -66,13 +65,11 @@
             </div>
           </div>
         </Slide>
-
         <template #addons>
           <Navigation />
         </template>
       </Carousel>
     </div>
-
     <!-- FAQ Section -->
     <div id="faq-section" class="faq-section">
       <h2 class="faq-title">Frequently Asked Questions</h2>
@@ -104,6 +101,8 @@
 import { defineComponent } from 'vue'
 import { Carousel, Navigation, Slide } from 'vue3-carousel'
 import { isAuthenticated } from '@/firebase/config';
+import userState from '@/store/userState.js'; // Update the path accordingly
+
 
 import 'vue3-carousel/dist/carousel.css'
 
@@ -113,6 +112,11 @@ export default defineComponent({
     Carousel,
     Slide,
     Navigation,
+  },
+  setup () {
+    const userEmail = userState.userEmail;
+    return { userEmail };
+
   },
   data() {
     return {
@@ -151,7 +155,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
+/* Your existing styles */
 .page {
   overflow-x: hidden;
 }

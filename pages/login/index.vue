@@ -25,12 +25,12 @@
   </div>
 </template>
 
-
 <script>
 import { ref } from 'vue';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from 'vue-router';
 import { projectFirestore } from '@/firebase/config'; 
+import userState from '@/store/userState.js'; // Update the path accordingly
 
 export default {
   layout: 'empty',
@@ -46,6 +46,7 @@ export default {
         const auth = getAuth();
         await signInWithEmailAndPassword(auth, email.value, password.value);
         console.log('User logged in:', email.value);
+        userState.userEmail = email.value; // Store user email in state
         router.push('/');
       } catch (error) {
         errorMessage.value = error.message; 

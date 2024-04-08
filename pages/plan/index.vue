@@ -1,5 +1,9 @@
 <template>
   <div class="center-container">
+    <!-- Display user's email -->
+    <div v-if="isAuthenticated" class="user-email">
+      User Email: {{ clientEmail }}
+    </div>
     <div class="container">
       <div class="section day-list-section">
         <div class="section-content">
@@ -29,7 +33,7 @@
       <div class="section gym-details-section">
         <div class="section-content">
           <h2>Gym Details</h2>
-          <p>Welcome to our gym! Our facilities offer state-of-the-art equipment and professional trainers to help you achieve your fitness goals.</p>
+          <p>Welcome to our gym! {{ clientEmail }} Our facilities offer state-of-the-art equipment and professional trainers to help you achieve your fitness goals.</p>
         </div>
       </div>
     </div>
@@ -38,11 +42,50 @@
 
 <script>
 import planLogic from './plan';
+import { ref } from 'vue';
+import { projectFirestore } from '@/firebase/config.js';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import userState from '@/store/userState.js'; 
 
 export default {
-  mixins: [planLogic]
+  middleware: 'auth',
+  mixins: [planLogic],
+  setup () {
+    const clientEmail = userState.userEmail;
+    const userData = ref(null);
+
+    const getUserResponses = async () => {
+      try {
+        const q = query(collection(projectFirestore, 'userResponses'), where('userEmail', '==', clientEmail));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+          userData.value = {
+            ageRange: doc.data().ageRange,
+            programType: doc.data().programType,
+            selectedRiskFactors: doc.data().selectedRiskFactors,
+            TobaccoUse: doc.data().TobaccoUse,
+            height: doc.data().height,
+            weight: doc.data().weight,
+            weightGainReasons: doc.data().weightGainReasons,
+            gender: doc.data().gender,
+            goalWeight: doc.data().goalWeight,
+            hoursOfSleep: doc.data().hoursOfSleep
+          };
+          console.log('User Data:', userData.value);
+        });
+      } catch (error) {
+        console.error('Error fetching user responses:', error.message);
+      }
+    };
+
+    getUserResponses(); // Call the function when the component is mounted
+
+    return { clientEmail, userData };
+  },
 };
 </script>
+
+
 
 <style>
 .center-container {
@@ -55,28 +98,22 @@ export default {
 
 .container {
   display: flex;
-  width: 95%; /* Adjusted width */
-  max-width: 1500px; /* Max width for the container */
-  height: 500px; /* Increased height */
+  width: 95%;
+  max-width: 1500px;
+  height: 500px;
   border: 2px solid #ccc;
-  border-radius: 10px; /* Rounded corners */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Drop shadow */
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .section {
-  flex: 1; /* Each section occupies equal space */
-  overflow: hidden; /* Prevent content from overflowing */
+  flex: 1;
+  overflow: hidden;
 }
 
 .section-content {
   padding: 20px;
   height: 100%;
-}
-
-.section-content h2 {
-  margin-top: 0;
-  margin-bottom: 20px;
-  font-size: 24px;
 }
 
 .day-list,
@@ -93,13 +130,13 @@ export default {
 .items-list li {
   margin: 0;
   padding: 0;
-  flex: 1; /* Each list item fills the available space */
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   position: relative;
-  transition: opacity 0.3s ease; /* Fade transition */
+  transition: opacity 0.3s ease, background-color 0.3s ease;
 }
 
 .day-list li:not(:last-child):after,
@@ -114,24 +151,26 @@ export default {
 }
 
 .selected {
-  opacity: 0.5; /* Reduced opacity for selected item */
+  opacity: 0.5;
 }
 
-.day-list-section,
-.video-section {
-  background-color: #fff; /* White background for the sections */
+.day-text,
+.item-text {
+  transition: transform 0.2s ease;
+  color: black; 
 }
 
-.day-text {
-  transition: transform 0.2s ease; /* Smooth transition on hover */
-  color: black; /* Text color related to #2ecc71 */
-}
-
-.day-list li:hover .day-text {
-  transform: translateY(-5px); /* Move the text up slightly on hover */
+.day-list li:hover .day-text,
+.items-list li:hover .item-text {
+  transform: translateY(-5px); 
 }
 
 .gym-details-section {
-  background-color: #fff; /* White background for the gym details section */
+  background-color: #fff;
+}
+
+.day-list li:hover,
+.items-list li:hover {
+  background-color: #f0f0f0;
 }
 </style>

@@ -88,7 +88,7 @@ export default {
           console.log("New weight gain reasons saved!");
         }
 
-        this.$router.push('/form/cut/qst13'); // Navigate to the next question
+        this.$router.push('/plan'); // Navigate to the next question
       } catch (error) {
         console.error("Error saving form data: ", error);
         alert('There was an error submitting your form. Please try again.');
