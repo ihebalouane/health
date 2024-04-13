@@ -13,7 +13,7 @@ export default {
   
   computed: {
     showHeaderFooter() {
-      const noHeaderFooterRoutes = ['/login', '/signup','/plan','/profile'];
+      const noHeaderFooterRoutes = ['/login', '/signup','/plan','/profile','/profile/messages'];
       const formRoutes = '/form/';
 
       // Check if the current route path is within the form folder

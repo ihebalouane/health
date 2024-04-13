@@ -43,12 +43,16 @@
           <div class="ml-4 flex items-center sm:ml-6">
             <!-- Toggle between profile picture and logout button -->
             <template v-if="isAuthenticated">
-              <button @click="toggleLogout" class="bg-white rounded-full h-10 w-10 flex items-center justify-center focus:outline-none">
-                <!-- Render profile picture here -->
-                <div class="profile-picture-placeholder"></div>
-              </button>
+              <router-link to="/profile">
+                <button class="bg-white rounded-full h-10 w-10 flex items-center justify-center focus:outline-none transition duration-300 ease-in-out hover:opacity-80">
+                  <!-- SVG Profile icon -->
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                    <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
+                  </svg>
+                </button>
+              </router-link>
               <!-- Logout button -->
-              <button @click="toggleLogout" class="ml-2 bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded-md text-sm">Logout</button>
+              <button @click="logoutUser" class="ml-2 bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded-md text-sm">Logout</button>
             </template>
             <template v-else>
               <router-link to="/login">
@@ -94,7 +98,7 @@ const navigation = [
   { name: 'About us', href: '/aboutus', current: route.name == 'aboutus' },
 ]
 
-const toggleLogout = async () => {
+const logoutUser = async () => {
   try {
     await logout(); // Call the logout function to log out the user
     console.log('User logged out')

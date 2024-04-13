@@ -41,37 +41,38 @@
 </template>
 
 <script>
-import planLogic from './plan';
 import { ref } from 'vue';
 import { projectFirestore } from '@/firebase/config.js';
 import { collection, getDocs, query, where } from 'firebase/firestore';
-import userState from '@/store/userState.js'; 
+import userState from '@/store/userState.js';
+import { videosMap } from './video.js'; // Importing the videos map
 
 export default {
   middleware: 'auth',
-  mixins: [planLogic],
-  setup () {
+  setup() {
     const clientEmail = userState.userEmail;
-    const userData = ref(null);
+    const isAuthenticated = true; // Assuming it's true for now
+
+    const selectedItems = ref([]);
+    const selectedDay = ref(null);
+    const selectedVideo = ref(null);
+    const days = ref([]);
 
     const getUserResponses = async () => {
       try {
         const q = query(collection(projectFirestore, 'userResponses'), where('userEmail', '==', clientEmail));
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
-          userData.value = {
-            ageRange: doc.data().ageRange,
-            programType: doc.data().programType,
-            selectedRiskFactors: doc.data().selectedRiskFactors,
-            TobaccoUse: doc.data().TobaccoUse,
-            height: doc.data().height,
-            weight: doc.data().weight,
-            weightGainReasons: doc.data().weightGainReasons,
-            gender: doc.data().gender,
-            goalWeight: doc.data().goalWeight,
-            hoursOfSleep: doc.data().hoursOfSleep
-          };
-          console.log('User Data:', userData.value);
+          const ageRange = doc.data().ageRange;
+          if (ageRange === '20s') {
+            selectedItems.value = ['Dumbbell press', 'Cable Crossover'];
+            selectedDay.value = 'Monday';
+          } else if (ageRange === '30s') {
+            selectedItems.value = ['Pec Deck', 'Incline Press-up'];
+            selectedDay.value = 'Tuesday';
+          } else {
+            console.error('Unsupported age range:', ageRange);
+          }
         });
       } catch (error) {
         console.error('Error fetching user responses:', error.message);
@@ -80,12 +81,38 @@ export default {
 
     getUserResponses(); // Call the function when the component is mounted
 
-    return { clientEmail, userData };
+    const showItems = (day) => {
+      selectedDay.value = day;
+    };
+
+    const loadVideo = (item) => {
+      selectedVideo.value = videosMap[item]; // Use videosMap object to get the video URL
+    };
+
+    const calculateDays = () => {
+      const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+      const currentDate = new Date();
+      const currentDayIndex = currentDate.getDay(); // 0 for Sunday, 1 for Monday, ..., 6 for Saturday
+      const nextMonday = new Date(currentDate);
+      nextMonday.setDate(currentDate.getDate() + ((7 - currentDayIndex) % 7)); // Calculate next Monday
+      for (let i = 0; i < daysOfWeek.length; i++) {
+        const dayDate = new Date(nextMonday);
+        dayDate.setDate(nextMonday.getDate() + i);
+        days.value.push({ name: daysOfWeek[i], date: formatDate(dayDate) });
+      }
+    };
+
+    const formatDate = (date) => {
+      const options = { weekday: 'short', month: 'short', day: 'numeric' };
+      return date.toLocaleDateString(undefined, options);
+    };
+
+    calculateDays(); // Initialize days
+
+    return { clientEmail, isAuthenticated, selectedItems, selectedDay, selectedVideo, days, showItems, loadVideo };
   },
 };
 </script>
-
-
 
 <style>
 .center-container {
@@ -157,12 +184,12 @@ export default {
 .day-text,
 .item-text {
   transition: transform 0.2s ease;
-  color: black; 
+  color: black;
 }
 
 .day-list li:hover .day-text,
 .items-list li:hover .item-text {
-  transform: translateY(-5px); 
+  transform: translateY(-5px);
 }
 
 .gym-details-section {
