@@ -85,7 +85,7 @@
 <script setup>
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
 import { useRouter } from 'vue-router';
-import { isAuthenticated, logout } from '/firebase/config'; // Import the logout function
+import { isAuthenticated, logout } from '/firebase/config'; 
 
 const router = useRouter();
 
@@ -100,9 +100,9 @@ const navigation = [
 
 const logoutUser = async () => {
   try {
-    await logout(); // Call the logout function to log out the user
+    await logout(); 
     console.log('User logged out')
-    router.push('/login'); // Redirect to the login page after logout
+    router.push('/login'); 
   } catch (error) {
     console.error('Error logging out:', error.message);
   }
@@ -112,7 +112,6 @@ const logoutUser = async () => {
 
 
 <style scoped>
-/* Styles for the profile picture placeholder */
 .profile-picture-placeholder {
   width: 40px;
   height: 40px;

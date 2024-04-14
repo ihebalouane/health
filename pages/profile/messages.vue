@@ -1,6 +1,5 @@
 <template>
     <profile-header/>
-
     <div>
 
     </div>
