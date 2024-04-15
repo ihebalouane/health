@@ -94,6 +94,11 @@
         <p class="answer">Staying motivated can be challenging, but setting specific goals, finding activities you enjoy, varying your routine, and seeking support from friends, family, or a fitness community can help maintain motivation over time.</p>
       </div>
     </div>
+    <router-link to="/profile/messages" class="messages-circle">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
+      </svg>
+    </router-link>
   </div>
 </template>
 
@@ -102,9 +107,8 @@ import { defineComponent } from 'vue'
 import { Carousel, Navigation, Slide } from 'vue3-carousel'
 import { isAuthenticated } from '@/firebase/config';
 import userState from '@/store/userState.js'; // Update the path accordingly
-
-
 import 'vue3-carousel/dist/carousel.css'
+
 
 export default defineComponent({
   name: 'HomePage',
@@ -165,6 +169,29 @@ export default defineComponent({
   justify-content: space-between;
   align-items: center;
   padding: 100px;
+}
+
+.messages-circle {
+  position: fixed;
+  bottom: 10px; /* Adjust as needed */
+  right: 20px; /* Adjust as needed */
+  width: 90px; /* Adjust as needed */
+  height: 90px; /* Adjust as needed */
+  background-color: #2ecc71; /* Example color */
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff; /* Example text color */
+  font-weight: bold;
+  font-size: 1.2rem; /* Example font size */
+  text-decoration: none; /* Remove underline from router-link */
+}
+
+.messages-circle svg {
+  fill: #fff; /* Example icon color */
+  width: 24px; /* Keep SVG icon size */
+  height: 24px; /* Keep SVG icon size */
 }
 
 .left-content {

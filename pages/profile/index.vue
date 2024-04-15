@@ -1,5 +1,5 @@
 <template>
-  <profile-header />
+  <profile-header/>
   <div class="profile">
     <div class="profile-content" style="margin-bottom: 10px;"> <!-- Adjusted margin-bottom -->
       <!-- Profile Information Section -->
@@ -18,7 +18,7 @@
             <option value="male">Male</option>
             <option value="female">Female</option>
             <option value="other">Rather not to say</option>
-          </select>
+          </select> 
         </div>
         <div class="form-group">
           <label for="birth-date">Birth Date</label>
