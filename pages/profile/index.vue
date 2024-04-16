@@ -28,6 +28,10 @@
           <label for="email">Email</label>
           <input type="email" id="email" v-model="email" required disabled>
         </div>
+        <div class="form-group">
+          <label for="profession">Profession</label>
+          <input type="text" id="profession" v-model="profession" readonly="readonly">
+        </div>
       </div>
 
       <!-- Change Password Section -->
@@ -80,6 +84,7 @@
       const gender = ref('');
       const birthDate = ref('');
       const email = ref('');
+      const profession = ref('Client'); // Default profession value
       const currentPassword = ref('');
       const newPassword = ref('');
       const confirmPassword = ref('');
@@ -102,6 +107,7 @@
             lastName.value = data.lastName || '';
             gender.value = data.gender || '';
             birthDate.value = data.birthDate || '';
+            profession.value = data.profession || 'Client'; // Set profession field value
             profilePicture.value = data.profilePicture || null;
           }
         } catch (error) {
@@ -144,8 +150,8 @@
           lastName: lastName.value,
           gender: gender.value,
           birthDate: birthDate.value,
+          profession: profession.value, // Save profession
           profilePicture: profilePicture.value, // Save profile picture
-          // Add more fields as needed
         };
 
         try {
@@ -154,7 +160,6 @@
           console.log('Profile data saved successfully!');
         } catch (error) {
           console.error('Error saving profile data:', error);
-          // Handle error here, e.g., show error message to user
         }
       };
 
@@ -179,6 +184,7 @@
         birthDate,
         Email,
         email,
+        profession,
         currentPassword,
         newPassword,
         confirmPassword,
