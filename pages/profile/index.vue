@@ -150,6 +150,7 @@
           lastName: lastName.value,
           gender: gender.value,
           birthDate: birthDate.value,
+          email: email.value, // Save email
           profession: profession.value, // Save profession
           profilePicture: profilePicture.value, // Save profile picture
         };
@@ -199,6 +200,7 @@
     },
   };
 </script>
+
 
 <style lang="scss" scoped>
   /* Existing styles */

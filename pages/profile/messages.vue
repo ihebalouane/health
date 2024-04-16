@@ -33,7 +33,7 @@
 
 <script>
 import { projectFirestore } from '@/firebase/config.js'; // Update the path accordingly
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, addDoc, Timestamp } from 'firebase/firestore';
 import userState from '@/store/userState.js';
 
 export default {
@@ -42,7 +42,7 @@ export default {
     return {
       profileList: [],
       selectedProfile: null,
-      messages: {},
+      messages: {}, // Changed to store messages based on senderId_receiverId combination
       newMessage: ''
     };
   },
@@ -56,7 +56,9 @@ export default {
   computed: {
     filteredMessages() {
       if (!this.selectedProfile) return [];
-      return this.messages[this.selectedProfile.id] || [];
+      // Get the conversation key based on senderId_receiverId combination
+      const conversationKey = `${this.Email}_${this.selectedProfile.email}`;
+      return this.messages[conversationKey] || [];
     }
   },
   methods: {
@@ -80,17 +82,37 @@ export default {
       }
       this.selectedProfile = profile;
     },
-    sendMessage() {
+    async sendMessage() {
       if (!this.selectedProfile) return;
       if (this.newMessage.trim() === '') return;
-      const profileId = this.selectedProfile.id;
-      if (!this.messages[profileId]) {
-        this.messages[profileId] = [];
+      const receiverEmail = this.selectedProfile.email; // Get receiver's email from the selected profile
+      const senderEmail = this.Email; // Get sender's email from userState
+      const timestamp = Timestamp.now(); // Get current timestamp
+      
+      // Get the conversation key based on senderId_receiverId combination
+      const conversationKey = `${senderEmail}_${receiverEmail}`;
+      
+      // Add message to the messages object based on the conversation key
+      if (!this.messages[conversationKey]) {
+        this.messages[conversationKey] = [];
       }
-      this.messages[profileId].push({
+      this.messages[conversationKey].push({
         text: this.newMessage,
         sentByMe: true // Assuming the user is always sending messages
       });
+      
+      // Add message to the messages collection
+      try {
+        await addDoc(collection(projectFirestore, 'messages'), {
+          receiverId: receiverEmail,
+          senderId: senderEmail,
+          message: this.newMessage,
+          timestamp: timestamp
+        });
+      } catch (error) {
+        console.error('Error sending message:', error);
+      }
+      
       this.newMessage = '';
       // Scroll to the bottom of the chat window
       this.$nextTick(() => {
@@ -100,6 +122,8 @@ export default {
   }
 };
 </script>
+
+
 
 
 <style scoped>
