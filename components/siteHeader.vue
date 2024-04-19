@@ -109,8 +109,6 @@ const logoutUser = async () => {
 };
 </script>
 
-
-
 <style scoped>
 .profile-picture-placeholder {
   width: 40px;
