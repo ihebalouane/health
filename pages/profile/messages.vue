@@ -10,7 +10,7 @@
               :key="index"
               class="user"
               @click="selectUser(profile)"
-              :class="{'selected-user': profile === selectedProfile}"
+              :class="{ 'selected-user': profile === selectedProfile }"
             >
               {{ profile.firstName + " " + profile.lastName }}
             </div>
@@ -21,35 +21,16 @@
             <div v-if="selectedProfile">{{ selectedProfile.firstName }}</div>
             <div v-else>Select a user to chat</div>
           </div>
+
           <div class="chat-messages" ref="messages">
-            <template v-for="(messageGroup, index) in groupedMessages" :key="index">
-              <div class="message-group" v-if="messageGroup.messages.length > 0">
-                <div class="message-group-header">{{ messageGroup.header }}</div>
-                <div v-if="messageGroup.header === 'Sent Messages'">
-                  <div
-                    v-for="(message, index) in messageGroup.messages"
-                    :key="index"
-                    class="message sent"
-                  >
-                    <div class="message-content sent-content">
-                      {{ message.message }}
-                    </div>
-                  </div>
-                </div>
-                <div v-else>
-                  <div
-                    v-for="(message, index) in messageGroup.messages"
-                    :key="index"
-                    class="message received"
-                  >
-                    <div class="message-content received-content">
-                      {{ message.message }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </template>
+            <div v-for="message in messages" :key="message.id" class="message">
+              <p>
+                <strong>{{ message.senderFirstName }}:</strong>
+                {{ message.message }}
+              </p>
+            </div>
           </div>
+
           <div class="chat-input">
             <input
               type="text"
@@ -59,9 +40,15 @@
             />
             <button @click="sendMessage">Send</button>
           </div>
-          <p>This sender email is: {{ senderEmail }} and profession is: {{ senderProfession }}</p>
+          <p>
+            This sender email is: {{ senderEmail }} and profession is:
+            {{ senderProfession }}
+          </p>
 
-          <p v-if="selectedProfile">You selected the user '{{ selectedProfile.firstName }}' to chat with</p>
+          <p v-if="selectedProfile">
+            You selected the user '{{ selectedProfile.firstName }}' to chat with
+            {{ selectedProfile.email }}
+          </p>
         </div>
       </div>
     </div>
@@ -70,7 +57,16 @@
 
 <script>
 import { projectFirestore } from "@/firebase/config.js";
-import { collection, getDocs, addDoc, Timestamp, query, where, orderBy } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  Timestamp,
+  query,
+  where,
+  orderBy,
+  onSnapshot,
+} from "firebase/firestore";
 import userState from "@/store/userState.js";
 
 export default {
@@ -84,36 +80,24 @@ export default {
       senderEmail: "",
       senderProfession: "",
       senderFirstName: "",
+      unsubscribe: null,
     };
   },
   async mounted() {
     await this.fetchProfiles();
   },
   computed: {
-    conversationKey() {
+    showMessages() {
       if (this.selectedProfile && this.senderEmail) {
         return `${this.senderEmail}_${this.selectedProfile.email}`;
       }
       return null;
     },
-    groupedMessages() {
-      const grouped = [];
-      const sentMessages = this.messages.filter(message => message.sentByMe);
-      const receivedMessages = this.messages.filter(message => !message.sentByMe);
-
-      if (sentMessages.length > 0) {
-        grouped.push({ header: "Sent Messages", messages: sentMessages });
-      }
-
-      if (receivedMessages.length > 0) {
-        grouped.push({ header: "Received Messages", messages: receivedMessages });
-      }
-
-      return grouped;
-    },
     filteredProfileList() {
       if (this.senderProfession === "Coach") {
-        return this.profileList.filter(profile => profile.profession === "Client");
+        return this.profileList.filter(
+          (profile) => profile.profession === "Client"
+        );
       } else {
         return this.profileList;
       }
@@ -122,8 +106,10 @@ export default {
   methods: {
     async fetchProfiles() {
       try {
-        const profilesSnapshot = await getDocs(collection(projectFirestore, "profile"));
-        this.profileList = profilesSnapshot.docs.map(doc => {
+        const profilesSnapshot = await getDocs(
+          collection(projectFirestore, "profile")
+        );
+        this.profileList = profilesSnapshot.docs.map((doc) => {
           return {
             id: doc.id,
             ...doc.data(),
@@ -147,8 +133,6 @@ export default {
       const senderEmail = this.senderEmail;
       const senderFirstName = this.senderFirstName;
       const timestamp = Timestamp.now();
-      const conversationKey = `${senderEmail}_${receiverEmail}`;
-      const inverseConversationKey = `${receiverEmail}_${senderEmail}`;
 
       try {
         await addDoc(collection(projectFirestore, "messages"), {
@@ -157,8 +141,6 @@ export default {
           senderFirstName: senderFirstName,
           message: this.newMessage,
           timestamp: timestamp,
-          conversationKey: conversationKey,
-          inverseConversationKey: inverseConversationKey
         });
       } catch (error) {
         console.error("Error sending message:", error);
@@ -174,8 +156,13 @@ export default {
         const email = userState.userEmail;
         this.senderEmail = email;
 
-        const querySnapshot = await getDocs(query(collection(projectFirestore, "profile"), where("email", "==", email)));
-        querySnapshot.forEach(doc => {
+        const querySnapshot = await getDocs(
+          query(
+            collection(projectFirestore, "profile"),
+            where("email", "==", email)
+          )
+        );
+        querySnapshot.forEach((doc) => {
           const data = doc.data();
           this.senderProfession = data.profession;
           this.senderFirstName = data.firstName;
@@ -189,75 +176,72 @@ export default {
     },
     async addClientUsers() {
       try {
-        const clientUsersSnapshot = await getDocs(query(collection(projectFirestore, "profile"), where("profession", "==", "Client")));
-        const clientUsers = clientUsersSnapshot.docs.map(doc => doc.data());
+        const clientUsersSnapshot = await getDocs(
+          query(
+            collection(projectFirestore, "profile"),
+            where("profession", "==", "Client")
+          )
+        );
+        const clientUsers = clientUsersSnapshot.docs.map((doc) => doc.data());
         this.profileList = clientUsers;
       } catch (error) {
         console.error("Error adding client users:", error);
       }
     },
-    async fetchMessages() {
-      try {
-        const senderEmail = this.senderEmail;
-        const receiverEmail = this.selectedProfile ? this.selectedProfile.email : null;
-        if (!receiverEmail) return;
+    fetchMessages() {
+      const senderEmail = this.senderEmail;
+      const receiverEmail = this.selectedProfile
+        ? this.selectedProfile.email
+        : null;
+      if (!receiverEmail) return;
 
-        const messagesSnapshot = await getDocs(
-          query(
-            collection(projectFirestore, "messages"),
-            where("senderId", "==", senderEmail),
-            where("receiverId", "==", receiverEmail)
-          )
-        );
-        const receivedMessagesSnapshot = await getDocs(
-          query(
-            collection(projectFirestore, "messages"),
-            where("senderId", "==", receiverEmail),
-            where("receiverId", "==", senderEmail)
-          )
-        );
+      const messagesRef = collection(projectFirestore, "messages");
+      const q = query(
+        messagesRef,
+        where("senderId", "in", [senderEmail, receiverEmail]),
+        where("receiverId", "in", [senderEmail, receiverEmail]),
+        orderBy("timestamp", "asc")
+      );
 
-        const messages = messagesSnapshot.docs.map(doc => {
-          const data = doc.data();
-          return {
-            conversationKey: `${data.senderId}_${data.receiverId}`,
-            inverseConversationKey: `${data.receiverId}_${data.senderId}`,
-            senderId: data.senderId,
-            senderFirstName: data.senderFirstName,
-            message: data.message,
-            timestamp: data.timestamp.toDate(),
-            sentByMe: true,
-          };
-        });
-
-        const receivedMessages = receivedMessagesSnapshot.docs.map(doc => {
-          const data = doc.data();
-          return {
-            conversationKey: `${data.senderId}_${data.receiverId}`,
-            inverseConversationKey: `${data.receiverId}_${data.senderId}`,
-            senderId: data.senderId,
-            senderFirstName: data.senderFirstName,
-            message: data.message,
-            timestamp: data.timestamp.toDate(),
-            sentByMe: false,
-          };
-        });
-
-        this.messages = [...messages, ...receivedMessages];
-      } catch (error) {
-        console.error("Error fetching messages:", error);
+      // Arrêter l'écoute des anciens messages si déjà souscrit
+      if (this.unsubscribe) {
+        this.unsubscribe();
       }
+
+      // Souscrire aux mises à jour de la collection
+      this.unsubscribe = onSnapshot(
+        q,
+        (querySnapshot) => {
+          this.messages = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+
+          this.$nextTick(() => {
+            const messagesContainer = this.$refs.messages;
+            if (messagesContainer) {
+              messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+          });
+        },
+        (error) => {
+          console.error("Error fetching messages:", error);
+        }
+      );
     },
   },
   watch: {
-    conversationKey() {
+    showMessages() {
       this.fetchMessages();
     },
   },
+  beforeUnmount() {
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
+  },
 };
 </script>
-
-
 
 <style scoped>
 /* Your existing styles */
@@ -270,7 +254,7 @@ export default {
 
 .chat-app {
   display: flex;
-  height: 400px; 
+  height: 400px;
 }
 
 .user-list-box {
@@ -290,8 +274,9 @@ export default {
   cursor: pointer;
 }
 
-.user:hover, .selected-user {
-  background-color: #f0f0f0; 
+.user:hover,
+.selected-user {
+  background-color: #f0f0f0;
 }
 
 .chat-container {
@@ -327,11 +312,11 @@ export default {
 }
 
 .sent {
-  align-self: flex-end; 
+  align-self: flex-end;
 }
 
 .received {
-  align-self: flex-start; 
+  align-self: flex-start;
 }
 
 .sent-content {
@@ -339,7 +324,11 @@ export default {
   margin-right: 50px;
   padding: 8px 12px;
   border-radius: 10px;
-  background-color: rgb(105, 146, 223); /* Default background color for sent messages */
+  background-color: rgb(
+    105,
+    146,
+    223
+  ); /* Default background color for sent messages */
 }
 
 .received-content {
@@ -365,7 +354,7 @@ export default {
 
 .chat-input button {
   padding: 8px 16px;
-  background-color: #007BFF; 
+  background-color: #007bff;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -373,6 +362,6 @@ export default {
 }
 
 .chat-input button:hover {
-  background-color: #0056b3; 
+  background-color: #0056b3;
 }
 </style>
