@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  
+  name: 'App',
   computed: {
     showHeaderFooter() {
       const noHeaderFooterRoutes = ['/login', '/signup','/plan','/profile','/profile/messages'];

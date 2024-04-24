@@ -23,16 +23,14 @@
         <h2 class="program-title">Bulk Edition</h2>
         <p class="program-description">Bulk Edition Description</p>
         <!-- Update router-link to conditionally render based on authentication status -->
-        <router-link v-if="isAuthenticated" :to="{ path: '/form/bulk/qst1' }" class="get-started-button">Get Started</router-link>
-        <router-link v-else to="/login" class="get-started-button">Get Started</router-link>
+        <router-link :to="{ path: '/form/bulk/qst1' }" class="get-started-button">Get Started</router-link>      
       </div>
       <div class="program-box">
         <img src="~/assets/images/program2.jpg" alt="Program 2" class="program-image">
         <h2 class="program-title">Cut Edition</h2>
         <p class="program-description">Cut Edition Description</p>
         <!-- Update router-link to conditionally render based on authentication status -->
-        <router-link v-if="isAuthenticated" :to="{ path: '/form/cut/qst1' }" class="get-started-button">Get Started</router-link>
-        <router-link v-else to="/login" class="get-started-button">Get Started</router-link>
+        <router-link :to="{ path: '/form/cut/qst1' }" class="get-started-button">Get Started</router-link>
       </div>
     </div>
     <div class="separator"></div>
@@ -46,9 +44,7 @@
             <p class="description-title">Program Description:</p>
             <p>Aliquam erat volutpat. Nulla facilisi. Suspendisse potenti. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Morbi at varius felis.</p>
           </div>
-          <!-- Update router-link to conditionally render based on authentication status -->
-          <router-link v-if="isAuthenticated" to="/plan" class="get-started-button">Get Started</router-link>
-          <router-link v-else to="/login" class="get-started-button">Get Started</router-link>
+          <router-link to="/plan" class="get-started-button">Get Started</router-link>
         </div>
       </div>
     </div>
@@ -105,26 +101,27 @@
 <script>
 import { defineComponent } from 'vue'
 import { Carousel, Navigation, Slide } from 'vue3-carousel'
-import { isAuthenticated } from '@/firebase/config';
 import userState from '@/store/userState.js'; // Update the path accordingly
 import 'vue3-carousel/dist/carousel.css'
 
 
 export default defineComponent({
   name: 'HomePage',
-  components: {
-    Carousel,
-    Slide,
-    Navigation,
-  },
+  components: {Carousel, Slide, Navigation},
   setup () {
-    const userEmail = userState.userEmail;
-    return { userEmail };
+    const userEmail = ref('');
 
+    onMounted(() => {
+      userEmail.value = localStorage.getItem('email') || '';
+    });
+
+    return { userEmail };
   },
+
+
+  // displaying the staff presentation
   data() {
     return {
-      isAuthenticated: isAuthenticated,
       carouselItems: [
         {
           image: '/coach1.jpg',
@@ -145,6 +142,8 @@ export default defineComponent({
       ]
     };
   },
+
+  //method to make scroll down by button
   methods: {
     scrollToSection2() {
       const section2 = document.getElementById('section-2');
@@ -157,6 +156,7 @@ export default defineComponent({
   }
 })
 </script>
+
 
 <style scoped>
 /* Your existing styles */

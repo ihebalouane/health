@@ -25,6 +25,7 @@
   </div>
 </template>
 
+
 <script>
 import { ref } from 'vue';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
@@ -36,7 +37,6 @@ export default {
   layout: 'empty',
   setup() {
     const router = useRouter(); 
-
     const email = ref('');
     const password = ref('');
     const errorMessage = ref('');
@@ -45,6 +45,8 @@ export default {
       try {
         const auth = getAuth();
         await signInWithEmailAndPassword(auth, email.value, password.value);
+        // Store email in local storage
+        localStorage.setItem('email', email.value);
         console.log('User logged in:', email.value);
         userState.userEmail = email.value; // Store user email in state
         router.push('/');
@@ -62,6 +64,9 @@ export default {
   }
 };
 </script>
+
+
+
 
 <style scoped>
 .login-container {

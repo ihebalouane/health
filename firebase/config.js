@@ -1,7 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
-import { getAuth, onAuthStateChanged, signOut  } from 'firebase/auth';
-
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAB4sLogG_6DEQ2_OtqBRJY9ad3eOoX3Ks",
@@ -17,7 +16,7 @@ const projectFirestore = getFirestore(firebaseApp);
 const auth = getAuth(firebaseApp);
 
 let isAuthenticated = false;
-let userEmail = null; 
+let userEmail = null;
 
 onAuthStateChanged(auth, (user) => {
   isAuthenticated = !!user;
@@ -27,6 +26,7 @@ onAuthStateChanged(auth, (user) => {
 const logout = async () => {
   try {
     await signOut(auth);
+    localStorage.removeItem('email'); // Remove email from local storage
   } catch (error) {
     console.error('Error signing out:', error.message);
   }

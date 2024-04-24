@@ -1,9 +1,6 @@
 <template>
   <div class="center-container">
     <!-- Display user's email -->
-    <div v-if="isAuthenticated" class="user-email">
-      User Email: {{ clientEmail }}
-    </div>
     <div class="container">
       <div class="section day-list-section">
         <div class="section-content">
@@ -33,7 +30,7 @@
       <div class="section gym-details-section">
         <div class="section-content">
           <h2>Gym Details</h2>
-          <p>Welcome to our gym! {{ clientEmail }} Our facilities offer state-of-the-art equipment and professional trainers to help you achieve your fitness goals.</p>
+          <p>Welcome to our gym! {{ userEmail }} Our facilities offer state-of-the-art equipment</p>
         </div>
       </div>
     </div>
@@ -50,7 +47,7 @@ import { videosMap } from './video.js'; // Importing the videos map
 export default {
   middleware: 'auth',
   setup() {
-    const clientEmail = userState.userEmail;
+    const userEmail = ref ('');
     const isAuthenticated = true; // Assuming it's true for now
 
     const selectedItems = ref([]);
@@ -58,9 +55,13 @@ export default {
     const selectedVideo = ref(null);
     const days = ref([]);
 
+    onMounted(() => {
+      userEmail.value = localStorage.getItem('email') || '';
+    });
+
     const getUserResponses = async () => {
       try {
-        const q = query(collection(projectFirestore, 'userResponses'), where('userEmail', '==', clientEmail));
+        const q = query(collection(projectFirestore, 'userResponses'), where('userEmail', '==', userEmail));
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
           const ageRange = doc.data().ageRange;
@@ -109,10 +110,12 @@ export default {
 
     calculateDays(); // Initialize days
 
-    return { clientEmail, isAuthenticated, selectedItems, selectedDay, selectedVideo, days, showItems, loadVideo };
+    return { userEmail, isAuthenticated, selectedItems, selectedDay, selectedVideo, days, showItems, loadVideo };
   },
 };
 </script>
+
+
 
 <style>
 .center-container {

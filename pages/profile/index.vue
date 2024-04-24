@@ -1,6 +1,8 @@
 <template>
+  <site-header/>
   <profile-header/>
   <div class="profile">
+    <BgAnimations/>
     <div class="profile-content" style="margin-bottom: 10px;"> <!-- Adjusted margin-bottom -->
       <!-- Profile Information Section -->
       <div class="info-section box">
@@ -70,15 +72,14 @@
 </template>
 
 <script>
-  import userState from '@/store/userState.js';
-  import { projectFirestore } from '@/firebase/config.js';
-  import { getAuth, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
-  import { collection, doc, setDoc, getDoc } from 'firebase/firestore';
   import { ref, onMounted } from 'vue';
+  import { getAuth, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
+  import { projectFirestore } from '@/firebase/config.js';
+  import { collection, doc, setDoc, getDoc } from 'firebase/firestore';
 
   export default {
     setup() {
-      const Email = userState.userEmail;
+      const userEmail = ref('');
       const firstName = ref('');
       const lastName = ref('');
       const gender = ref('');
@@ -91,16 +92,16 @@
       const showIcon = ref(false);
       const profilePicture = ref(null);
 
-      // Set email field value to the value of Email
+      // Set email field value to the value of userEmail
       onMounted(() => {
-        email.value = Email;
+        userEmail.value = localStorage.getItem('email') || '';
         // Retrieve user's profile data from Firestore if available
         getProfileData();
       });
 
       const getProfileData = async () => {
         try {
-          const profileDoc = await getDoc(doc(projectFirestore, 'profile', Email));
+          const profileDoc = await getDoc(doc(projectFirestore, 'profile', userEmail.value));
           if (profileDoc.exists()) {
             const data = profileDoc.data();
             firstName.value = data.firstName || '';
@@ -150,13 +151,13 @@
           lastName: lastName.value,
           gender: gender.value,
           birthDate: birthDate.value,
-          email: email.value, // Save email
+          email: userEmail.value, // Save email
           profession: profession.value, // Save profession
           profilePicture: profilePicture.value, // Save profile picture
         };
 
         try {
-          const profileRef = doc(projectFirestore, 'profile', email.value);
+          const profileRef = doc(projectFirestore, 'profile', userEmail.value);
           await setDoc(profileRef, profileData);
           console.log('Profile data saved successfully!');
         } catch (error) {
@@ -183,7 +184,7 @@
         lastName,
         gender,
         birthDate,
-        Email,
+        userEmail,
         email,
         profession,
         currentPassword,
@@ -251,7 +252,7 @@
   }
 
   button {
-    background-color: #007bff;
+    background-color: #2ecc71;
     color: #fff;
     cursor: pointer;
     border: none;
@@ -260,7 +261,7 @@
   }
 
   button:hover {
-    background-color: #0056b3;
+    background-color: #2ecc71;
   }
 
   .profilpic {
