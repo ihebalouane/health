@@ -1,4 +1,5 @@
 <template>
+  <site-header/>
   <div class="center-container">
     <!-- Display user's email -->
     <div class="container">
@@ -41,7 +42,6 @@
 import { ref } from 'vue';
 import { projectFirestore } from '@/firebase/config.js';
 import { collection, getDocs, query, where } from 'firebase/firestore';
-import userState from '@/store/userState.js';
 import { videosMap } from './video.js'; // Importing the videos map
 
 export default {
@@ -60,25 +60,29 @@ export default {
     });
 
     const getUserResponses = async () => {
-      try {
-        const q = query(collection(projectFirestore, 'userResponses'), where('userEmail', '==', userEmail));
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-          const ageRange = doc.data().ageRange;
-          if (ageRange === '20s') {
-            selectedItems.value = ['Dumbbell press', 'Cable Crossover'];
-            selectedDay.value = 'Monday';
-          } else if (ageRange === '30s') {
-            selectedItems.value = ['Pec Deck', 'Incline Press-up'];
-            selectedDay.value = 'Tuesday';
-          } else {
-            console.error('Unsupported age range:', ageRange);
-          }
-        });
-      } catch (error) {
-        console.error('Error fetching user responses:', error.message);
+  try {
+    const localEmail = localStorage.getItem('email');
+    const q = query(collection(projectFirestore, 'userResponses'), where('userEmail', '==', localEmail));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      const ageRange = doc.data().ageRange;
+      if (ageRange === '20s') {
+        selectedItems.value = ['Dumbbell press', 'Cable Crossover'];
+        selectedDay.value = 'Monday';
+      } else if (ageRange === '30s') {
+        selectedItems.value = ['Pec Deck', 'Incline Press-up'];
+        selectedDay.value = 'Monday';
+      } else {
+        console.error('Unsupported age range:', ageRange);
       }
-    };
+    });
+  } catch (error) {
+    console.error(error.message);
+  }
+};
+
+
+
 
     getUserResponses(); // Call the function when the component is mounted
 

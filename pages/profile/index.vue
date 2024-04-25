@@ -28,7 +28,7 @@
         </div>
         <div class="form-group">
           <label for="email">Email</label>
-          <input type="email" id="email" v-model="email" required disabled>
+          <input type="email" id="userEmail" v-model="email" required disabled>
         </div>
         <div class="form-group">
           <label for="profession">Profession</label>
@@ -84,7 +84,6 @@
       const lastName = ref('');
       const gender = ref('');
       const birthDate = ref('');
-      const email = ref('');
       const profession = ref('Client'); // Default profession value
       const currentPassword = ref('');
       const newPassword = ref('');
@@ -151,7 +150,7 @@
           lastName: lastName.value,
           gender: gender.value,
           birthDate: birthDate.value,
-          email: userEmail.value, // Save email
+          userEmail: userEmail.value, // Save email
           profession: profession.value, // Save profession
           profilePicture: profilePicture.value, // Save profile picture
         };
@@ -185,7 +184,6 @@
         gender,
         birthDate,
         userEmail,
-        email,
         profession,
         currentPassword,
         newPassword,

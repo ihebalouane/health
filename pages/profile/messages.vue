@@ -7,7 +7,12 @@
       <div class="chat-app">
         <div class="user-list-box">
           <div class="user-list">
-            <div v-if="showCoachTitle" class="user-list-title">Coaches</div>
+            <div v-if="showCoachTitle" class="title-container">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+              </svg>
+              Coach
+            </div>
             <div
               v-for="(profile, index) in filteredProfileList('Coach')"
               :key="'coach' + index"
@@ -15,13 +20,17 @@
               @click="selectUser(profile)"
               :class="{ 'selected-user': profile === selectedProfile }"
             >
-              <!-- SVG icon added here -->
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z" />
               </svg>
               {{ profile.firstName + " " + profile.lastName }}
             </div>
-            <div v-if="showClientTitle" class="user-list-title">Clients</div>
+            <div v-if="showClientTitle" class="title-container">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+              </svg>
+              Client
+            </div>
             <div
               v-for="(profile, index) in filteredProfileList('Client')"
               :key="'client' + index"
@@ -29,7 +38,6 @@
               @click="selectUser(profile)"
               :class="{ 'selected-user': profile === selectedProfile }"
             >
-              <!-- SVG icon added here -->
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z" />
               </svg>
@@ -44,11 +52,16 @@
           </div>
 
           <div class="chat-messages" ref="messages">
-            <div v-for="message in messages" :key="message.id" class="message">
-              <p>
-                <strong>{{ message.senderFirstName }}:</strong>
-                {{ message.message }}
-              </p>
+            <div v-for="message in messages" :key="message.id" :class="[message.senderId === userEmail ? 'sent-message-container' : 'received-message-container']">
+              <div :class="[message.senderId === userEmail ? 'sent-message' : 'received-message']">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                </svg>
+                <p>
+                  <strong>{{ message.senderFirstName }}:</strong>
+                  {{ message.message }}
+                </p>
+              </div>
             </div>
           </div>
 
@@ -69,13 +82,12 @@
 
 <script>
 import { projectFirestore } from "@/firebase/config.js";
-import {collection,getDocs,addDoc,Timestamp,query,where,orderBy,onSnapshot} from "firebase/firestore";
-import userState from "@/store/userState.js";
+import { collection, getDocs, addDoc, Timestamp, query, where, orderBy, onSnapshot } from "firebase/firestore";
 import { ref, onMounted } from 'vue';
 
 export default {
   middleware: "auth",
-  setup (){
+  setup() {
     const userEmail = ref('');
 
     onMounted(() => {
@@ -212,7 +224,7 @@ export default {
       }
     },
     fetchMessages() {
-      const senderEmail = this.userEmail;
+      const senderEmail = this.userEmail
       const receiverEmail = this.selectedProfile
         ? this.selectedProfile.email
         : null;
@@ -284,8 +296,8 @@ export default {
 
 .chat-app {
   display: flex;
-  max-height: 600px; /* Set maximum height */
-  overflow-y: auto; /* Add vertical scroll if content exceeds maximum height */
+  max-height: 600px;
+  overflow-y: auto; 
 }
 
 .user-list-box {
@@ -295,32 +307,38 @@ export default {
 }
 
 .user-list {
-  border: none; /* Removed border for cleaner look */
+  border: none; 
   overflow-y: auto;
 }
 
-.user-list-title {
+.title-container {
   font-size: 16px;
   font-weight: bold;
   color: #333;
   margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.title-container svg {
+  margin-right: 8px;
 }
 
 .user {
   padding: 12px;
   cursor: pointer;
-  transition: background-color 0.3s ease; /* Added smooth transition */
-  display: flex; /* Added to align icon and text horizontally */
-  align-items: center; /* Added to align icon and text vertically */
+  transition: background-color 0.3s ease; 
+  display: flex; 
+  align-items: center; 
 }
 
 .user svg {
-  margin-right: 8px; /* Added margin to separate icon from text */
+  margin-right: 8px;
 }
 
 .user:hover,
 .selected-user {
-  background-color: #f0f0f0; /* Lighter background color on hover */
+  background-color: #f0f0f0; 
 }
 
 .chat-container {
@@ -330,27 +348,27 @@ export default {
 }
 
 .chat-header {
-  padding: 20px; /* Increased padding for better spacing */
+  padding: 20px; 
   border-bottom: 1px solid #ccc;
-  font-size: 18px; /* Larger font size for header */
+  font-size: 18px; 
   font-weight: bold;
 }
 
 .chat-messages {
   flex: 1;
-  padding: 20px; /* Increased padding for better spacing */
+  padding: 20px; 
   overflow-y: auto;
 }
 
 .message {
-  margin-bottom: 20px; /* Increased margin for better separation */
+  margin-bottom: 20px; 
 }
 
 .chat-input {
   display: flex;
   align-items: center;
-  padding: 20px; /* Increased padding for better spacing */
-  border-top: 1px solid #ccc; /* Added border top */
+  padding: 20px; 
+  border-top: 1px solid #ccc; 
 }
 
 .chat-input input {
@@ -362,16 +380,43 @@ export default {
 }
 
 .chat-input button {
-  padding: 12px 24px; /* Increased padding for better appearance */
+  padding: 12px 24px; 
   background-color: #2ecc71;
   color: #fff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease; /* Added smooth transition */
+  transition: background-color 0.3s ease; 
 }
 
 .chat-input button:hover {
-  background-color: #0056b3; /* Darker background color on hover */
+  background-color: #0056b3; 
 }
+
+.received-message-container {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+}
+
+.sent-message-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.received-message {
+  background-color: #2ecc71; 
+  color: #fff; 
+  padding: 10px; 
+  border-radius: 20px; 
+}
+
+.sent-message {
+  background-color: rgb(94, 113, 236); 
+  color: white; 
+  padding: 10px; 
+  border-radius: 20px; 
+}
+
 </style>

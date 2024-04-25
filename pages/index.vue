@@ -49,6 +49,7 @@
       </div>
     </div>
     <div class="separator"></div>
+    <br>
     <!--Section 4 carousel-->
     <div>
       <Carousel :items-to-show="2" :wrap-around="true">
@@ -66,28 +67,36 @@
         </template>
       </Carousel>
     </div>
+    <br>
+    <div class="separator"></div>
+
     <!-- FAQ Section -->
     <div id="faq-section" class="faq-section">
       <h2 class="faq-title">Frequently Asked Questions</h2>
-      <div class="faq-item">
-        <h3 class="question">Question 1: What are the benefits of regular exercise?</h3>
-        <p class="answer">Regular exercise has numerous benefits, including improved cardiovascular health, increased muscle strength and flexibility, better mood and mental health, and weight management.</p>
-      </div>
-      <div class="faq-item">
-        <h3 class="question">Question 2: How often should I exercise?</h3>
-        <p class="answer">It's recommended to engage in at least 150 minutes of moderate-intensity aerobic exercise or 75 minutes of vigorous-intensity aerobic exercise per week, along with muscle-strengthening activities on two or more days a week.</p>
-      </div>
-      <div class="faq-item">
-        <h3 class="question">Question 3: Can I exercise if I have a medical condition?</h3>
-        <p class="answer">In most cases, yes. However, it's important to consult with your healthcare provider before starting any new exercise program, especially if you have a medical condition or any concerns about your health.</p>
-      </div>
-      <div class="faq-item">
-        <h3 class="question">Question 4: What should I eat before and after exercising?</h3>
-        <p class="answer">Before exercising, it's good to have a balanced meal or snack that includes carbohydrates for energy and protein for muscle repair. After exercising, focus on replenishing fluids and consuming a combination of protein and carbohydrates to aid in recovery.</p>
-      </div>
-      <div class="faq-item">
-        <h3 class="question">Question 5: How do I stay motivated to exercise regularly?</h3>
-        <p class="answer">Staying motivated can be challenging, but setting specific goals, finding activities you enjoy, varying your routine, and seeking support from friends, family, or a fitness community can help maintain motivation over time.</p>
+      <div class="faq-container">
+        <div class="faq-item" v-for="(faq, index) in faqList" :key="index">
+          <div class="question-answer">
+            <h3 class="question">{{ faq.question }}</h3>
+            <p class="answer" :class="{ 'expanded': faq.expanded }">{{ faq.answer }}</p>
+          </div>
+          <div class="expand-icon" @click="toggleAnswer(index)">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              class="w-6 h-6"
+              :class="{ 'rotate': faq.expanded }"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </div>
+        </div>
       </div>
     </div>
     <router-link to="/profile/messages" class="messages-circle">
@@ -99,15 +108,15 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import { defineComponent, ref, onMounted } from 'vue'
 import { Carousel, Navigation, Slide } from 'vue3-carousel'
-import userState from '@/store/userState.js'; // Update the path accordingly
 import 'vue3-carousel/dist/carousel.css'
+import { videosMap } from './video.js'; // Importing the videos map
 
 
 export default defineComponent({
   name: 'HomePage',
-  components: {Carousel, Slide, Navigation},
+  components: { Carousel, Slide, Navigation },
   setup () {
     const userEmail = ref('');
 
@@ -117,9 +126,6 @@ export default defineComponent({
 
     return { userEmail };
   },
-
-
-  // displaying the staff presentation
   data() {
     return {
       carouselItems: [
@@ -138,12 +144,16 @@ export default defineComponent({
           title: 'Nutrition Guidance',
           description: 'Receive expert guidance on nutrition to complement your fitness journey.'
         },
-        
+      ],
+      faqList: [
+        { question: 'Question 1: What are the benefits of regular exercise?', answer: 'Regular exercise has numerous benefits, including improved cardiovascular health, increased muscle strength and flexibility, better mood and mental health, and weight management.', expanded: false },
+        { question: 'Question 2: How often should I exercise?', answer: "It's recommended to engage in at least 150 minutes of moderate-intensity aerobic exercise or 75 minutes of vigorous-intensity aerobic exercise per week, along with muscle-strengthening activities on two or more days a week.", expanded: false },
+        { question: 'Question 3: Can I exercise if I have a medical condition?', answer: "In most cases, yes. However, it's important to consult with your healthcare provider before starting any new exercise program, especially if you have a medical condition or any concerns about your health.", expanded: false },
+        { question: 'Question 4: What should I eat before and after exercising?', answer: 'Before exercising, it\'s good to have a balanced meal or snack that includes carbohydrates for energy and protein for muscle repair. After exercising, focus on replenishing fluids and consuming a combination of protein and carbohydrates to aid in recovery.', expanded: false },
+        { question: 'Question 5: How do I stay motivated to exercise regularly?', answer: 'Staying motivated can be challenging, but setting specific goals, finding activities you enjoy, varying your routine, and seeking support from friends, family, or a fitness community can help maintain motivation over time.', expanded: false }
       ]
     };
   },
-
-  //method to make scroll down by button
   methods: {
     scrollToSection2() {
       const section2 = document.getElementById('section-2');
@@ -152,11 +162,13 @@ export default defineComponent({
     scrollToSection4() {
       const section4 = document.getElementById('faq-section');
       section4.scrollIntoView({ behavior: 'smooth' });
+    },
+    toggleAnswer(index) {
+      this.faqList[index].expanded = !this.faqList[index].expanded;
     }
   }
 })
 </script>
-
 
 <style scoped>
 /* Your existing styles */
@@ -380,8 +392,19 @@ export default defineComponent({
   margin-bottom: 40px;
 }
 
+.faq-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
 .faq-item {
   margin-bottom: 30px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 20px;
+}
+
+.question-answer {
+  cursor: pointer;
 }
 
 .question {
@@ -394,5 +417,29 @@ export default defineComponent({
 .answer {
   font-size: 1.2rem;
   color: #444;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.answer.expanded {
+  max-height: 1000px; /* Adjust as needed */
+}
+
+.expand-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.expand-icon svg {
+  fill: #444;
+  width: 24px;
+  height: 24px;
+  transition: transform 0.3s ease;
+}
+
+.rotate {
+  transform: rotate(180deg);
 }
 </style>
