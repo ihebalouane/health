@@ -1,13 +1,12 @@
 <template>
   <div class="page">
-    <BgAnimations/>
+    <BgAnimations />
     <div class="home-section-1">
       <div class="left-content">
-        <p>welcome {{ userEmail }}</p>
         <h1 class="title">Health+</h1>
         <p class="description">Your ultimate destination for achieving your fitness goals</p>
         <div class="buttons">
-          <button class="get-started-button" @click="scrollToSection2">Get Started</button>
+          <button class="get-started-button" @click="handleGetStarted('section-2')">Get Started</button>
           <button class="learn-more-button" @click="scrollToSection4">Learn More</button>
         </div>
       </div>
@@ -16,24 +15,24 @@
       </div>
     </div>
     <div class="separator"></div>
+
     <!-- Section 2 -->
     <div id="section-2" class="home-section-2">
       <div class="program-box">
         <img src="~/assets/images/program2.jpg" alt="Program 1" class="program-image">
         <h2 class="program-title">Bulk Edition</h2>
         <p class="program-description">Bulk Edition Description</p>
-        <!-- Update router-link to conditionally render based on authentication status -->
-        <router-link :to="{ path: '/form/bulk/qst1' }" class="get-started-button">Get Started</router-link>      
+        <button @click="handleProgramRedirect('/form/bulk/qst0')" class="get-started-button">Get Started</button>
       </div>
       <div class="program-box">
         <img src="~/assets/images/program2.jpg" alt="Program 2" class="program-image">
         <h2 class="program-title">Cut Edition</h2>
         <p class="program-description">Cut Edition Description</p>
-        <!-- Update router-link to conditionally render based on authentication status -->
-        <router-link :to="{ path: '/form/cut/qst1' }" class="get-started-button">Get Started</router-link>
+        <button @click="handleProgramRedirect('/form/cut/qst0')" class="get-started-button">Get Started</button>
       </div>
     </div>
     <div class="separator"></div>
+
     <!-- Section 3 -->
     <div id="section-3" class="home-section-3">
       <div class="program-box">
@@ -44,12 +43,12 @@
             <p class="description-title">Program Description:</p>
             <p>Aliquam erat volutpat. Nulla facilisi. Suspendisse potenti. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Morbi at varius felis.</p>
           </div>
-          <router-link to="/plan" class="get-started-button">Get Started</router-link>
+          <button @click="handleProgramRedirect('/plan')" class="get-started-button">Get Started</button>
         </div>
       </div>
     </div>
     <div class="separator"></div>
-    <br>
+
     <!--Section 4 carousel-->
     <div>
       <Carousel :items-to-show="2" :wrap-around="true">
@@ -99,6 +98,7 @@
         </div>
       </div>
     </div>
+
     <router-link to="/profile/messages" class="messages-circle">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
         <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
@@ -108,23 +108,46 @@
 </template>
 
 <script>
-import { defineComponent, ref, onMounted } from 'vue'
-import { Carousel, Navigation, Slide } from 'vue3-carousel'
-import 'vue3-carousel/dist/carousel.css'
-import { videosMap } from './video.js'; // Importing the videos map
-
+import { defineComponent, ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { projectFirestore } from '@/firebase/config.js';
+import { Carousel, Navigation, Slide } from 'vue3-carousel';
+import 'vue3-carousel/dist/carousel.css';
 
 export default defineComponent({
   name: 'HomePage',
   components: { Carousel, Slide, Navigation },
-  setup () {
+  setup() {
     const userEmail = ref('');
+    const isUserLoggedIn = ref(false);
+    const router = useRouter();
 
     onMounted(() => {
       userEmail.value = localStorage.getItem('email') || '';
+      isUserLoggedIn.value = !!userEmail.value; // Check if user is logged in based on email
     });
 
-    return { userEmail };
+    const handleGetStarted = (section) => {
+      if (isUserLoggedIn.value) {
+        // Scroll to the specified section if user is logged in
+        document.getElementById(section).scrollIntoView({ behavior: 'smooth' });
+      } else {
+        // Redirect to login page if user is not logged in
+        router.push('/login');
+      }
+    };
+
+    const handleProgramRedirect = (path) => {
+      if (isUserLoggedIn.value) {
+        // Redirect to the specified path if user is logged in
+        router.push(path);
+      } else {
+        // Redirect to login page if user is not logged in
+        router.push('/login');
+      }
+    };
+
+    return { userEmail, handleGetStarted, handleProgramRedirect, isUserLoggedIn };
   },
   data() {
     return {
@@ -143,31 +166,30 @@ export default defineComponent({
           image: '/coach3.jpg',
           title: 'Nutrition Guidance',
           description: 'Receive expert guidance on nutrition to complement your fitness journey.'
-        },
+        }
       ],
       faqList: [
         { question: 'Question 1: What are the benefits of regular exercise?', answer: 'Regular exercise has numerous benefits, including improved cardiovascular health, increased muscle strength and flexibility, better mood and mental health, and weight management.', expanded: false },
         { question: 'Question 2: How often should I exercise?', answer: "It's recommended to engage in at least 150 minutes of moderate-intensity aerobic exercise or 75 minutes of vigorous-intensity aerobic exercise per week, along with muscle-strengthening activities on two or more days a week.", expanded: false },
-        { question: 'Question 3: Can I exercise if I have a medical condition?', answer: "In most cases, yes. However, it's important to consult with your healthcare provider before starting any new exercise program, especially if you have a medical condition or any concerns about your health.", expanded: false },
-        { question: 'Question 4: What should I eat before and after exercising?', answer: 'Before exercising, it\'s good to have a balanced meal or snack that includes carbohydrates for energy and protein for muscle repair. After exercising, focus on replenishing fluids and consuming a combination of protein and carbohydrates to aid in recovery.', expanded: false },
-        { question: 'Question 5: How do I stay motivated to exercise regularly?', answer: 'Staying motivated can be challenging, but setting specific goals, finding activities you enjoy, varying your routine, and seeking support from friends, family, or a fitness community can help maintain motivation over time.', expanded: false }
+        { question: 'Question 3: Can I exercise if I have a medical condition?', answer: "In most cases, yes. However, it's important to consult with your healthcare provider before starting any new exercise program, especially if you have a medical condition or are taking medications.", expanded: false },
+        { question: 'Question 4: What should I eat before and after exercise?', answer: 'Before exercise, choose a meal or snack that provides carbohydrates for energy and a small amount of protein. After exercise, refuel with a meal or snack that contains protein and carbohydrates to support recovery and muscle repair.', expanded: false },
+        { question: 'Question 5: How can I stay motivated to exercise?', answer: 'Setting realistic goals, tracking your progress, varying your routine, and finding a workout buddy can help you stay motivated to exercise regularly.', expanded: false }
       ]
     };
   },
   methods: {
-    scrollToSection2() {
-      const section2 = document.getElementById('section-2');
-      section2.scrollIntoView({ behavior: 'smooth' });
-    },
-    scrollToSection4() {
-      const section4 = document.getElementById('faq-section');
-      section4.scrollIntoView({ behavior: 'smooth' });
-    },
+  scrollToSection4() {
+    const faqSection = document.querySelector('#faq-section');
+    if (faqSection) {
+      faqSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  },
+},
     toggleAnswer(index) {
       this.faqList[index].expanded = !this.faqList[index].expanded;
     }
   }
-})
+);
 </script>
 
 <style scoped>

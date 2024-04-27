@@ -34,7 +34,9 @@ export default {
         { value: 'bloodPressure', label: 'High blood pressure' },
         { value: 'heartDisease', label: 'Heart disease' },
         { value: 'depressionAnxiety', label: 'Depression/anxiety' },
-        { value: 'cholesterol', label: 'High cholesterol' }
+        { value: 'cholesterol', label: 'High cholesterol' },
+        { value: 'none', label: 'None' }  // Added option for no sickness
+
       ]
     };
   },

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <site-header/>
     <qst-header />
     <BgAnimations/>
     <div class="page-container">
@@ -12,10 +13,21 @@
               <input type="number" id="weight" name="weight" placeholder="Enter your goal weight" required v-model.number="weight" min="0" class="form-input">
             </div>
             <button type="submit" class="submit-button transition ease-in-out delay-200 bg-green-500 hover:-translate-y-0.5 hover:scale-200 hover:bg-green-600 duration-300">
-                  Next
-            </button>          
+              Next
+            </button>
           </form>
         </div>
+
+        <!-- Explanation Box -->
+        <div class="explanation-box">
+          <div class="info-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189m-1.5.189a6.01 6.01 0 0 1-1.5-.189m3.75 7.478a12.06 12.06 0 0 1-4.5 0m3.75 2.383a14.406 14.406 0 0 1-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 1 0-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />
+            </svg>
+          </div>
+          <p>We ask for this information to help you achieve your goal weight more effectively.</p>
+        </div>
+        <!-- End of Explanation Box -->
       </div>
     </div>
   </div>
@@ -80,7 +92,6 @@ export default {
 };
 </script>
 
-
 <style scoped>
 .page-container {
   display: flex;
@@ -143,5 +154,25 @@ export default {
 
 .submit-button:hover {
   background-color: #27ae60; /* Adjust hover background color to a slightly darker shade of green */
+}
+
+.explanation-box {
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 10px;
+  border-radius: 8px;
+  backdrop-filter: blur(10px); /* Add a blur effect for modernity */
+  background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent background color */
+  color: #333;
+  font-size: 1rem;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for modernity */
+  display: flex;
+  align-items: center; /* Center content vertically */
+  justify-content: center; /* Center content horizontally */
+}
+
+.info-icon {
+  margin-right: 10px; /* Space between the icon and text */
 }
 </style>

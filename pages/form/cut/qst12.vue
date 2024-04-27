@@ -4,7 +4,7 @@
     <BgAnimations/>
     <div class="form-container">
       <div class="weight-gain-form">
-        <label class="form-label">Why do you want to gain weight?</label>
+        <label class="form-label">Why do you want to lose weight?</label>
         <div class="checkbox-group">
           <label class="checkbox-label" v-for="option in options" :key="option.value">
             <input type="checkbox" v-model="selectedOptions" :value="option.value" class="checkbox-input">
