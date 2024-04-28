@@ -32,7 +32,7 @@
                 <NuxtLink
                   v-for="item in navigation"
                   :key="item.name"
-                  :to="item.href"
+                  :href="item.href"
                   :class="[item.current ? 'bg-green-300 text-black' : 'text-black-300 hover:bg-#2ecc71-700 hover:text-#2ecc71', 'rounded-md px-3 py-2 text-sm font-medium']"
                   :aria-current="item.current ? 'page' : undefined"
                 >{{ item.name }}</NuxtLink>
@@ -40,24 +40,28 @@
             </div>
           </div>
           <!-- Profile picture or login/sign-up buttons -->
-          <div class="ml-4 flex items-center sm:ml-6" ref="profileDropdown">
-            <!-- Profile dropdown -->
-            <div class="relative" x-data="{ openProfile: false }">
-              <button @click="openProfile = !openProfile" class="bg-white rounded-full h-10 w-10 flex items-center justify-center focus:outline-none transition duration-300 ease-in-out hover:opacity-80">
-                <!-- SVG Profile icon -->
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                  <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
-                </svg>
-              </button>
-              <!-- Profile dropdown menu -->
-              <div x-show="openProfile" @click.away="openProfile = false" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                <div class="py-1" role="none">
-                  <NuxtLink to="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Profile</NuxtLink>
-                  <NuxtLink to="/profile/messages" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Messages</NuxtLink>
-                  <button @click="logoutUser" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full text-left" role="menuitem">Logout</button>
-                </div>
-              </div>
-            </div>
+          <div class="ml-4 flex items-center sm:ml-6">
+            <!-- Toggle between profile picture and logout button -->
+            <template v-if="isAuthenticated">
+              <NuxtLink to="/profile">
+                <button class="bg-white rounded-full h-10 w-10 flex items-center justify-center focus:outline-none transition duration-300 ease-in-out hover:opacity-80">
+                  <!-- SVG Profile icon -->
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                    <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
+                  </svg>
+                </button>
+              </NuxtLink>
+              <!-- Logout button -->
+              <button @click="logoutUser" class="ml-2 bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded-md text-sm">Logout</button>
+            </template>
+            <template v-else>
+              <NuxtLink to="/login">
+                <button class="bg-green-500 hover:bg-green-700 text-white px-3 py-1 rounded-md mr-2 text-sm">Log in</button>
+              </NuxtLink>
+              <NuxtLink to="/signup">
+                <button class="bg-white hover:bg-gray-200 text-green-500 px-3 py-1 rounded-md text-sm">Sign Up</button>
+              </NuxtLink>
+            </template>
           </div>
         </div>
       </div>
@@ -68,7 +72,7 @@
             v-for="item in navigation"
             :key="item.name"
             as="a"
-            :href="item.href"
+            :to="item.href"
             :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'block rounded-md px-3 py-2 text-base font-medium']"
             :aria-current="item.current ? 'page' : undefined"
           >{{ item.name }}</DisclosureButton>
@@ -81,7 +85,7 @@
 <script setup>
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
 import { useRouter } from 'vue-router';
-import { userEmail, logout } from '/firebase/config'; 
+import { isAuthenticated, logout } from '/firebase/config'; 
 
 const router = useRouter();
 

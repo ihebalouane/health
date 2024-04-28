@@ -1,5 +1,5 @@
 <template>
-  <site-header/>
+  <site-header />
   <div class="center-container">
     <!-- Display user's email -->
     <div class="container">
@@ -31,7 +31,7 @@
       <div class="section gym-details-section">
         <div class="section-content">
           <h2>Gym Details</h2>
-          <p>Welcome to our gym! {{ userEmail }} Our facilities offer state-of-the-art equipment</p>
+          <p>Welcome to our gym! {{ userEmail }} Our facilities offer state-of-the-art equipment.</p>
         </div>
       </div>
     </div>
@@ -39,67 +39,87 @@
 </template>
 
 <script>
-import { ref } from 'vue';
-import { projectFirestore } from '@/firebase/config.js';
+import { ref, onMounted } from 'vue';
+import { projectFirestore } from '@/firebase/config';
 import { collection, getDocs, query, where } from 'firebase/firestore';
-import { videosMap } from './video.js'; // Importing the videos map
+import { videosMap } from './video'; // Importing the videos map
 
 export default {
   middleware: 'auth',
   setup() {
-    const userEmail = ref ('');
-    const isAuthenticated = true; // Assuming it's true for now
-
+    const userEmail = ref('');
     const selectedItems = ref([]);
     const selectedDay = ref(null);
     const selectedVideo = ref(null);
     const days = ref([]);
 
+    // Fetch user's email when component is mounted
     onMounted(() => {
       userEmail.value = localStorage.getItem('email') || '';
     });
 
+    // Function to fetch user responses from Firestore
     const getUserResponses = async () => {
-  try {
-    const localEmail = localStorage.getItem('email');
-    const q = query(collection(projectFirestore, 'userResponses'), where('userEmail', '==', localEmail));
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      const ageRange = doc.data().ageRange;
-      if (ageRange === '20s') {
-        selectedItems.value = ['Dumbbell press', 'Cable Crossover'];
-        selectedDay.value = 'Monday';
-      } else if (ageRange === '30s') {
-        selectedItems.value = ['Pec Deck', 'Incline Press-up'];
-        selectedDay.value = 'Monday';
-      } else {
-        console.error('Unsupported age range:', ageRange);
+      try {
+        const localEmail = localStorage.getItem('email');
+        const q = query(collection(projectFirestore, 'userResponses'), where('userEmail', '==', localEmail));
+        const querySnapshot = await getDocs(q);
+
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          const ageRange = data.ageRange;
+          const weight = data.weight;
+          const goalWeight = data.goalWeight;
+
+          // Check if the user's age range is 20s and the goal weight is greater than the current weight
+          if (ageRange === '20s' && goalWeight > weight) {
+            program1(selectedDay.value);
+          }
+        });
+      } catch (error) {
+        console.error(error.message);
       }
-    });
-  } catch (error) {
-    console.error(error.message);
-  }
-};
+    };
 
+    // Function for the specific program 1
+    const program1 = (day) => {
+      if (day === 'Monday') { //Chest day + Triceps
+        selectedItems.value = ['Bench Press','Dumbbell press', 'Cable Crossover','Landmine Press'];
+      } else if (day === 'Tuesday') { //Back day + Biceps
+        selectedItems.value = ['Lat Pulldowns','Dumbell Single','Pull ups', 'Pulls', ];
+      } else if (day === 'Friday') { //Shoulders day
+        selectedItems.value = ['Squat','Deadlift','Front squat', 'Goblet', 'Lunge'];
+      } else if (day === 'Thursday') { //Legs day
+        selectedItems.value = ['Cable pull','Front raise','Face Pull', 'High Pull', 'Raise'];
+      }
+    };
 
+    // Call the function when the component is mounted
+    getUserResponses();
 
-
-    getUserResponses(); // Call the function when the component is mounted
-
+    // Function to update the selected day
     const showItems = (day) => {
       selectedDay.value = day;
+      getUserResponses(); // Call getUserResponses to update the items based on the selected day
     };
 
+    // Function to load video based on the selected item
     const loadVideo = (item) => {
-      selectedVideo.value = videosMap[item]; // Use videosMap object to get the video URL
+      if (videosMap.hasOwnProperty(item)) {
+        selectedVideo.value = videosMap[item];
+      } else {
+        console.error(`Video URL not found for item: ${item}`);
+      }
     };
 
+    // Function to calculate and set the days of the week starting from the next Monday
     const calculateDays = () => {
       const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
       const currentDate = new Date();
       const currentDayIndex = currentDate.getDay(); // 0 for Sunday, 1 for Monday, ..., 6 for Saturday
       const nextMonday = new Date(currentDate);
       nextMonday.setDate(currentDate.getDate() + ((7 - currentDayIndex) % 7)); // Calculate next Monday
+
       for (let i = 0; i < daysOfWeek.length; i++) {
         const dayDate = new Date(nextMonday);
         dayDate.setDate(nextMonday.getDate() + i);
@@ -107,19 +127,27 @@ export default {
       }
     };
 
+    // Function to format date in a readable format
     const formatDate = (date) => {
       const options = { weekday: 'short', month: 'short', day: 'numeric' };
       return date.toLocaleDateString(undefined, options);
     };
 
-    calculateDays(); // Initialize days
+    // Calculate the days when the component is mounted
+    calculateDays();
 
-    return { userEmail, isAuthenticated, selectedItems, selectedDay, selectedVideo, days, showItems, loadVideo };
+    return {
+      userEmail,
+      selectedItems,
+      selectedDay,
+      selectedVideo,
+      days,
+      showItems,
+      loadVideo,
+    };
   },
 };
 </script>
-
-
 
 <style>
 .center-container {
@@ -175,7 +203,7 @@ export default {
 
 .day-list li:not(:last-child):after,
 .items-list li:not(:last-child):after {
-  content: "";
+  content: '';
   position: absolute;
   bottom: 0;
   left: 0;

@@ -4,7 +4,7 @@ export const videosMap = {
         'Cinematic': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Cinematic%20gym%20workout.mp4?alt=media&token=f624bad5-d2c2-4f95-9b18-92c28d11a0d7',
 //BULK EDITION:
     //Chest videos:
-        'Alternating Dumbbell Bench Press': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FChest%20program%2FAlternating%20Dumbbell%20Bench%20Press.mp4?alt=media&token=c12945d7-6dbd-428c-b22f-3211ee87b6aa',
+        'Bench Press': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FChest%20program%2FAlternating%20Dumbbell%20Bench%20Press.mp4?alt=media&token=c12945d7-6dbd-428c-b22f-3211ee87b6aa',
         'Cable Crossover': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FChest%20program%2FCable%20Crossover.mp4?alt=media&token=01e136ba-3163-4dd6-b0df-2005eb6e84d3',
         'Dumbbell press': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FChest%20program%2FDumbbell%20press.mp4?alt=media&token=40d71d55-b785-402a-a787-701cc5d6b6ce',
         'Dumbell flye' : 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FChest%20program%2FDumbell%20flye.mp4?alt=media&token=5bebbde0-950e-400d-ae4f-7a9ba3dce49e',
@@ -18,7 +18,7 @@ export const videosMap = {
 
     //Back videos:
         'Barbell Bent-Over': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FBack%20program%2FBarbell%20Bent-Over%20Row.mp4?alt=media&token=3e0f57d0-5d1a-4612-af54-74dcb884712d',
-        'Dumbell Single-Arm': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FBack%20program%2FDumbell%20Single-Arm%20Row.mp4?alt=media&token=b633a306-6734-47a8-bcb6-4ee6d5833842',
+        'Dumbell Single': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FBack%20program%2FDumbell%20Single-Arm%20Row.mp4?alt=media&token=b633a306-6734-47a8-bcb6-4ee6d5833842',
         'Hold up': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FBack%20program%2FHold%20up.mp4?alt=media&token=8228044b-8c59-45a2-b175-94f458e1074d',
         'Landmine One-Arm Row': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FBack%20program%2FLandmine%20One-Arm%20Row.mp4?alt=media&token=1b9dbe83-704c-4b0b-9e4b-f9c7f7fd2f21',
         'Lat Pulldowns':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FBack%20program%2FLat%20Pulldowns.mp4?alt=media&token=d09479b3-86a6-41c5-b38c-2421ad10dc48',

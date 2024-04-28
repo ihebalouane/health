@@ -38,7 +38,7 @@
       <div class="program-box">
         <img src="~/assets/images/program3.jpg" alt="Program 3" class="program-image">
         <div class="description-container">
-          <h2 class="program-title">Program 3</h2>
+          <h2 class="program-title">Start your program</h2>
           <div class="program-description">
             <p class="description-title">Program Description:</p>
             <p>Aliquam erat volutpat. Nulla facilisi. Suspendisse potenti. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Morbi at varius felis.</p>
@@ -49,7 +49,7 @@
     </div>
     <div class="separator"></div>
 
-    <!--Section 4 carousel-->
+    <!-- Section 4 carousel -->
     <div>
       <Carousel :items-to-show="2" :wrap-around="true">
         <Slide v-for="(slide, index) in carouselItems" :key="index">
@@ -99,18 +99,19 @@
       </div>
     </div>
 
-    <router-link to="/profile/messages" class="messages-circle">
+    <!-- Messages Circle -->
+    <router-link v-if="isUserLoggedIn" to="/profile/messages" class="messages-circle">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
         <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
       </svg>
     </router-link>
+
   </div>
 </template>
 
 <script>
 import { defineComponent, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { projectFirestore } from '@/firebase/config.js';
 import { Carousel, Navigation, Slide } from 'vue3-carousel';
 import 'vue3-carousel/dist/carousel.css';
 
@@ -178,18 +179,17 @@ export default defineComponent({
     };
   },
   methods: {
-  scrollToSection4() {
-    const faqSection = document.querySelector('#faq-section');
-    if (faqSection) {
-      faqSection.scrollIntoView({ behavior: 'smooth' });
-    }
-  },
-},
+    scrollToSection4() {
+      const faqSection = document.querySelector('#faq-section');
+      if (faqSection) {
+        faqSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    },
     toggleAnswer(index) {
       this.faqList[index].expanded = !this.faqList[index].expanded;
     }
   }
-);
+});
 </script>
 
 <style scoped>
