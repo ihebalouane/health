@@ -1,6 +1,5 @@
 export const videosMap = {
 
-
         'Cinematic': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Cinematic%20gym%20workout.mp4?alt=media&token=f624bad5-d2c2-4f95-9b18-92c28d11a0d7',
 //BULK EDITION:
     //Chest videos:
@@ -23,7 +22,7 @@ export const videosMap = {
         'Landmine One-Arm Row': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FBack%20program%2FLandmine%20One-Arm%20Row.mp4?alt=media&token=1b9dbe83-704c-4b0b-9e4b-f9c7f7fd2f21',
         'Lat Pulldowns':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FBack%20program%2FLat%20Pulldowns.mp4?alt=media&token=d09479b3-86a6-41c5-b38c-2421ad10dc48',
         'Lat Pulldowns1':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FBack%20program%2FLat%20Pulldowns%201.mp4?alt=media&token=5da7e006-f0d7-4c9c-818d-bd4a5969138b',
-        'Lying Lateral Raise':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FBack%20program%2FLying%20Lateral%20Raise.mp4?alt=media&token=0aa4e434-4197-4846-88b2-be56e928aaa8',
+        'Lying Lateral':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FBack%20program%2FLying%20Lateral%20Raise.mp4?alt=media&token=0aa4e434-4197-4846-88b2-be56e928aaa8',
         'Pull up':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FBack%20program%2FPull%20up.mp4?alt=media&token=3d109263-5120-4a0e-8502-60152e18b074',
         'Pull ups':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FBack%20program%2FPull%20ups.mp4?alt=media&token=d5f38e04-4b1f-4736-9183-14cba156f717',
         'Pulls':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FBack%20program%2FPulls.mp4?alt=media&token=88a0f216-a9ce-4735-9bde-3c5c05838fa7',
@@ -47,6 +46,28 @@ export const videosMap = {
         'Split squats':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FLegs%20program%2FSplit%20squats.mp4?alt=media&token=7ed94d94-794c-4c83-847c-9aaa89944e80',
         'Squat':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FLegs%20program%2FSquat.mp4?alt=media&token=ed21217f-57b2-4dd0-87c6-5f91543a239d',
         'Sumo squat':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FLegs%20program%2FSumo%20squat.mp4?alt=media&token=2d34966c-3e4f-4537-a1e6-e781d5d59513',
-        'Walking Lunge':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FLegs%20program%2FWalking%20Lunge.mp4?alt=media&token=6a6c05fa-606d-4aa6-9776-e1d49ae1c447'
+        'Walking Lunge':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FLegs%20program%2FWalking%20Lunge.mp4?alt=media&token=6a6c05fa-606d-4aa6-9776-e1d49ae1c447',
+
+
+    //Cardio 
+        'Cardio': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FCardio%20program%2Fcardio1.mp4?alt=media&token=7dfe6359-a57c-4954-a2cd-14565c5ef58c',
+        'Cardio-t': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FCardio%20program%2Fcardio2.mp4?alt=media&token=d37def84-2f2d-49b9-b4ec-2c6e4d1678dc',
+        'Cardio legs': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FCardio%20program%2Fcardio3.mp4?alt=media&token=eb8b752c-4116-48e4-b7ec-d31ae1cef090',
+        'Cardio ex': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FCardio%20program%2Fcardio4.mp4?alt=media&token=2fd69221-3081-4fb0-b3a6-4738c668f5a4',
+        'Cardio breath': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FCardio%20program%2Fcardio5.mp4?alt=media&token=18b31d95-7715-498f-97a9-5486be792135',
+
+    //Biceps
+        'Bicep curl': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FBiceps%2Fbiceps1.mp4?alt=media&token=7a24a942-c9fe-43f2-b131-3a641bf7c426',
+        'Barbell curl': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FBiceps%2Fbiceps2.mp4?alt=media&token=d748e313-4dee-4dad-b292-ea5051a162ad',
+        'Incline dumbbell curl': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FBiceps%2Fbiceps3.mp4?alt=media&token=8adc0467-a0da-4b27-b53c-e09daa85ca1b',
+        'Dumbbell bicep curl': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FBiceps%2Fbiceps4.mp4?alt=media&token=2fd41413-15de-452b-8a0b-9c46ef289e93',
+        'Biceps': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FBiceps%2Fbiceps5.mp4?alt=media&token=f18f1f19-0cf0-40ba-ab5c-168843384a41',
+
+    //Triceps
+        'Lying triceps': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FTriceps%2Ftriceps1.mp4?alt=media&token=4e8f1f2b-80bf-41cf-b099-3d77b4b463f0',
+        'Triceps': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FTriceps%2Ftriceps2.mp4?alt=media&token=8eb1fd46-8950-4e02-a61d-cddde1ac0cb0',
+        'Dips': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FTriceps%2Ftriceps3.mp4?alt=media&token=ea3c4d36-033d-48a3-83c3-7c110772c996',
+        'Cable triceps': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FTriceps%2Ftriceps4.mp4?alt=media&token=c6d9c86f-a96f-4967-9b06-54972686ff6e',
+        'Bar triceps': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Bulk%2FTriceps%2Ftriceps5.mp4?alt=media&token=5312c1d9-f090-4139-9dbe-a9f413f7fa96',
     };
   

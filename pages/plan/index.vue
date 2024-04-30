@@ -65,34 +65,139 @@ export default {
         const q = query(collection(projectFirestore, 'userResponses'), where('userEmail', '==', localEmail));
         const querySnapshot = await getDocs(q);
 
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          const ageRange = data.ageRange;
-          const weight = data.weight;
-          const goalWeight = data.goalWeight;
+            querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const ageRange = data.ageRange;
+        const weight = data.weight;
+        const goal = data.goalWeight;
+        const programType = data.programType;
+        const exp = data.experienceLevel;
+        const daysE = data.exerciseFrequency;
+        const risk = data. selectedRiskFactors;
 
-          // Check if the user's age range is 20s and the goal weight is greater than the current weight
-          if (ageRange === '20s' && goalWeight > weight) {
-            program1(selectedDay.value);
-          }
-        });
+        //Program conditions
+        const relevantAgeRanges = ['under 20s', '20s', '30s'];
+        if (ageRange === '60s' || daysE === '1' || daysE === '2') {
+            program6(selectedDay.value)
+            console.log ('program 6')
+        } else if (programType === 'Bulk') {
+            if ((exp === 'beginner') && (goal > weight) && (ageRange === relevantAgeRanges)) {
+                program1(selectedDay.value);
+                console.log ('program 1')
+            } else if (risk === 'depressionAnxiety') {
+                program5(selectedDay.value);
+                console.log ('program 5')
+            } else {
+                program3(selectedDay.value);
+                console.log ('program 3')
+            }
+        } else if (programType === 'Cut') {
+            if (risk === 'none' && goalWeight < weight) {
+              program2(selectedDay.value)
+              console.log ('program 2')
+            } else if (risk ==="depressionAnxiety") {
+                program5(selectedDay.value)
+                console.log ('program 5')
+            } else if (risk ==="bloodPressure" || risk ==="depressionAnxiety") {
+                program4(selectedDay.value)
+                console.log ('program 4')
+            } else {
+                program3(selectedDay.value);
+                console.log ('program 3')
+            }
+        } 
+      });
+
       } catch (error) {
         console.error(error.message);
       }
     };
 
-    // Function for the specific program 1
+    // Function for the specific program 1: Beginner' muscle building
     const program1 = (day) => {
       if (day === 'Monday') { //Chest day + Triceps
-        selectedItems.value = ['Bench Press','Dumbbell press', 'Cable Crossover','Landmine Press'];
+        selectedItems.value = ['Bench Press','Bench press', 'Cable Crossover','Landmine Press'];
       } else if (day === 'Tuesday') { //Back day + Biceps
         selectedItems.value = ['Lat Pulldowns','Dumbell Single','Pull ups', 'Pulls', ];
-      } else if (day === 'Friday') { //Shoulders day
+      } else if (day === 'Friday') { //Legs day
         selectedItems.value = ['Squat','Deadlift','Front squat', 'Goblet', 'Lunge'];
-      } else if (day === 'Thursday') { //Legs day
+      } else if (day === 'Thursday') { //Shoulders day
         selectedItems.value = ['Cable pull','Front raise','Face Pull', 'High Pull', 'Raise'];
       }
     };
+
+    // Function for the specific program2: Fat loss program
+    const program2 = (day) => {
+      if (day === 'Monday') { //Chest day + triceps + Cardio
+        selectedItems.value = ['Upper Chest', 'Dumbell flye','Lying triceps','Triceps','Cardio','Cardio 2'];
+      } else if (day === 'Tuesday') { //Back day + Biceps
+        selectedItems.value = ['Lying Lateral','Trap Raise','Dips','Bar Triceps','Cardio legs','Cardio ex'];
+      } else if (day === 'Wednesday') { //Cardio
+        selectedItems.value = [];
+      } else if (day === 'Thursday') { //Shoulders + Cardio
+        selectedItems.value = ['Seated Dumbbell Clean', 'Raise', 'High Pull', 'Cable pull'];
+    }   else if (day === 'Friday') { //Back day + Biceps
+        selectedItems.value = ['Walking Lunge', 'Sumo squat','Split squats','Deficit Reverse Lunge'];
+    }   
+  }
+
+  const program3 = (day) => {
+      if (day === 'Monday') { //Chest day
+        selectedItems.value = ['Bench Press', 'Dumbell flye','Lying triceps','Triceps','Cardio','Cardio 2'];
+      } else if (day === 'Tuesday') { //Back day
+        selectedItems.value = ['Lying Lateral','Trap Raise','Dips','Bar Triceps','Cardio legs','Cardio ex'];
+      } else if (day === 'Wednesday') { //Shoulders + Cardio
+        selectedItems.value = [];
+      } else if (day === 'Friday') { //Arms
+        selectedItems.value = ['Seated Dumbbell Clean', 'Raise', 'High Pull', 'Cable pull'];
+    }   else if (day === 'Sunday') { //Legs
+        selectedItems.value = ['Walking Lunge', 'Sumo squat','Split squats','Deficit Reverse Lunge'];
+    }   
+  }
+
+  const program4 = (day) => {
+      if (day === 'Monday') { //Chest day
+        selectedItems.value = ['Cardio', 'Cardio Legs', 'Cardio Breath'];
+      } else if (day === 'Tuesday') { //Back day
+        selectedItems.value = [];
+      } else if (day === 'Wednesday') { //Shoulders + Cardio
+        selectedItems.value =  ['Cardio-t', 'Cardio Breath', 'Cardio Legs'];
+      } else if (day === 'Friday') { //Arms
+        selectedItems.value = ['Cardio Breath', 'Cardio Legs', 'Cardio-t'];
+    }   else if (day === 'Sunday') { //Legs
+        selectedItems.value = [];
+    }   
+  }
+
+  const program5 = (day) => {
+      if (day === 'Monday') { //Chest day
+        selectedItems.value = ['Squat', 'Deadlift', 'Front Squat', 'Lunge', 'Sumo Squat'];
+      } else if (day === 'Tuesday') { //Back day
+        selectedItems.value = ['Dumbbell Press', 'Dumbbell Flye', 'Cable Pull', 'Triceps'];
+      } else if (day === 'Wednesday') { //Shoulders + Cardio
+        selectedItems.value = ['Hold Up', 'Lying Lateral', 'Barbell Bent-Over', 'Trap Raise'];
+      } else if (day === 'Friday') { //Arms
+        selectedItems.value = ['Squat', 'Deadlift', 'Front Squat', 'Lunge', 'Sumo Squat'];
+    }   else if (day === 'Sunday') { //Legs
+        selectedItems.value = [];
+    }   
+  }
+
+  const program6 = (day) => {
+      if (day === 'Monday') { //Chest day
+        selectedItems.value = [];
+      } else if (day === 'Tuesday') { //Back day
+        selectedItems.value = ['Bench Press', 'Pull Ups', 'Cable Pull', 'Bicep Curl', 'Triceps'];
+      } else if (day === 'Wednesday') { //Shoulders + Cardio
+        selectedItems.value = [];
+      } else if (day === 'Saturday') { //Arms
+        selectedItems.value = ['Squat', 'Front Squat', 'Goblet Squat', 'Deficit Reverse Lunge'];
+    }   else if (day === 'Sunday') { //Legs
+        selectedItems.value = ['Walking Lunge', 'Sumo squat','Split squats','Deficit Reverse Lunge'];
+    }   
+  }
+
+    
 
     // Call the function when the component is mounted
     getUserResponses();
