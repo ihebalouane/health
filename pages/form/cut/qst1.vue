@@ -45,7 +45,7 @@ const submitGender = async () => {
     if (user) {
       await addDoc(collection(projectFirestore, "Cut"), {
         gender: userGender,
-        programType: 'Cut', // Set programType to 'Bulk' regardless of gender
+        programType: 'Cut', // Set programType to 'Cut' regardless of gender
         userEmail: user.email,
         timestamp: new Date() 
       });

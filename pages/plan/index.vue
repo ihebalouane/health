@@ -32,6 +32,7 @@
         <div class="section-content">
           <h2>Gym Details</h2>
           <p>Welcome to our gym! {{ userEmail }} Our facilities offer state-of-the-art equipment.</p>
+          <p> Here the program: {{programText }}</p> <!-- Add the program text here -->
         </div>
       </div>
     </div>
@@ -52,8 +53,9 @@ export default {
     const selectedDay = ref(null);
     const selectedVideo = ref(null);
     const days = ref([]);
+    const programText = ref('')
 
-    // Fetch user's email when component is mounted
+    // Fetch user's email when the component is mounted
     onMounted(() => {
       userEmail.value = localStorage.getItem('email') || '';
     });
@@ -65,49 +67,52 @@ export default {
         const q = query(collection(projectFirestore, 'userResponses'), where('userEmail', '==', localEmail));
         const querySnapshot = await getDocs(q);
 
-            querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        const ageRange = data.ageRange;
-        const weight = data.weight;
-        const goal = data.goalWeight;
-        const programType = data.programType;
-        const exp = data.experienceLevel;
-        const daysE = data.exerciseFrequency;
-        const risk = data. selectedRiskFactors;
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          const ageRange = data.ageRange;
+          const weight = data.weight;
+          const goal = data.goalWeight;
+          const programType = data.programType;
+          const exp = data.experienceLevel;
+          const daysE = data.exerciseFrequency;
+          const risk = data.selectedRiskFactors;
 
-        //Program conditions
-        const relevantAgeRanges = ['under 20s', '20s', '30s'];
-        if (ageRange === '60s' || daysE === '1' || daysE === '2') {
-            program6(selectedDay.value)
-            console.log ('program 6')
-        } else if (programType === 'Bulk') {
-            if ((exp === 'beginner') && (goal > weight) && (ageRange === relevantAgeRanges)) {
-                program1(selectedDay.value);
-                console.log ('program 1')
-            } else if (risk === 'depressionAnxiety') {
-                program5(selectedDay.value);
-                console.log ('program 5')
-            } else {
-                program3(selectedDay.value);
-                console.log ('program 3')
-            }
-        } else if (programType === 'Cut') {
-            if (risk === 'none' && goalWeight < weight) {
-              program2(selectedDay.value)
-              console.log ('program 2')
-            } else if (risk ==="depressionAnxiety") {
-                program5(selectedDay.value)
-                console.log ('program 5')
-            } else if (risk ==="bloodPressure" || risk ==="depressionAnxiety") {
-                program4(selectedDay.value)
-                console.log ('program 4')
-            } else {
-                program3(selectedDay.value);
-                console.log ('program 3')
-            }
-        } 
-      });
+          // Program conditions
+          const days = ['1', '2'];
+          const relevantAgeRanges = ['under 20s', '20s', '30s'];
+          const risk1 = ['bloodPressure', 'heartDisease'];
+          console.log (typeof(programText))
 
+          if (ageRange === '60s' || days.includes(daysE)) {
+            program6(selectedDay.value);
+            programText = 'Program 6: Specialized for older age groups or limited exercise frequency.';
+          } else if (programType === 'Bulk') {
+            if ((exp === 'beginner') && (goal > weight) && (relevantAgeRanges.includes(ageRange))) {
+              program1(selectedDay.value);
+              programText.value = 'Program 1: Beginner muscle building program.';
+            } else if (risk.includes('depressionAnxiety')) {
+              program5(selectedDay.value);
+              programText.value = 'Program 5: Bulk program with mental health risk considerations.';
+            } else {
+              program3(selectedDay.value);
+              programText.value = 'Program 3: Bulk program.';
+            }
+          } else if (programType === 'Cut') {
+            if (risk.includes('none') && goal < weight) {
+              program2(selectedDay.value);
+              programText.value = 'Program 2: Cut program for weight loss.';
+            } else if (risk.includes('depressionAnxiety')) {
+              program5(selectedDay.value);
+              programText.value = 'Program 5: Cut program with mental health risk considerations.';
+            } else if (risk1.includes(risk)) {
+              program4(selectedDay.value);
+              programText.value = 'Program 4: Cut program for high-risk factors.';
+            } else {
+              program3(selectedDay.value);
+              programText.value = 'Program 3: Cut program.';
+            }
+          }
+        });
       } catch (error) {
         console.error(error.message);
       }
@@ -129,7 +134,7 @@ export default {
     // Function for the specific program2: Fat loss program
     const program2 = (day) => {
       if (day === 'Monday') { //Chest day + triceps + Cardio
-        selectedItems.value = ['Upper Chest', 'Dumbell flye','Lying triceps','Triceps','Cardio','Cardio 2'];
+        selectedItems.value = ['Upper Chest', 'Dumbell flye','Lying triceps','Triceps','Cardio','Cardio-t'];
       } else if (day === 'Tuesday') { //Back day + Biceps
         selectedItems.value = ['Lying Lateral','Trap Raise','Dips','Bar Triceps','Cardio legs','Cardio ex'];
       } else if (day === 'Wednesday') { //Cardio
@@ -171,7 +176,7 @@ export default {
 
   const program5 = (day) => {
       if (day === 'Monday') { //Chest day
-        selectedItems.value = ['Squat', 'Deadlift', 'Front Squat', 'Lunge', 'Sumo Squat'];
+        selectedItems.value = ['Squat', 'Deadlift', 'Front squat', 'Lunge', 'Sumo squat'];
       } else if (day === 'Tuesday') { //Back day
         selectedItems.value = ['Dumbbell Press', 'Dumbbell Flye', 'Cable Pull', 'Triceps'];
       } else if (day === 'Wednesday') { //Shoulders + Cardio
