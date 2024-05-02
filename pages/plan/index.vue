@@ -32,7 +32,6 @@
         <div class="section-content">
           <h2>Gym Details</h2>
           <p>Welcome to our gym! {{ userEmail }} Our facilities offer state-of-the-art equipment.</p>
-          <p> Here the program: {{programText }}</p> <!-- Add the program text here -->
         </div>
       </div>
     </div>
@@ -53,7 +52,6 @@ export default {
     const selectedDay = ref(null);
     const selectedVideo = ref(null);
     const days = ref([]);
-    const programText = ref('')
 
     // Fetch user's email when the component is mounted
     onMounted(() => {
@@ -85,31 +83,23 @@ export default {
 
           if (ageRange === '60s' || days.includes(daysE)) {
             program6(selectedDay.value);
-            programText = 'Program 6: Specialized for older age groups or limited exercise frequency.';
           } else if (programType === 'Bulk') {
             if ((exp === 'beginner') && (goal > weight) && (relevantAgeRanges.includes(ageRange))) {
               program1(selectedDay.value);
-              programText.value = 'Program 1: Beginner muscle building program.';
             } else if (risk.includes('depressionAnxiety')) {
               program5(selectedDay.value);
-              programText.value = 'Program 5: Bulk program with mental health risk considerations.';
             } else {
               program3(selectedDay.value);
-              programText.value = 'Program 3: Bulk program.';
             }
           } else if (programType === 'Cut') {
             if (risk.includes('none') && goal < weight) {
               program2(selectedDay.value);
-              programText.value = 'Program 2: Cut program for weight loss.';
             } else if (risk.includes('depressionAnxiety')) {
               program5(selectedDay.value);
-              programText.value = 'Program 5: Cut program with mental health risk considerations.';
             } else if (risk1.includes(risk)) {
               program4(selectedDay.value);
-              programText.value = 'Program 4: Cut program for high-risk factors.';
             } else {
               program3(selectedDay.value);
-              programText.value = 'Program 3: Cut program.';
             }
           }
         });
@@ -136,7 +126,7 @@ export default {
       if (day === 'Monday') { //Chest day + triceps + Cardio
         selectedItems.value = ['Upper Chest', 'Dumbell flye','Lying triceps','Triceps','Cardio','Cardio-t'];
       } else if (day === 'Tuesday') { //Back day + Biceps
-        selectedItems.value = ['Lying Lateral','Trap Raise','Dips','Bar Triceps','Cardio legs','Cardio ex'];
+        selectedItems.value = ['Lying Lateral','Trap Raise','Dips','Bar triceps','Cardio legs','Cardio ex'];
       } else if (day === 'Wednesday') { //Cardio
         selectedItems.value = [];
       } else if (day === 'Thursday') { //Shoulders + Cardio
@@ -192,7 +182,7 @@ export default {
       if (day === 'Monday') { //Chest day
         selectedItems.value = [];
       } else if (day === 'Tuesday') { //Back day
-        selectedItems.value = ['Bench Press', 'Pull Ups', 'Cable Pull', 'Bicep Curl', 'Triceps'];
+        selectedItems.value = ['Bench Press', 'Pull ups', 'Cable pull', 'Bicep curl', 'Triceps'];
       } else if (day === 'Wednesday') { //Shoulders + Cardio
         selectedItems.value = [];
       } else if (day === 'Saturday') { //Arms
