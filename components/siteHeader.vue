@@ -94,7 +94,7 @@ const route = router.currentRoute.value;
 const navigation = [
   { name: 'Home', href: '/', current: route.name == 'index' },
   { name: 'Program', href: '/plan', current: route.name == 'plan' },
-  { name: 'Diet', href: '/diet', current: route.name == 'diet' },
+  { name: 'Diet', href: '/plan/diet', current: route.name == 'diet' },
   { name: 'About us', href: '/aboutus', current: route.name == 'aboutus' },
   { name: 'Contact', href: '/contact', current: route.name == 'contact' },
 

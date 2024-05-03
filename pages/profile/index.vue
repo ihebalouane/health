@@ -1,5 +1,4 @@
 <template>
-  <site-header/>
   <profile-header/>
   <div class="profile">
     <BgAnimations/>

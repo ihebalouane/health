@@ -1,5 +1,4 @@
 <template>
-  <site-header />
   <div class="center-container">
     <!-- Display user's email -->
     <div class="container">

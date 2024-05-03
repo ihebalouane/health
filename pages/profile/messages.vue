@@ -1,6 +1,5 @@
 <template>
   <div>
-    <site-header/>
     <profile-header />
     <div class="chat-box">
       <BgAnimations/>
