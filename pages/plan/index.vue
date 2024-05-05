@@ -23,6 +23,7 @@
       </div>
       <div class="section video-section">
         <div class="section-content">
+          <h3 class="exercise-title">{{ selectedExerciseTitle }}</h3> <!-- Display the exercise title -->
           <video v-if="selectedVideo" controls loop :src="selectedVideo" class="video-player">
             Your browser does not support the video tag.
           </video>
@@ -31,7 +32,8 @@
       <div class="section gym-details-section">
         <div class="section-content">
           <h2>Gym Details</h2>
-          <p>Welcome to our gym! {{ userEmail }} Our facilities offer state-of-the-art equipment.</p>
+          <p>{{ userEmail }}</p>
+          <p v-if="selectedExerciseDescription">{{ selectedExerciseDescription }}</p> <!-- Display the exercise description -->
         </div>
       </div>
     </div>
@@ -51,7 +53,17 @@ export default {
     const selectedItems = ref([]);
     const selectedDay = ref(null);
     const selectedVideo = ref(null);
+    const selectedExerciseTitle = ref('');
+    const selectedExerciseDescription = ref('');
     const days = ref([]);
+
+    // Map of exercises to their descriptions
+    const exerciseDescriptions = {
+      'Bench Press': 'A strength training exercise that works your chest muscles. Performed lying flat on a bench.',
+      'Lat Pulldowns': 'A back exercise focusing on the latissimus dorsi muscles. Done using a lat pulldown machine.',
+      'Squat': 'A lower body exercise that targets the quads, glutes, and hamstrings. Performed standing and bending at the knees.',
+      // Add more exercises and their descriptions as needed
+    };
 
     // Fetch user's email when the component is mounted
     onMounted(() => {
@@ -79,7 +91,6 @@ export default {
           const days = ['1', '2'];
           const relevantAgeRanges = ['under 20s', '20s', '30s'];
           const risk1 = ['bloodPressure', 'heartDisease'];
-          console.log (typeof(programText))
 
           if (ageRange === '60s' || days.includes(daysE)) {
             program6(selectedDay.value);
@@ -108,7 +119,7 @@ export default {
       }
     };
 
-    // Function for the specific program 1: Beginner' muscle building
+    // Function for the specific program 1: Beginner's muscle building
     const program1 = (day) => {
       if (day === 'Monday') { //Chest day + Triceps
         selectedItems.value = ['Bench Press','Bench press', 'Cable Crossover','Landmine Press'];
@@ -203,10 +214,12 @@ export default {
       getUserResponses(); // Call getUserResponses to update the items based on the selected day
     };
 
-    // Function to load video based on the selected item
+    // Function to load video and description based on the selected item
     const loadVideo = (item) => {
       if (videosMap.hasOwnProperty(item)) {
         selectedVideo.value = videosMap[item];
+        selectedExerciseTitle.value = item;
+        selectedExerciseDescription.value = exerciseDescriptions[item] || 'Description not available.';
       } else {
         console.error(`Video URL not found for item: ${item}`);
       }
@@ -241,6 +254,8 @@ export default {
       selectedItems,
       selectedDay,
       selectedVideo,
+      selectedExerciseTitle,
+      selectedExerciseDescription,
       days,
       showItems,
       loadVideo,
@@ -257,7 +272,7 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: linear-gradient(to bottom left , #2ecc71, #ffffff); /*bg grey*/
+  background: linear-gradient(to bottom left, #2ecc71, #ffffff); /* Background gradient */
 }
 
 .container {
@@ -327,6 +342,20 @@ export default {
   color: #424242;
 }
 
+/* Exercise Title Styles */
+.exercise-title {
+  font-size: 20px; /* Increase the font size for better visibility */
+  font-weight: bold; /* Make the title bold */
+  color: #333333; /* Dark gray color for modern look */
+  margin-bottom: 20px; /* Add space below the title */
+  text-align: center; /* Center-align the title */
+  letter-spacing: 1px; /* Add slight spacing between letters for a cleaner look */
+  line-height: 1.5; /* Add a comfortable line height */
+  text-transform: capitalize; /* Capitalize each word for a neat appearance */
+}
+
+
+/* Gym Details Section Styles */
 .gym-details-section {
   background-color: #f5f5f5;
   padding: 30px;
@@ -337,12 +366,14 @@ export default {
 
 .gym-details-section h2 {
   margin-bottom: 15px;
-  color: #424242;
+  color: #333;
+  font-weight: 700;
+  font-size: 24px;
 }
 
 .gym-details-section p {
   color: #616161;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.5;
 }
 
@@ -353,7 +384,6 @@ export default {
   align-items: center;
   padding-top: 80px;
   height: 100%; /* Make the height of the video section match the entire container height */
-
 }
 
 .video-player {
@@ -361,6 +391,6 @@ export default {
   border-radius: 15px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
-
 </style>
+
 
