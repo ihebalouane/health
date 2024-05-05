@@ -1,11 +1,12 @@
 <template>
   <div class="center-container">
-    <!-- Display user's email -->
     <div class="container">
       <div class="section day-list-section">
         <div class="section-content">
           <ul class="day-list">
-            <li v-for="(day, index) in days" :key="index" :class="{ 'selected': selectedDay === day.name }" @click="showItems(day.name)">
+            <li v-for="(day, index) in days" :key="index"
+                :class="{ 'selected': selectedDay === day.name }"
+                @click="showItems(day.name)">
               <span class="day-text">{{ day.name }} - {{ day.date }}</span>
             </li>
           </ul>
@@ -22,7 +23,7 @@
       </div>
       <div class="section video-section">
         <div class="section-content">
-          <video v-if="selectedVideo" controls loop :src="selectedVideo" :style="{ width: '100%', height: '100%' }">
+          <video v-if="selectedVideo" controls loop :src="selectedVideo" class="video-player">
             Your browser does not support the video tag.
           </video>
         </div>
@@ -185,7 +186,7 @@ export default {
       } else if (day === 'Wednesday') { //Shoulders + Cardio
         selectedItems.value = [];
       } else if (day === 'Saturday') { //Arms
-        selectedItems.value = ['Squat', 'Front Squat', 'Goblet Squat', 'Deficit Reverse Lunge'];
+        selectedItems.value = ['Squat', 'Front squat', 'Goblet', 'Deficit Reverse Lunge'];
     }   else if (day === 'Sunday') { //Legs
         selectedItems.value = ['Walking Lunge', 'Sumo squat','Split squats','Deficit Reverse Lunge'];
     }   
@@ -249,31 +250,35 @@ export default {
 </script>
 
 <style>
+/* General Styles */
 .center-container {
   display: flex;
+  border-radius: 20px;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: white;
+  background: linear-gradient(to bottom left , #2ecc71, #ffffff); /*bg grey*/
 }
 
 .container {
   display: flex;
   width: 95%;
   max-width: 1500px;
-  height: 500px;
-  border: 2px solid #ccc;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.section {
-  flex: 1;
+  height: 600px;
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 20px 50px rgba(233, 228, 228, 0.1);
   overflow: hidden;
 }
 
-.section-content {
+/* Section Styles */
+.section {
+  flex: 1;
+  overflow: auto;
   padding: 20px;
+}
+
+.section-content {
   height: 100%;
 }
 
@@ -284,54 +289,78 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: center;
 }
 
 .day-list li,
 .items-list li {
   margin: 0;
   padding: 0;
-  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 40px;
   cursor: pointer;
-  position: relative;
-  transition: opacity 0.3s ease, background-color 0.3s ease;
+  border-radius: 10px;
+  transition: all 0.3s ease;
 }
 
-.day-list li:not(:last-child):after,
-.items-list li:not(:last-child):after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background-color: #ccc;
+.day-list li:hover,
+.items-list li:hover,
+.day-list li.selected,
+.items-list li.selected {
+  background-color: #2ecc71;
+  color: white;
+  opacity: 0.9;
+  transform: translateY(-5px);
 }
 
-.selected {
-  opacity: 0.5;
+.day-list li:not(:last-child),
+.items-list li:not(:last-child) {
+  margin-bottom: 10px;
 }
 
 .day-text,
 .item-text {
-  transition: transform 0.2s ease;
-  color: black;
-}
-
-.day-list li:hover .day-text,
-.items-list li:hover .item-text {
-  transform: translateY(-5px);
+  font-weight: 500;
+  font-size: 16px;
+  color: #424242;
 }
 
 .gym-details-section {
-  background-color: #fff;
+  background-color: #f5f5f5;
+  padding: 30px;
+  border-top: 1px solid #ccc;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
 }
 
-.day-list li:hover,
-.items-list li:hover {
-  background-color: #f0f0f0;
+.gym-details-section h2 {
+  margin-bottom: 15px;
+  color: #424242;
 }
+
+.gym-details-section p {
+  color: #616161;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Video Player Styles */
+.video-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 80px;
+  height: 100%; /* Make the height of the video section match the entire container height */
+
+}
+
+.video-player {
+  max-width: 100%;
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
 </style>
+
