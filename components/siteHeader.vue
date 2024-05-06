@@ -4,7 +4,7 @@
       <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div class="relative flex h-16 items-center justify-between">
           <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
-            <!-- Mobile menu button-->
+            <!-- Mobile menu button -->
             <DisclosureButton
               class="inline-flex items-center justify-center rounded-md p-2 text-black-400 hover:bg-black-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
             >
@@ -30,7 +30,7 @@
             <div class="hidden sm:ml-6 sm:block">
               <div class="flex space-x-4">
                 <NuxtLink
-                  v-for="item in navigation"
+                  v-for="item in filteredNavigation"
                   :key="item.name"
                   :href="item.href"
                   :class="[item.current ? 'bg-green-300 text-black' : 'text-black-300 hover:bg-#2ecc71-700 hover:text-#2ecc71', 'rounded-md px-3 py-2 text-sm font-medium']"
@@ -47,7 +47,7 @@
                 <button class="bg-white rounded-full h-10 w-10 flex items-center justify-center focus:outline-none transition duration-300 ease-in-out hover:opacity-80">
                   <!-- SVG Profile icon -->
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                    <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
+                    <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 a4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75 .75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
                   </svg>
                 </button>
               </NuxtLink>
@@ -69,7 +69,7 @@
       <DisclosurePanel class="sm:hidden">
         <div class="space-y-1 px-2 pb-3 pt-2">
           <DisclosureButton
-            v-for="item in navigation"
+            v-for="item in filteredNavigation"
             :key="item.name"
             as="a"
             :to="item.href"
@@ -85,30 +85,73 @@
 <script setup>
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
 import { useRouter } from 'vue-router';
-import { isAuthenticated, logout } from '/firebase/config'; 
+import { isAuthenticated, logout } from '@/firebase/config';
+import { ref, onMounted } from 'vue';
+import { projectFirestore } from '@/firebase/config';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 
 const router = useRouter();
-
 const route = router.currentRoute.value;
 
-const navigation = [
-  { name: 'Home', href: '/', current: route.name == 'index' },
-  { name: 'Program', href: '/plan', current: route.name == 'plan' },
-  { name: 'Diet', href: '/plan/diet', current: route.name == 'diet' },
-  { name: 'About us', href: '/aboutus', current: route.name == 'aboutus' },
-  { name: 'Contact', href: '/contact', current: route.name == 'contact' },
+// Define the user's email and profession state
+const userEmail = ref(null);
+const profession = ref(null);
 
-]
+// Define the initial navigation items
+const navigation = ref([
+  { name: 'Home', href: '/', current: route.name === 'index' },
+  { name: 'Program', href: '/plan', current: route.name === 'plan' },
+  { name: 'Diet', href: '/plan/diet', current: route.name === 'diet' },
+  { name: 'About us', href: '/aboutus', current: route.name === 'aboutus' },
+  { name: 'Contact', href: '/contact', current: route.name === 'contact' },
+]);
 
+const filteredNavigation = ref([...navigation.value]);
+
+// Function to log out the user
 const logoutUser = async () => {
   try {
-    await logout(); 
-    console.log('User logged out')
-    router.push('/login'); 
+    await logout();
+    console.log('User logged out');
+    router.push('/login');
   } catch (error) {
     console.error('Error logging out:', error.message);
   }
 };
+
+// Function to fetch the user's profession
+const fetchUserProfession = async () => {
+  try {
+    // Fetch the user's profession from Firestore
+    const userQuery = query(collection(projectFirestore, 'profile'), where('email', '==', userEmail.value));
+    const userSnapshot = await getDocs(userQuery);
+
+    if (!userSnapshot.empty) {
+      const userData = userSnapshot.docs[0].data();
+      profession.value = userData.profession;
+
+      // Add the "Test" navigation item if the user is an Admin
+      if (profession.value === 'Admin') {
+        filteredNavigation.value.push({ name: 'Admin', href: '/admin' });
+      }
+    }
+  } catch (error) {
+    console.error('Error fetching user profession:', error);
+  }
+};
+
+// On mounted hook to handle browser-specific code
+onMounted(() => {
+  // Check if running in a browser environment and localStorage is available
+  if (typeof window !== 'undefined' && window.localStorage) {
+    userEmail.value = window.localStorage.getItem('email');
+
+    // Fetch user profession if email is available
+    if (userEmail.value) {
+      fetchUserProfession();
+    }
+  }
+});
 </script>
 
 <style scoped>

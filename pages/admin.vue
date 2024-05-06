@@ -1,0 +1,310 @@
+<template>
+    <div class="admin-page">
+      <h2>All Users</h2>
+      <div class="user-list">
+        <div v-for="(user, index) in users" :key="index" class="user-item">
+          <div class="user-details">
+            <div class="user-info">
+              <p><strong>Email:</strong> {{ user.email }}</p>
+              <p><strong>First Name:</strong> {{ user.firstName }}</p>
+              <p><strong>Last Name:</strong> {{ user.lastName }}</p>
+              <p><strong>Gender:</strong> {{ user.gender }}</p>
+              <p><strong>Birth Date:</strong> {{ user.birthDate }}</p>
+              <p><strong>Profession:</strong> {{ user.profession }}</p>
+            </div>
+            <div class="action-buttons">
+              <button @click="openModifyForm(user)" class="modify-button">Modify</button>
+              <button @click="deleteUser(user)" class="delete-button">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Modify form modal -->
+      <div v-if="isFormVisible" class="modal-overlay" @click="closeForm">
+        <div class="modal-content show" @click.stop>
+          <h3>Modify User</h3>
+          <form @submit.prevent="submitForm">
+            <div class="form-group">
+              <label for="email">Email:</label>
+              <input type="email" id="email" v-model="selectedUser.email" readonly required />
+            </div>
+            <div class="form-group">
+              <label for="first-name">First Name:</label>
+              <input type="text" id="first-name" v-model="selectedUser.firstName" required />
+            </div>
+            <div class="form-group">
+              <label for="last-name">Last Name:</label>
+              <input type="text" id="last-name" v-model="selectedUser.lastName" required />
+            </div>
+            <div class="form-group">
+              <label for="gender">Gender:</label>
+              <select id="gender" v-model="selectedUser.gender" required>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Rather not say</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="birth-date">Birth Date:</label>
+              <input type="date" id="birth-date" v-model="selectedUser.birthDate" required />
+            </div>
+            <div class="form-group">
+              <label for="profession">Profession:</label>
+              <input type="text" id="profession" v-model="selectedUser.profession" required />
+            </div>
+  
+            <div class="form-buttons">
+              <button type="submit" class="save-button">Save</button>
+              <button type="button" @click="closeForm" class="cancel-button">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </template>
+  
+  <script setup>
+  import { ref, onMounted } from 'vue';
+  import { collection, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
+  import { projectFirestore } from '@/firebase/config.js';
+  
+  const users = ref([]);
+  const selectedUser = ref(null);
+  const isFormVisible = ref(false);
+  
+  onMounted(async () => {
+      try {
+          const userCollection = collection(projectFirestore, 'profile');
+          const querySnapshot = await getDocs(userCollection);
+          querySnapshot.forEach((doc) => {
+              const userData = doc.data();
+              users.value.push(userData);
+          });
+      } catch (error) {
+          console.error('Error fetching user data:', error);
+      }
+  });
+  
+  const openModifyForm = (user) => {
+      selectedUser.value = { ...user };
+      isFormVisible.value = true;
+  };
+  
+  const closeForm = () => {
+      isFormVisible.value = false;
+  };
+  
+  const submitForm = async () => {
+      try {
+          const userRef = doc(projectFirestore, 'profile', selectedUser.value.email);
+          await updateDoc(userRef, {
+              firstName: selectedUser.value.firstName,
+              lastName: selectedUser.value.lastName,
+              gender: selectedUser.value.gender,
+              birthDate: selectedUser.value.birthDate,
+              profession: selectedUser.value.profession,
+          });
+          console.log('User data updated successfully!');
+  
+          const index = users.value.findIndex((user) => user.email === selectedUser.value.email);
+          if (index !== -1) {
+              users.value[index] = { ...selectedUser.value };
+          }
+  
+          closeForm();
+      } catch (error) {
+          console.error('Error updating user data:', error);
+      }
+  };
+  
+  const deleteUser = async (user) => {
+      try {
+          const userRef = doc(projectFirestore, 'profile', user.email);
+          await deleteDoc(userRef);
+          console.log('User deleted successfully');
+  
+          users.value = users.value.filter((u) => u.email !== user.email);
+      } catch (error) {
+          console.error('Error deleting user:', error);
+      }
+  };
+  </script>
+  
+  <style scoped>
+  /* Base styles */
+  .admin-page {
+      padding: 20px;
+      font-family: 'Poppins', sans-serif; /* Modern font */
+      color: #333;
+      line-height: 1.6;
+  }
+  
+  /* Headings */
+  h2 {
+      margin-bottom: 20px;
+      color: #212121;
+      font-size: 28px;
+      font-weight: 700; /* Bold weight for emphasis */
+  }
+  
+  /* User list container */
+  .user-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+  }
+  
+  /* User item card */
+  .user-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+      background-color: #ffffff;
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+      cursor: pointer; /* Indicates interactiveness */
+  }
+  
+  .user-item:hover {
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      transform: translateY(-4px); /* Slight upward lift */
+  }
+  
+  /* User info styles */
+  .user-info p {
+      margin: 5px 0;
+      color: #555;
+      font-size: 16px;
+  }
+  
+  .user-info p strong {
+      color: #212121;
+  }
+  
+  /* Action buttons */
+  .action-buttons {
+      display: flex;
+      gap: 10px;
+  }
+  
+  .modify-button,
+  .delete-button {
+      padding: 10px 15px;
+      font-size: 14px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .modify-button {
+      background-color: #007bff; /* Blue */
+      color: #ffffff;
+  }
+  
+  .delete-button {
+      background-color: #dc3545; /* Red */
+      color: #ffffff;
+  }
+  
+  .modify-button:hover {
+      background-color: #0056b3; /* Darker blue */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .delete-button:hover {
+      background-color: #c82333; /* Darker red */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Modal styles */
+  .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+  
+  .modal-content {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 600px;
+      width: 90%;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      opacity: 0;
+      transform: scale(0.95);
+  }
+  
+  .modal-content.show {
+      opacity: 1;
+      transform: scale(1);
+  }
+  
+  /* Form group and button styles */
+  .form-group {
+      margin-bottom: 15px;
+  }
+  
+  .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      color: #212121;
+      font-size: 16px;
+  }
+  
+  .form-group input,
+  .form-group select {
+      width: 100%;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #ced4da; /* Light border */
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .form-group input:focus,
+  .form-group select:focus {
+      border-color: #007bff; /* Blue border on focus */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-buttons {
+      display: flex;
+      justify-content: space-between;
+  }
+  
+  .save-button,
+  .cancel-button {
+      padding: 10px 15px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      color: #ffffff;
+  }
+  
+  .save-button {
+      background-color: #28a745; /* Green */
+  }
+  
+  .cancel-button {
+      background-color: #6c757d; /* Gray */
+  }
+  
+  .save-button:hover {
+      background-color: #218838; /* Darker green */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .cancel-button:hover {
+      background-color: #5a6268; /* Darker gray */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  </style>
+  

@@ -38,6 +38,7 @@
       </div>
     </div>
   </div>
+  <br>
 </template>
 
 <script>
@@ -227,18 +228,22 @@ export default {
 
     // Function to calculate and set the days of the week starting from the next Monday
     const calculateDays = () => {
-      const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-      const currentDate = new Date();
-      const currentDayIndex = currentDate.getDay(); // 0 for Sunday, 1 for Monday, ..., 6 for Saturday
-      const nextMonday = new Date(currentDate);
-      nextMonday.setDate(currentDate.getDate() + ((7 - currentDayIndex) % 7)); // Calculate next Monday
+  const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const currentDate = new Date();
+  
+  // Calculate the starting day index as the day after the current day
+  const currentDayIndex = currentDate.getDay(); // 0 for Sunday, 1 for Monday, ..., 6 for Saturday
+  const nextDayDate = new Date(currentDate);
+  nextDayDate.setDate(currentDate.getDate() + 1); // Calculate the date for the next day
 
-      for (let i = 0; i < daysOfWeek.length; i++) {
-        const dayDate = new Date(nextMonday);
-        dayDate.setDate(nextMonday.getDate() + i);
-        days.value.push({ name: daysOfWeek[i], date: formatDate(dayDate) });
-      }
-    };
+  for (let i = 0; i < daysOfWeek.length; i++) {
+    const dayDate = new Date(nextDayDate);
+    dayDate.setDate(nextDayDate.getDate() + i);
+    days.value.push({ name: daysOfWeek[(currentDayIndex + i) % 7], date: formatDate(dayDate) });
+  }
+};
+
+
 
     // Function to format date in a readable format
     const formatDate = (date) => {
@@ -356,26 +361,32 @@ export default {
 
 
 /* Gym Details Section Styles */
+/* Gym Details Section Styles */
 .gym-details-section {
-  background-color: #f5f5f5;
-  padding: 30px;
-  border-top: 1px solid #ccc;
-  border-bottom-left-radius: 15px;
+  background-color: #f9f9f9; /* Light background color */
+  padding: 20px; /* Padding around the content */
+  border-top: 2px solid #ddd; /* Subtle top border */
+  border-bottom-left-radius: 15px; /* Rounded corners */
   border-bottom-right-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Slight shadow */
 }
 
 .gym-details-section h2 {
-  margin-bottom: 15px;
-  color: #333;
-  font-weight: 700;
-  font-size: 24px;
+  margin-bottom: 10px; /* Reduced margin for a compact look */
+  color: #222; /* Darker text color */
+  font-weight: bold; /* Maintain bold weight */
+  font-size: 22px; /* Slightly smaller font size */
+  text-transform: capitalize; /* Capitalize each word */
+  letter-spacing: 0.5px; /* Slight letter spacing */
 }
 
 .gym-details-section p {
-  color: #616161;
-  font-size: 15px;
-  line-height: 1.5;
+  color: #555; /* Medium gray text color for a modern look */
+  font-size: 14px; /* Standard font size */
+  line-height: 1.4; /* Slightly reduced line height */
+  margin-bottom: 10px; /* Add margin below paragraphs for spacing */
 }
+
 
 /* Video Player Styles */
 .video-section {
