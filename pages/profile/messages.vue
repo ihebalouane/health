@@ -24,24 +24,6 @@
               </svg>
               {{ profile.firstName + " " + profile.lastName }}
             </div>
-            <div v-if="showClientTitle" class="title-container">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
-              </svg>
-              Client
-            </div>
-            <div
-              v-for="(profile, index) in filteredProfileList('Client')"
-              :key="'client' + index"
-              class="user"
-              @click="selectUser(profile)"
-              :class="{ 'selected-user': profile === selectedProfile }"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z" />
-              </svg>
-              {{ profile.firstName + " " + profile.lastName }}
-            </div>
           </div>
         </div>
         <div class="chat-container">
@@ -119,9 +101,6 @@ export default {
     showCoachTitle() {
       return this.filteredProfileList('Coach').length > 0;
     },
-    showClientTitle() {
-      return this.filteredProfileList('Client').length > 0;
-    },
   },
   methods: {
     async fetchProfiles() {
@@ -141,36 +120,44 @@ export default {
       }
     },
     selectUser(profile) {
-      if (this.selectedProfile && profile.id !== this.selectedProfile.id) {
-        this.newMessage = "";
-      }
-      this.selectedProfile = profile;
-    },
+  console.log("Selected Profile:", profile); //problem here
+  if (this.selectedProfile && profile.id !== this.selectedProfile.id) {
+    this.newMessage = "";
+  }
+  this.selectedProfile = profile;
+},
+
     async sendMessage() {
-      if (!this.selectedProfile) return;
-      if (this.newMessage.trim() === "") return;
-      const receiverEmail = this.selectedProfile.email;
-      const senderEmail = this.userEmail;
-      const senderFirstName = this.senderFirstName;
-      const timestamp = Timestamp.now();
+  if (!this.selectedProfile || !this.userEmail || this.newMessage.trim() === "") {
+    return;
+  }
 
-      try {
-        await addDoc(collection(projectFirestore, "messages"), {
-          receiverId: receiverEmail,
-          senderId: senderEmail,
-          senderFirstName: senderFirstName,
-          message: this.newMessage,
-          timestamp: timestamp,
-        });
-      } catch (error) {
-        console.error("Error sending message:", error);
-      }
+  const receiverEmail = this.selectedProfile.email;
+  console.log("Receiver Email:", receiverEmail); //problem here
+  console.log("Selected Profile:", this.selectedProfile); //problem here
 
-      this.newMessage = "";
-      this.$nextTick(() => {
-        this.$refs.messages.scrollTop = this.$refs.messages.scrollHeight;
-      });
-    },
+  const senderEmail = this.userEmail;
+  const senderFirstName = this.senderFirstName;
+  const timestamp = Timestamp.now();
+
+  try {
+    await addDoc(collection(projectFirestore, "messages"), {
+      receiverId: receiverEmail,
+      senderId: senderEmail,
+      senderFirstName: senderFirstName,
+      message: this.newMessage,
+      timestamp: timestamp,
+    });
+  } catch (error) {
+    console.error("Error sending message:", error);
+  }
+
+  this.newMessage = "";
+  this.$nextTick(() => {
+    this.$refs.messages.scrollTop = this.$refs.messages.scrollHeight;
+  });
+},
+
     async retrieveSenderInfo() {
       try {
         const email = this.userEmail;
@@ -184,45 +171,15 @@ export default {
           const data = doc.data();
           this.senderProfession = data.profession;
           this.senderFirstName = data.firstName;
-          if (this.senderProfession === "Coach") {
-            this.addClientUsers();
-          } else if (this.senderProfession === "Client") {
-            this.addCoachUsers();
+          if (this.senderProfession === "Client") {
+            this.profileList = this.filteredProfileList('Coach');
           }
         });
       } catch (error) {
         console.error("Error retrieving sender info:", error);
       }
     },
-    async addClientUsers() {
-      try {
-        const clientUsersSnapshot = await getDocs(
-          query(
-            collection(projectFirestore, "profile"),
-            where("profession", "==", "Client")
-          )
-        );
-        const clientUsers = clientUsersSnapshot.docs.map((doc) => doc.data());
-        this.profileList = clientUsers;
-      } catch (error) {
-        console.error("Error adding client users:", error);
-      }
-    },
-    async addCoachUsers() {
-      try {
-        const coachUsersSnapshot = await getDocs(
-          query(
-            collection(projectFirestore, "profile"),
-            where("profession", "==", "Coach")
-          )
-        );
-        const coachUsers = coachUsersSnapshot.docs.map((doc) => doc.data());
-        this.profileList = coachUsers;
-      } catch (error) {
-        console.error("Error adding coach users:", error);
-      }
-    },
-    fetchMessages() {
+    async fetchMessages() {
       const senderEmail = this.userEmail
       const receiverEmail = this.selectedProfile
         ? this.selectedProfile.email
@@ -282,9 +239,9 @@ export default {
 };
 </script>
 
+
 <style scoped>
 /* Your existing styles */
-/* Updated styles for a more modern look */
 
 .chat-box {
   border: 1px solid #ccc;
