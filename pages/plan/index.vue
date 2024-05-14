@@ -30,11 +30,26 @@
         </div>
       </div>
       <div class="section gym-details-section">
-        <div class="section-content">
-          <h2>Gym Details</h2>
-          <p>{{ userEmail }}</p>
-          <p v-if="selectedExerciseDescription">{{ selectedExerciseDescription }}</p> <!-- Display the exercise description -->
-        </div>
+        <div class="section gym-details-section">
+  <div class="section-content">
+    <h2>Workout Details</h2>
+    <p>{{ userEmail }}</p>
+    <p v-if="selectedExerciseDescription">{{ selectedExerciseDescription }}</p> <!-- Display the exercise description -->
+
+    <!-- Recommendations for Clients -->
+    <div class="recommendations">
+      <h3>Recommendations:</h3>
+      <ul>
+        <li>Sleep 7-9 hours every night for proper recovery and muscle growth.</li>
+        <li>Avoid alcohol consumption as it can hinder muscle recovery and performance.</li>
+        <li>Avoid tobacco use to maintain optimal lung function and overall health.</li>
+        <li>Manage stress through relaxation techniques like meditation or yoga.</li>
+        <!-- Add more recommendations as needed -->
+      </ul>
+    </div>
+  </div>
+</div>
+
       </div>
     </div>
   </div>
@@ -95,23 +110,31 @@ export default {
 
           if (ageRange === '60s' || days.includes(daysE)) {
             program6(selectedDay.value);
+            console.log('program 6')
           } else if (programType === 'Bulk') {
             if ((exp === 'beginner') && (goal > weight) && (relevantAgeRanges.includes(ageRange))) {
               program1(selectedDay.value);
+              console.log('program 1')
             } else if (risk.includes('depressionAnxiety')) {
               program5(selectedDay.value);
+              console.log('program 5')
             } else {
               program3(selectedDay.value);
+              console.log('program 3')
             }
           } else if (programType === 'Cut') {
             if (risk.includes('none') && goal < weight) {
               program2(selectedDay.value);
+              console.log('program 2')
             } else if (risk.includes('depressionAnxiety')) {
               program5(selectedDay.value);
+              console.log('program 5')
             } else if (risk1.includes(risk)) {
               program4(selectedDay.value);
+              console.log('program 4')
             } else {
               program3(selectedDay.value);
+              console.log('program 3')
             }
           }
         });
@@ -123,7 +146,7 @@ export default {
     // Function for the specific program 1: Beginner's muscle building
     const program1 = (day) => {
       if (day === 'Monday') { //Chest day + Triceps
-        selectedItems.value = ['Bench Press','Bench press', 'Cable Crossover','Landmine Press'];
+        selectedItems.value = ['Bench Press','Dumbbell press', 'Cable Crossover','Landmine Press'];
       } else if (day === 'Tuesday') { //Back day + Biceps
         selectedItems.value = ['Lat Pulldowns','Dumbell Single','Pull ups', 'Pulls', ];
       } else if (day === 'Friday') { //Legs day
@@ -284,6 +307,7 @@ export default {
   display: flex;
   width: 95%;
   max-width: 1500px;
+  align-items: stretch;
   height: 600px;
   background-color: #ffffff;
   border-radius: 15px;
@@ -365,7 +389,6 @@ export default {
 .gym-details-section {
   background-color: #f9f9f9; /* Light background color */
   padding: 20px; /* Padding around the content */
-  border-top: 2px solid #ddd; /* Subtle top border */
   border-bottom-left-radius: 15px; /* Rounded corners */
   border-bottom-right-radius: 15px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Slight shadow */
@@ -402,4 +425,35 @@ export default {
   border-radius: 15px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
+
+/* Recommendations Section Styles */
+.recommendations {
+  margin-top: 20px; /* Add space above recommendations */
+}
+
+.recommendations h3 {
+  font-size: 18px; /* Increase font size for recommendation title */
+  margin-bottom: 10px; /* Add space below title */
+  color: #333; /* Dark gray text color */
+}
+
+.recommendations ul {
+  list-style-type: disc; /* Use bullet points for recommendations */
+  padding-left: 20px; /* Indent the bullet points */
+}
+
+.recommendations ul li {
+  font-size: 14px; /* Set font size for recommendations */
+  line-height: 1.6; /* Increase line height for better readability */
+  color: #555; /* Medium gray text color */
+}
+
+.recommendations ul li:first-child {
+  margin-top: 5px; /* Add a small margin at the top of the list */
+}
+
+.recommendations ul li:last-child {
+  margin-bottom: 0; /* Remove margin at the bottom of the list */
+}
+
 </style>

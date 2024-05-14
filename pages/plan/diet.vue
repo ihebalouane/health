@@ -1,327 +1,311 @@
 <template>
-    <div class="container">
-      <!-- Meal list on the left side -->
-      <div class="meal-list-section">
-        <ul class="meal-list">
-          <!-- Loop through the filtered list of meals -->
-          <li
-            v-for="(meal, index) in filteredMeals"
-            :key="index"
-            @click="selectMeal(meal)"
-            :class="{ selected: selectedMeal === meal.name }"
-          >
-            <span class="meal-text">{{ meal.name }}</span>
-          </li>
-        </ul>
-      </div>
+  <div class="container">
+    <!-- Meal list on the left side -->
+    <div class="meal-list-section">
+      <ul class="meal-list">
+        <!-- Loop through the filtered list of meals -->
+        <li v-for="(meal, index) in filteredMeals" :key="index" @click="selectMeal(meal)" :class="{ selected: selectedMeal === meal }">
+          <span class="meal-text">{{ meal }}</span>
+          <hr /> <!-- Line separator -->
+        </li>
+      </ul>
+    </div>
 
-      <!-- Image and description display in the middle -->
-      <div class="image-display-section" v-if="showData">
-        <!-- Image container -->
-        <div class="image-container">
-          <img
-            v-if="selectedImage"
-            :src="selectedImage"
-            alt="Selected Meal"
-            class="meal-image"
-            @click="openModal"
-          />
-        </div>
-      </div>
-
-      <!-- Modal overlay -->
-      <div v-if="isModalOpen" class="modal-overlay" @click="closeModal">
-        <div class="modal-content" @click.stop>
-          <h3>Description</h3>
-          <p>{{ selectedDescription }}</p>
-
-          <h3>Advice</h3>
-          <p>{{ advice }}</p>
-
-          <button @click="closeModal">Close</button>
-        </div>
+    <!-- Image and description display in the middle -->
+    <div class="image-display-section" v-if="showData">
+      <!-- Image container -->
+      <div class="image-container">
+        <img v-if="selectedImage" :src="selectedImage" alt="Selected Meal" class="meal-image" @click="openModal" />
       </div>
     </div>
-  </template>
 
-  <script>
-  import { ref, onMounted, computed } from 'vue';
-  import { projectFirestore } from '@/firebase/config';
-  import { collection, getDocs, query, where } from 'firebase/firestore';
-  
-  export default {
-    setup() {
-      // Define the list of meals with images and descriptions for different program types
-      const meals = ref([
-        {
-          name: 'Breakfast',
-          Bulk: {
-            image: '/diet/bulk/1.jpg',
-            description: 'A hearty start to the day.',
-          },
-          Cut: {
-            image: '/diet/cut/1.jpg',
-            description: 'A light and healthy breakfast.',
-          },
-        },
-        {
-          name: 'After Snack',
-          Bulk: {
-            image: '/diet/bulk/After snack.jpg',
-            description: 'A substantial snack to keep you powered.',
-          },
-        },
-        {
-          name: 'Lunch',
-          Bulk: {
-            image: '/diet/bulk/2.jpg',
-            description: 'A large, energy-packed midday meal.',
-          },
-          Cut: {
-            image: '/diet/cut/2.jpg',
-            description: 'A balanced, calorie-controlled lunch.',
-          },
-        },
-        {
-          name: 'Mid Snack',
-          Bulk: {
-            image: '/diet/bulk/Mid snack.png',
-            description: 'A nutritious snack to sustain your energy.',
-          },
-        },
-        {
-          name: 'Dinner',
-          Bulk: {
-            image: '/diet/bulk/dinner.jpeg',
-            description: 'A robust and hearty dinner to end your day.',
-          },
-          Cut: {
-            image: '/diet/cut/3.jpeg',
-            description: 'A light dinner to support your fitness goals.',
-          },
-        },
-        {
-          name: 'Evening Snack',
-          Bulk: {
-            image: '/diet/bulk/Evening snack.jpg',
-            description: 'A final snack to top off your daily caloric intake.',
-          },
-        },
-      ]);
-  
-      const selectedMeal = ref('');
-      const selectedImage = ref('');
-      const selectedDescription = ref('');
-      const showData = ref(false);
-      const programType = ref('');
-      const deficiencies = ref([]);
-      const advice = ref('');
-      const isModalOpen = ref(false);
-  
-      // Advice recommendations based on deficiencies
-      const deficiencyAdvice = {
-        iron: 'Increase intake of iron-rich foods such as red meat, leafy greens, and legumes.',
-        vitaminA: 'Consider consuming more foods like sweet potatoes, carrots, and spinach for vitamin A.',
-        vitaminB: 'Include sources of B vitamins like whole grains, meat, and eggs in your diet.',
-        vitaminD: 'Get more sunlight and consume foods rich in vitamin D, such as fish and fortified dairy.',
-        calcium: 'Consume more dairy products, leafy greens, and fortified foods for calcium.',
-        magnesium: 'Eat more nuts, seeds, and whole grains to increase magnesium intake.',
-        zinc: 'Include more zinc-rich foods like shellfish, meat, and legumes in your diet.',
-      };
-  
-      // Filter meals based on the availability of "Cut" data
-      const filteredMeals = computed(() => {
-        if (programType.value === 'Cut') {
-          return meals.value.filter((meal) => meal.Cut);
-        }
-        return meals.value;
-      });
-  
-      const selectMeal = (meal) => {
-        selectedMeal.value = meal.name;
-        if (meal[programType.value]) {
-          selectedImage.value = meal[programType.value].image;
-          selectedDescription.value = meal[programType.value].description;
-        }
-      };
-  
-      // Open the modal
-      const openModal = () => {
-        isModalOpen.value = true;
-      };
-  
-      // Close the modal
-      const closeModal = () => {
-        isModalOpen.value = false;
-      };
-  
-      // Fetch user data and set deficiencies and advice
-      const fetchUserData = async () => {
-        try {
-          const userEmail = localStorage.getItem('email');
-          const q = query(collection(projectFirestore, 'userResponses'), where('userEmail', '==', userEmail));
-          const querySnapshot = await getDocs(q);
-          querySnapshot.forEach((doc) => {
-            const data = doc.data();
-  
-            // Store the program type
-            programType.value = data.programType;
-  
-            // Show data if program type is either "Bulk" or "Cut"
-            showData.value = ['Bulk', 'Cut'].includes(programType.value);
-  
-            // Retrieve deficiencies and set advice accordingly
-            if (data.deficiencies) {
-              deficiencies.value = data.deficiencies;
-              setAdviceBasedOnDeficiencies();
-            }
-          });
-        } catch (error) {
-          console.error('Error fetching user data:', error);
-        }
-      };
-  
-      // Set advice based on the user's deficiencies
-      const setAdviceBasedOnDeficiencies = () => {
-        const userDeficiencies = deficiencies.value;
-        let adviceArray = [];
-        
-        userDeficiencies.forEach((deficiency) => {
-          if (deficiencyAdvice[deficiency]) {
-            adviceArray.push(deficiencyAdvice[deficiency]);
+    <!-- Modal overlay -->
+    <div v-if="isModalOpen" class="modal-overlay" @click="closeModal">
+      <div class="modal-content" @click.stop>
+        <h3>Description</h3>
+        <p>{{ selectedDescription }}</p>
+
+        <h3>Advice</h3>
+        <p>{{ advice }}</p>
+
+        <button @click="closeModal">Close</button>
+      </div>
+    </div>
+  </div>
+</template>
+
+
+<script>
+import { ref, onMounted, computed } from 'vue';
+import { projectFirestore } from '@/firebase/config';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+
+export default {
+  setup() {
+    // Define the list of meals with images and descriptions for different program types
+    const mealImages = {
+      //Meal 1 Bulk
+      'Grilled chicken': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Diet%2FMeal%201%2FGrilled%20chicken%20breast.jpg?alt=media&token=f1dbb2cf-aa85-4acf-b38b-d35c42294633',
+      'Greek yogurt':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Diet%2FMeal%201%2FGreek%20yogurt%20with%20mixed%20berries%20and%20a%20handful%20of%20almonds.jpg?alt=media&token=139faab9-e710-4117-892c-d436b73377d8',
+      'Whole wheat toast':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Diet%2FMeal%201%2Fwhole%20wheat%20toast.png?alt=media&token=9c8664e5-e322-4541-8785-adc0520a4ff6',
+      'Scrambled eggs':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Diet%2FMeal%201%2FScrambled%20eggs.jpg?alt=media&token=f92e6dde-203a-4a1a-8c86-2593e0520aa6',
+      'Baked salamon':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Diet%2FMeal%201%2FBaked%20salamon.jpeg?alt=media&token=a37caee0-bef6-4fe4-a5de-da39cdaf8433',
+      //Meal 2 vegan :
+      'Cereale': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Diet%2FMeal%201%2FCereale.jpg?alt=media&token=b28572aa-5252-4b44-a831-5d27a4f3450e',
+      'Edamame beans':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Diet%2FMeal%202%20vegan%2FEdamame%20beans.jpg?alt=media&token=a6ac9bd0-1d3c-4255-b0bf-c9c1879c6e37',
+      'Grilled tofu with stir-fried vegetables':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Diet%2FMeal%202%20vegan%2FGrilled%20tofu%20with%20stir-fried%20vegetables.jpeg?alt=media&token=81997593-95c3-4a90-93fd-73295b65593a',
+      'Hummus scaled':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Diet%2FMeal%202%20vegan%2FHummus-scaled.jpg?alt=media&token=7cbf41fe-799e-48ba-8b7f-754c452653c8',
+      'Lentil soup with whole grain bread and a side salad':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Diet%2FMeal%202%20vegan%2FLentil%20soup%20with%20whole%20grain%20bread.jpg?alt=media&token=04657997-51b6-4f08-bb2a-a926c13f1ac4',
+      //Meal 3 high blood pressure
+      'Protein oatmeal with sliced bananas':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Diet%2FMeal%20high%20blood%2FProtein-Oatmeal-with-Bananas.jpg?alt=media&token=ad91df4d-057d-4d32-b9d5-80de3ce2c31e',
+      'Cottage cheese with pineapple chunks':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Diet%2FMeal%20high%20blood%2FPineapple%20and%20cottage%20cheese%20Bowl.jpg?alt=media&token=c10d93ec-9e4a-45ca-98a4-009953d79b87',
+      'Turkey and avocado wrap':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Diet%2FMeal%20high%20blood%2Fveggie-turkey-wrap.jpg?alt=media&token=d4cbf059-6424-4052-8cc1-9cad1fb12ae0',
+      'Protein bar':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Diet%2FMeal%20high%20blood%2Fcrunchy%20protein%20bars.jpg?alt=media&token=65121b97-c037-45a6-8639-ee1434fa2a3c',
+      'Beef stir-fry with mixed':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Diet%2FMeal%20high%20blood%2FBeef%20and%20Vegetable%20Stir.jpg?alt=media&token=5a297792-33b4-4eed-b85a-911bdac5f926',
+      //Meal 4 diabetes
+      'A small apple with a tablespoon of almond butter':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Diet%2FMeal%20diabetes%2FA%20small%20apple%20with%20a%20tablespoon%20of%20almond%20butter.jpg?alt=media&token=a510ad92-5857-4a10-8b56-433e07cf1a9e',
+      'A side of quinoa or brown rice':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Diet%2FMeal%20diabetes%2FA%20side%20of%20quinoa%20or%20brown%20rice.jpg?alt=media&token=a0d3e04a-92d3-4d8d-98cc-d683f9cf8d5b',
+      'Carrot sticks with hummus':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Diet%2FMeal%20diabetes%2FCarrot%20sticks%20with%20hummus.jpg?alt=media&token=d08e037b-a4b2-4915-a27c-1ed8788934ca',
+      'Steamed broccoli or asparagus':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Diet%2FMeal%20diabetes%2FSteamed%20broccoli%20or%20asparagus.jpg?alt=media&token=12b4db47-3adf-4507-90f4-3553132f8f01',
+      //Meal 5 Cut
+      'Steel cut oats':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Diet%2FMeal%202%2FSteel-Cut-Oats-Recipe.jpg?alt=media&token=193da136-da23-49c1-881b-100df0136edc',
+      'Salad chicken':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Diet%2FMeal%202%2Fsalad%20chicken.jpg?alt=media&token=47c429fa-2305-4afb-bbc8-00bf5bb7a1cb',
+      'Omelet made with egg':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Diet%2FMeal%202%2Fbest-omelette-recipe-1.jpg?alt=media&token=7bc184bf-dfe7-433c-9993-ad651cbe7c4f',
+      //Meal 6 cholesterol
+      'Oatmeal made with rolled oats':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Diet%2FMeal%20cholesterol%2FOatmeal%20made%20with%20rolled%20oats.jpg?alt=media&token=8af10cac-1c52-490f-8fcb-ce477c9c0293',
+      'Walnuts or almonds':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Diet%2FMeal%20cholesterol%2FWalnuts%20or%20almonds.jpg?alt=media&token=689d0c28-a112-4258-9cf5-3fa216791b85',
+      'Quinoa or wild rice pilaf':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Diet%2FMeal%20cholesterol%2FQuinoa%20or%20wild%20rice%20pilaf%20with%20diced%20vegetables.jpg?alt=media&token=1c2543c3-b3ee-4725-9ac6-1ca409199806',
+      'Mixed salad':'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Diet%2FMeal%20cholesterol%2FMixed%20salad.jpg?alt=media&token=59016b90-c496-4df2-8f97-414afea12d2e',
+    };
+
+    const selectedMeal = ref('');
+    const selectedImage = ref('');
+    const selectedDescription = ref('');
+    const showData = ref(false);
+    const programType = ref('');
+    const diet = ref('');
+    const selectedRiskFactors = ref([]); // Assuming selectedRiskFactors is fetched from user data
+    const deficiencies = ref([]);
+    const advice = ref('');
+    const isModalOpen = ref(false);
+
+    // Advice recommendations based on deficiencies
+    const deficiencyAdvice = {
+      iron: 'Increase intake of iron-rich foods such as red meat, leafy greens, and legumes.',
+      vitaminA: 'Consider consuming more foods like sweet potatoes, carrots, and spinach for vitamin A.',
+      vitaminB: 'Include sources of B vitamins like whole grains, meat, and eggs in your diet.',
+      vitaminD: 'Get more sunlight and consume foods rich in vitamin D, such as fish and fortified dairy.',
+      calcium: 'Consume more dairy products, leafy greens, and fortified foods for calcium.',
+      magnesium: 'Eat more nuts, seeds, and whole grains to increase magnesium intake.',
+      zinc: 'Include more zinc-rich foods like shellfish, meat, and legumes in your diet.',
+    };
+
+    // Filter meals based on the conditions
+    const filteredMeals = computed(() => {
+      if (diet.value === 'Vegetarian' || diet.value === 'Vegan') {
+        console.log ('Meal 1')
+        return ['Cereale','Hummus scaled','Lentil soup with whole grain bread and a side salad','Edamame beans','Grilled tofu with stir-fried vegetables'];
+      } else if (programType.value === 'Bulk') {
+        if (selectedRiskFactors.value.includes('bloodPressure')) {
+          return ['Protein oatmeal with sliced bananas','Cottage cheese with pineapple chunks','Turkey and avocado wrap','Protein bar','Beef stir-fry with mixed'];
+      } else if (selectedRiskFactors.value.includes('diabetes')) {
+        return ['Greek yogurt','A small apple with a tablespoon of almond butter', 'A side of quinoa or brown rice', 'Carrot sticks with hummus', 'Steamed broccoli or asparagus'];
+      } else if (selectedRiskFactors.value.includes('cholesterol')) {
+        return ['Oatmeal made with rolled oats','Walnuts or almonds','Quinoa or wild rice pilaf','Mixed salad','Lentil soup with whole grain bread and a side salad'];
+      } else {
+        console.log ('Meal 1')
+        return ['Scrambled eggs','Greek yogurt','Grilled chicken','Whole wheat toast','Baked salamon'];
+      }
+      } else if (programType.value === 'Cut') {
+        if (selectedRiskFactors.value.includes('bloodPressure')) {
+        return ['Protein oatmeal with sliced bananas','Cottage cheese with pineapple chunks','Turkey and avocado wrap','Protein bar','Beef stir-fry with mixed'];
+      } else if (selectedRiskFactors.value.includes('diabetes')) {
+        return ['Greek yogurt','A small apple with a tablespoon of almond butter', 'A side of quinoa or brown rice', 'Carrot sticks with hummus', 'Steamed broccoli or asparagus'];
+      } else if (selectedRiskFactors.value.includes('cholesterol')) {
+        return ['Oatmeal made with rolled oats','Walnuts or almonds','Quinoa or wild rice pilaf','Mixed salad','Lentil soup with whole grain bread and a side salad'];
+      } else {
+        return ['Steel cut oats','Salad chicken','Hummus scaled', 'Beef stir-fry with mixed', 'Omelet made with egg',];
+      }
+      }
+    });
+
+    const selectMeal = (mealName) => {
+      selectedMeal.value = mealName;
+      if (mealImages[mealName]) {
+        selectedImage.value = mealImages[mealName];
+      }
+    };
+
+    // Open and close the modal
+    const openModal = () => {
+      isModalOpen.value = true;
+    };
+    const closeModal = () => {
+      isModalOpen.value = false;
+    };
+
+    // Fetch user data and set deficiencies, advice, and diet
+    const fetchUserData = async () => {
+      try {
+        const userEmail = localStorage.getItem('email');
+        const q = query(collection(projectFirestore, 'userResponses'), where('userEmail', '==', userEmail));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+
+          // Store the program type
+          programType.value = data.programType;
+
+          // Show data if program type is either "Bulk" or "Cut"
+          showData.value = ['Bulk', 'Cut'].includes(programType.value);
+          // Retrieve selectedRiskFactors and set filtered meals accordingly
+          if (data.selectedRiskFactors) {
+            selectedRiskFactors.value = data.selectedRiskFactors;
+          }
+          // Retrieve deficiencies and set advice accordingly
+          if (data.deficiencies) {
+            deficiencies.value = data.deficiencies;
+            setAdviceBasedOnDeficiencies();
+          }
+          // Set the diet
+          if (data.diet) {
+            diet.value = data.diet;
           }
         });
-        
-        advice.value = adviceArray.join('. ');
-      };
-  
-      onMounted(() => {
-        fetchUserData();
-      });
-  
-      return {
-        filteredMeals,
-        selectedMeal,
-        selectedImage,
-        selectedDescription,
-        selectMeal,
-        showData,
-        programType,
-        deficiencies,
-        advice,
-        isModalOpen,
-        openModal,
-        closeModal,
-      };
-    },
-  };
-  </script>
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
 
-  <style>
-  .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    padding: 20px;
-    transition: filter 0.3s;
-  }
-  
-  .container.blurred {
-    filter: blur(5px);
-  }
-  
-  .meal-list-section {
-    flex: 1;
-    margin-right: 20px;
-  }
-  
-  .meal-list {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .meal-list li {
-    padding: 12px;
-    margin-bottom: 8px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.2s;
-  }
-  
-  .meal-list li.selected,
-  .meal-list li:hover {
-    background-color: #e0f7fa;
-  }
-  
-  .meal-text {
-    font-size: 16px;
-    color: #00796b;
-  }
-  
-  .image-display-section {
-    flex: 2;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    border: 2px solid #00796b;
-    border-radius: 10px;
-    background-color: #e0f7fa;
-    padding: 20px;
-  }
-  
-  .image-container {
-    padding: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-  }
-  
-  .meal-image {
-    max-width: 100%;
-    max-height: 400px;
-    object-fit: contain;
-    border-radius: 10px;
-    cursor: pointer;
-  }
-  
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .modal-content {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 600px;
-    width: 90%;
-  }
-  
-  .modal-content h3 {
-    color: #00796b;
-    margin-bottom: 10px;
-  }
-  
-  .modal-content p {
-    color: #333;
-    margin-bottom: 20px;
-  }
-  
-  .modal-content button {
-    padding: 8px 16px;
-    background-color: #00796b;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  </style>
+    // Set advice based on the user's deficiencies
+    const setAdviceBasedOnDeficiencies = () => {
+      const userDeficiencies = deficiencies.value;
+      let adviceArray = [];
+
+      userDeficiencies.forEach((deficiency) => {
+        if (deficiencyAdvice[deficiency]) {
+          adviceArray.push(deficiencyAdvice[deficiency]);
+        }
+      });
+
+      advice.value = adviceArray.join('. ');
+    };
+
+    onMounted(() => {
+      fetchUserData();
+    });
+
+    return {
+      filteredMeals,
+      selectedMeal,
+      selectedImage,
+      selectedDescription,
+      selectMeal,
+      showData,
+      programType,
+      selectedRiskFactors,
+      deficiencies,
+      advice,
+      isModalOpen,
+      openModal,
+      closeModal,
+    };
+  },
+};
+</script>
+<style scoped>
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 20px;
+}
+
+.meal-list-section {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.meal-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.meal-list li {
+  padding: 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.2s;
+}
+
+.meal-list li.selected,
+.meal-list li:hover {
+  background-color: #e0f7fa;
+}
+
+.meal-text {
+  font-size: 16px;
+  color: #2ecc71;
+}
+
+.image-display-section {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-container {
+  border: 2px solid #2ecc71;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.meal-image {
+  max-width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 600px;
+  width: 90%;
+}
+
+.modal-content h3 {
+  color: #2ecc71;
+  margin-bottom: 10px;
+}
+
+.modal-content p {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.modal-content button {
+  padding: 8px 16px;
+  background-color: #2ecc71;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+</style>

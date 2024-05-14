@@ -47,6 +47,8 @@ export default {
         { value: 'calcium', label: 'Calcium' },
         { value: 'magnesium', label: 'Magnesium' },
         { value: 'zinc', label: 'Zinc' },
+        { value: 'none', label: 'None' },
+
       ]
     };
   },

@@ -1,5 +1,4 @@
 export const videosMap = {
-
         'Cinematic': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Cinematic%20gym%20workout.mp4?alt=media&token=f624bad5-d2c2-4f95-9b18-92c28d11a0d7',
 //BULK EDITION:
     //Chest videos:
