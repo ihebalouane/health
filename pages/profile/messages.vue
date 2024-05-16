@@ -47,7 +47,10 @@
                     d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z"
                   />
                 </svg>
-                {{ profile.firstName + " " + profile.lastName }}
+                {{ profile.firstName }} {{ profile.lastName }}
+                <span v-if="profile.unreadCount > 0" class="unread-count">
+                  &nbsp;({{ profile.unreadCount }})
+                </span>
               </div>
             </div>
           </div>
@@ -108,6 +111,7 @@ import {
   where,
   orderBy,
   onSnapshot,
+  updateDoc,
 } from "firebase/firestore";
 import { ref, onMounted } from "vue";
 
@@ -154,24 +158,96 @@ export default {
         const profilesSnapshot = await getDocs(
           collection(projectFirestore, "profile")
         );
-        this.profileList = profilesSnapshot.docs.map((doc) => {
-          return {
+
+        // Fetch profiles and unread message counts
+        const profilePromises = profilesSnapshot.docs.map(async (doc) => {
+          const profile = {
             id: doc.id,
             ...doc.data(),
           };
+          // Get unread message count for the profile
+          profile.unreadCount = await this.getUnreadMessagesCount(
+            profile.userEmail
+          );
+          return profile;
         });
-        this.retrieveSenderInfo();
+
+        // Wait for all profile promises to resolve
+        this.profileList = await Promise.all(profilePromises);
+
+        // Retrieve sender info after profiles are fetched
+        await this.retrieveSenderInfo();
       } catch (error) {
         console.error("Error fetching profiles:", error);
+      } finally {
+        this.loading = false;
       }
-    },
-    selectUser(profile) {
-      if (this.selectedProfile && profile.id !== this.selectedProfile.id) {
-        this.newMessage = "";
-      }
-      this.selectedProfile = profile;
     },
 
+    async selectUser(profile) {
+      this.selectedProfile = profile;
+      this.newMessage = "";
+      await this.markMessagesAsRead();
+    },
+
+    async markMessagesAsRead() {
+      const senderEmail = this.userEmail;
+      const receiverEmail = this.selectedProfile.userEmail;
+
+      const messagesRef = collection(projectFirestore, "messages");
+      const q = query(
+        messagesRef,
+        where("senderId", "==", receiverEmail),
+        where("receiverId", "==", senderEmail),
+        where("isRead", "==", false)
+      );
+
+      try {
+        const querySnapshot = await getDocs(q);
+        const updatePromises = querySnapshot.docs.map((doc) => {
+          const messageRef = doc.ref;
+          return updateDoc(messageRef, { isRead: true });
+        });
+
+        await Promise.all(updatePromises);
+        this.selectedProfile.unreadCount = 0;
+        console.log("All messages marked as read.");
+      } catch (error) {
+        console.error("Error marking messages as read:", error);
+      }
+    },
+
+    async getUnreadMessagesCount(profileId) {
+      const profilesSnapshot = await getDocs(
+        collection(projectFirestore, "profile")
+      );
+      const profiles = profilesSnapshot.docs.map((doc) => {
+        return {
+          id: doc.id,
+          ...doc.data(),
+        };
+      });
+      if (!this.userEmail) return 0;
+      const profile = profiles.find((profile) => profile.id === profileId);
+      if (!profile) return 0;
+      const senderEmail = profile.userEmail;
+      const receiverEmail = this.userEmail;
+
+      try {
+        const messagesRef = collection(projectFirestore, "messages");
+        const q = query(
+          messagesRef,
+          where("senderId", "==", senderEmail),
+          where("receiverId", "==", receiverEmail),
+          where("isRead", "==", false)
+        );
+        const querySnapshot = await getDocs(q);
+        return querySnapshot.size;
+      } catch (error) {
+        console.error("Error fetching unread messages:", error);
+        return 0;
+      }
+    },
     async sendMessage() {
       if (
         !this.selectedProfile ||
@@ -193,6 +269,7 @@ export default {
           senderFirstName: senderFirstName,
           message: this.newMessage,
           timestamp: timestamp,
+          isRead: false,
         });
       } catch (error) {
         console.error("Error sending message:", error);
@@ -380,6 +457,11 @@ export default {
   flex: 1;
   padding: 20px;
   overflow-y: auto;
+}
+
+.unread-count {
+  color: red;
+  font-weight: bold;
 }
 
 .message {
