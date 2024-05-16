@@ -135,7 +135,14 @@ import {
   EmailAuthProvider,
 } from "firebase/auth";
 import { projectFirestore } from "@/firebase/config.js";
-import { collection, doc, setDoc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  setDoc,
+  query,
+  getDocs,
+  where,
+} from "firebase/firestore";
 
 export default {
   setup() {
@@ -160,18 +167,22 @@ export default {
 
     const getProfileData = async () => {
       try {
-        const profileDoc = await getDoc(
-          doc(projectFirestore, "profile", userEmail.value)
+        const q = query(
+          collection(projectFirestore, "profile"),
+          where("userEmail", "==", userEmail.value)
         );
-        if (profileDoc.exists()) {
-          const data = profileDoc.data();
+
+        const querySnapshot = await getDocs(q);
+
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
           firstName.value = data.firstName || "";
           lastName.value = data.lastName || "";
           gender.value = data.gender || "";
           birthDate.value = data.birthDate || "";
-          profession.value = data.profession || "Client"; // Set profession field value
+          profession.value = data.profession || "Client";
           profilePicture.value = data.profilePicture || null;
-        }
+        });
       } catch (error) {
         console.error("Error fetching profile data:", error);
       }
@@ -242,7 +253,9 @@ export default {
       const fileInput = document.getElementById("file-input");
       fileInput.click();
     };
-
+    onMounted(() => {
+      getProfileData();
+    });
     return {
       firstName,
       lastName,

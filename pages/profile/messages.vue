@@ -183,9 +183,6 @@ export default {
       }
 
       const receiverEmail = this.selectedProfile.userEmail;
-      console.log("Receiver Email:", receiverEmail); //problem here
-      console.log("Selected Profile:", this.selectedProfile); //problem here
-
       const senderEmail = this.userEmail;
       const senderFirstName = this.senderFirstName;
       const timestamp = Timestamp.now();
