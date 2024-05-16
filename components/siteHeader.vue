@@ -112,29 +112,45 @@
 
 <script setup>
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { isAuthenticated, logout } from "@/firebase/config";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { projectFirestore } from "@/firebase/config";
 import { collection, query, where, getDocs } from "firebase/firestore";
 
 const router = useRouter();
-const route = router.currentRoute.value;
+const route = useRoute();
 
-// Define the user's email and profession state
 const userEmail = ref(null);
 const profession = ref(null);
 
-// Define the initial navigation items
-const navigation = ref([
-  { name: "Home", href: "/", current: route.name === "index" },
-  { name: "Program", href: "/plan", current: route.name === "plan" },
-  { name: "Diet", href: "/plan/diet", current: route.name === "diet" },
-  { name: "About us", href: "/aboutus", current: route.name === "aboutus" },
-  { name: "Contact", href: "/contact", current: route.name === "contact" },
-]);
+const navigation = ref([]);
+const filteredNavigation = ref([]);
 
-const filteredNavigation = ref([...navigation.value]);
+const initializeNavigation = () => {
+  const currentRouteName = route.name;
+  navigation.value = [
+    { name: "Home", href: "/", current: currentRouteName === "index" },
+    { name: "Program", href: "/plan", current: currentRouteName === "plan" },
+    { name: "Diet", href: "/plan/diet", current: currentRouteName === "diet" },
+    {
+      name: "About us",
+      href: "/aboutus",
+      current: currentRouteName === "aboutus",
+    },
+    {
+      name: "Contact",
+      href: "/contact",
+      current: currentRouteName === "contact",
+    },
+  ];
+
+  filteredNavigation.value = [...navigation.value];
+
+  if (profession.value === "Admin") {
+    filteredNavigation.value.push({ name: "Admin", href: "/admin" });
+  }
+};
 
 // Function to log out the user
 const logoutUser = async () => {
@@ -150,7 +166,6 @@ const logoutUser = async () => {
 // Function to fetch the user's profession
 const fetchUserProfession = async () => {
   try {
-    // Fetch the user's profession from Firestore
     const userQuery = query(
       collection(projectFirestore, "profile"),
       where("email", "==", userEmail.value)
@@ -161,28 +176,30 @@ const fetchUserProfession = async () => {
       const userData = userSnapshot.docs[0].data();
       profession.value = userData.profession;
 
-      // Add the "Test" navigation item if the user is an Admin
-      if (profession.value === "Admin") {
-        filteredNavigation.value.push({ name: "Admin", href: "/admin" });
-      }
+      initializeNavigation();
     }
   } catch (error) {
     console.error("Error fetching user profession:", error);
   }
 };
 
-// On mounted hook to handle browser-specific code
 onMounted(() => {
-  // Check if running in a browser environment and localStorage is available
   if (typeof window !== "undefined" && window.localStorage) {
     userEmail.value = window.localStorage.getItem("email");
 
-    // Fetch user profession if email is available
     if (userEmail.value) {
       fetchUserProfession();
+    } else {
+      initializeNavigation();
     }
   }
 });
+watch(
+  () => route.name,
+  () => {
+    initializeNavigation();
+  }
+);
 </script>
 
 <style scoped>
