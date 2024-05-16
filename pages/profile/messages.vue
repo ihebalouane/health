@@ -75,7 +75,6 @@
                   ]"
                 >
                   <p>
-                    <strong>{{ message.senderFirstName }}:</strong>
                     {{ message.message }}
                   </p>
                 </div>
