@@ -127,7 +127,11 @@ const initializeNavigation = () => {
   navigation.value = [
     { name: "Home", href: "/", current: currentRouteName === "index" },
     { name: "Program", href: "/plan", current: currentRouteName === "plan" },
-    { name: "Diet", href: "/plan/diet", current: currentRouteName === "diet" },
+    {
+      name: "Diet",
+      href: "/plan/diet",
+      current: currentRouteName === "plan-diet",
+    },
     {
       name: "About us",
       href: "/aboutus",
