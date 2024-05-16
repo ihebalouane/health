@@ -118,7 +118,6 @@ const route = useRoute();
 
 const profession = ref(null);
 const isUserAuthenticated = computed(() => isAuthenticated.value);
-console.log("isUserAuthenticated initial:", isUserAuthenticated.value);
 
 const navigation = ref([]);
 const filteredNavigation = ref([]);
@@ -184,7 +183,6 @@ const fetchUserProfession = async () => {
 onMounted(() => {
   if (typeof window !== "undefined" && window.localStorage) {
     const email = window.localStorage.getItem("email");
-    console.log("User email from localStorage:", email); // Ajoutez cette ligne
 
     if (email) {
       userEmail.value = email;
