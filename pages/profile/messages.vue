@@ -2,13 +2,24 @@
   <div>
     <profile-header />
     <div class="chat-box">
-      <BgAnimations/>
+      <BgAnimations />
       <div class="chat-app">
         <div class="user-list-box">
           <div class="user-list">
             <div v-if="showCoachTitle" class="title-container">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"
+                />
               </svg>
               Coach
             </div>
@@ -19,8 +30,19 @@
               @click="selectUser(profile)"
               :class="{ 'selected-user': profile === selectedProfile }"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z"
+                />
               </svg>
               {{ profile.firstName + " " + profile.lastName }}
             </div>
@@ -33,10 +55,35 @@
           </div>
 
           <div class="chat-messages" ref="messages">
-            <div v-for="message in messages" :key="message.id" :class="[message.senderId === userEmail ? 'sent-message-container' : 'received-message-container']">
-              <div :class="[message.senderId === userEmail ? 'sent-message' : 'received-message']">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+            <div
+              v-for="message in messages"
+              :key="message.id"
+              :class="[
+                message.senderId === userEmail
+                  ? 'sent-message-container'
+                  : 'received-message-container',
+              ]"
+            >
+              <div
+                :class="[
+                  message.senderId === userEmail
+                    ? 'sent-message'
+                    : 'received-message',
+                ]"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                  />
                 </svg>
                 <p>
                   <strong>{{ message.senderFirstName }}:</strong>
@@ -63,16 +110,25 @@
 
 <script>
 import { projectFirestore } from "@/firebase/config.js";
-import { collection, getDocs, addDoc, Timestamp, query, where, orderBy, onSnapshot } from "firebase/firestore";
-import { ref, onMounted } from 'vue';
+import {
+  collection,
+  getDocs,
+  addDoc,
+  Timestamp,
+  query,
+  where,
+  orderBy,
+  onSnapshot,
+} from "firebase/firestore";
+import { ref, onMounted } from "vue";
 
 export default {
   middleware: "auth",
   setup() {
-    const userEmail = ref('');
+    const userEmail = ref("");
 
     onMounted(() => {
-      userEmail.value = localStorage.getItem('email') || '';
+      userEmail.value = localStorage.getItem("email") || "";
     });
 
     return { userEmail };
@@ -99,7 +155,7 @@ export default {
       return null;
     },
     showCoachTitle() {
-      return this.filteredProfileList('Coach').length > 0;
+      return this.filteredProfileList("Coach").length > 0;
     },
   },
   methods: {
@@ -120,43 +176,47 @@ export default {
       }
     },
     selectUser(profile) {
-  console.log("Selected Profile:", profile); //problem here
-  if (this.selectedProfile && profile.id !== this.selectedProfile.id) {
-    this.newMessage = "";
-  }
-  this.selectedProfile = profile;
-},
+      console.log("Selected Profile:", profile); //problem here
+      if (this.selectedProfile && profile.id !== this.selectedProfile.id) {
+        this.newMessage = "";
+      }
+      this.selectedProfile = profile;
+    },
 
     async sendMessage() {
-  if (!this.selectedProfile || !this.userEmail || this.newMessage.trim() === "") {
-    return;
-  }
+      if (
+        !this.selectedProfile ||
+        !this.userEmail ||
+        this.newMessage.trim() === ""
+      ) {
+        return;
+      }
 
-  const receiverEmail = this.selectedProfile.email;
-  console.log("Receiver Email:", receiverEmail); //problem here
-  console.log("Selected Profile:", this.selectedProfile); //problem here
+      const receiverEmail = this.selectedProfile.email;
+      console.log("Receiver Email:", receiverEmail); //problem here
+      console.log("Selected Profile:", this.selectedProfile); //problem here
 
-  const senderEmail = this.userEmail;
-  const senderFirstName = this.senderFirstName;
-  const timestamp = Timestamp.now();
+      const senderEmail = this.userEmail;
+      const senderFirstName = this.senderFirstName;
+      const timestamp = Timestamp.now();
 
-  try {
-    await addDoc(collection(projectFirestore, "messages"), {
-      receiverId: receiverEmail,
-      senderId: senderEmail,
-      senderFirstName: senderFirstName,
-      message: this.newMessage,
-      timestamp: timestamp,
-    });
-  } catch (error) {
-    console.error("Error sending message:", error);
-  }
+      try {
+        await addDoc(collection(projectFirestore, "messages"), {
+          receiverId: receiverEmail,
+          senderId: senderEmail,
+          senderFirstName: senderFirstName,
+          message: this.newMessage,
+          timestamp: timestamp,
+        });
+      } catch (error) {
+        console.error("Error sending message:", error);
+      }
 
-  this.newMessage = "";
-  this.$nextTick(() => {
-    this.$refs.messages.scrollTop = this.$refs.messages.scrollHeight;
-  });
-},
+      this.newMessage = "";
+      this.$nextTick(() => {
+        this.$refs.messages.scrollTop = this.$refs.messages.scrollHeight;
+      });
+    },
 
     async retrieveSenderInfo() {
       try {
@@ -164,7 +224,7 @@ export default {
         const querySnapshot = await getDocs(
           query(
             collection(projectFirestore, "profile"),
-            where("email", "==", email)
+            where("userEmail", "==", email)
           )
         );
         querySnapshot.forEach((doc) => {
@@ -172,7 +232,7 @@ export default {
           this.senderProfession = data.profession;
           this.senderFirstName = data.firstName;
           if (this.senderProfession === "Client") {
-            this.profileList = this.filteredProfileList('Coach');
+            this.profileList = this.filteredProfileList("Coach");
           }
         });
       } catch (error) {
@@ -180,7 +240,7 @@ export default {
       }
     },
     async fetchMessages() {
-      const senderEmail = this.userEmail
+      const senderEmail = this.userEmail;
       const receiverEmail = this.selectedProfile
         ? this.selectedProfile.email
         : null;
@@ -239,7 +299,6 @@ export default {
 };
 </script>
 
-
 <style scoped>
 /* Your existing styles */
 
@@ -253,7 +312,7 @@ export default {
 .chat-app {
   display: flex;
   max-height: 600px;
-  overflow-y: auto; 
+  overflow-y: auto;
 }
 
 .user-list-box {
@@ -263,7 +322,7 @@ export default {
 }
 
 .user-list {
-  border: none; 
+  border: none;
   overflow-y: auto;
 }
 
@@ -283,9 +342,9 @@ export default {
 .user {
   padding: 12px;
   cursor: pointer;
-  transition: background-color 0.3s ease; 
-  display: flex; 
-  align-items: center; 
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
 }
 
 .user svg {
@@ -294,7 +353,7 @@ export default {
 
 .user:hover,
 .selected-user {
-  background-color: #f0f0f0; 
+  background-color: #f0f0f0;
 }
 
 .chat-container {
@@ -304,27 +363,27 @@ export default {
 }
 
 .chat-header {
-  padding: 20px; 
+  padding: 20px;
   border-bottom: 1px solid #ccc;
-  font-size: 18px; 
+  font-size: 18px;
   font-weight: bold;
 }
 
 .chat-messages {
   flex: 1;
-  padding: 20px; 
+  padding: 20px;
   overflow-y: auto;
 }
 
 .message {
-  margin-bottom: 20px; 
+  margin-bottom: 20px;
 }
 
 .chat-input {
   display: flex;
   align-items: center;
-  padding: 20px; 
-  border-top: 1px solid #ccc; 
+  padding: 20px;
+  border-top: 1px solid #ccc;
 }
 
 .chat-input input {
@@ -336,17 +395,17 @@ export default {
 }
 
 .chat-input button {
-  padding: 12px 24px; 
+  padding: 12px 24px;
   background-color: #2ecc71;
   color: #fff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease; 
+  transition: background-color 0.3s ease;
 }
 
 .chat-input button:hover {
-  background-color: #0056b3; 
+  background-color: #0056b3;
 }
 
 .received-message-container {
@@ -362,17 +421,16 @@ export default {
 }
 
 .received-message {
-  background-color: #2ecc71; 
-  color: #fff; 
-  padding: 10px; 
-  border-radius: 20px; 
+  background-color: #2ecc71;
+  color: #fff;
+  padding: 10px;
+  border-radius: 20px;
 }
 
 .sent-message {
-  background-color: rgb(94, 113, 236); 
-  color: white; 
-  padding: 10px; 
-  border-radius: 20px; 
+  background-color: rgb(94, 113, 236);
+  color: white;
+  padding: 10px;
+  border-radius: 20px;
 }
-
 </style>
