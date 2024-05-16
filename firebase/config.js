@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { ref } from 'vue';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAB4sLogG_6DEQ2_OtqBRJY9ad3eOoX3Ks",
@@ -15,12 +16,17 @@ const firebaseApp = initializeApp(firebaseConfig);
 const projectFirestore = getFirestore(firebaseApp);
 const auth = getAuth(firebaseApp);
 
-let isAuthenticated = false;
-let userEmail = null;
+const isAuthenticated = ref(false);
+const userEmail = ref(null);
 
 onAuthStateChanged(auth, (user) => {
-  isAuthenticated = !!user;
-  userEmail = isAuthenticated ? user.email : null; // Update user's email
+  isAuthenticated.value = !!user;
+  userEmail.value = isAuthenticated.value ? user.email : null; // Update user's email
+  if (isAuthenticated.value) {
+    localStorage.setItem('email', user.email); // Save email to local storage
+  } else {
+    localStorage.removeItem('email'); // Remove email from local storage
+  }
 });
 
 const logout = async () => {
@@ -33,3 +39,4 @@ const logout = async () => {
 };
 
 export { projectFirestore, auth, isAuthenticated, userEmail, logout };
+

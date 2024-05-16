@@ -7,7 +7,6 @@
             class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start"
           >
             <div class="flex flex-shrink-0 items-center">
-              <!-- Website logo -->
               <img
                 class="block h-8 w-auto lg:hidden"
                 src="~/assets/images/gymlogo.png?color=indigo&shade=500"
@@ -37,15 +36,12 @@
               </div>
             </div>
           </div>
-          <!-- Profile picture or login/sign-up buttons -->
           <div class="ml-4 flex items-center sm:ml-6">
-            <!-- Toggle between profile picture and logout button -->
-            <template v-if="isAuthenticated">
+            <template v-if="isUserAuthenticated">
               <NuxtLink to="/profile">
                 <button
                   class="bg-white rounded-full h-10 w-10 flex items-center justify-center focus:outline-none transition duration-300 ease-in-out hover:opacity-80"
                 >
-                  <!-- SVG Profile icon -->
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -53,14 +49,13 @@
                     class="w-6 h-6"
                   >
                     <path
-                      fillRule="evenodd"
-                      d="M7.5 6a4.5 4.5 0 1 1 9 0 a4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75 .75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
-                      clipRule="evenodd"
+                      fill-rule="evenodd"
+                      d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
+                      clip-rule="evenodd"
                     />
                   </svg>
                 </button>
               </NuxtLink>
-              <!-- Logout button -->
               <button
                 @click="logoutUser"
                 class="ml-2 bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded-md text-sm"
@@ -113,16 +108,17 @@
 <script setup>
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import { useRouter, useRoute } from "vue-router";
-import { isAuthenticated, logout } from "@/firebase/config";
-import { ref, onMounted, watch } from "vue";
+import { isAuthenticated, userEmail, logout } from "@/firebase/config";
+import { ref, onMounted, watch, computed } from "vue";
 import { projectFirestore } from "@/firebase/config";
 import { collection, query, where, getDocs } from "firebase/firestore";
 
 const router = useRouter();
 const route = useRoute();
 
-const userEmail = ref(null);
 const profession = ref(null);
+const isUserAuthenticated = computed(() => isAuthenticated.value);
+console.log("isUserAuthenticated initial:", isUserAuthenticated.value);
 
 const navigation = ref([]);
 const filteredNavigation = ref([]);
@@ -168,7 +164,7 @@ const fetchUserProfession = async () => {
   try {
     const userQuery = query(
       collection(projectFirestore, "profile"),
-      where("email", "==", userEmail.value)
+      where("userEmail", "==", userEmail.value)
     );
     const userSnapshot = await getDocs(userQuery);
 
@@ -177,6 +173,8 @@ const fetchUserProfession = async () => {
       profession.value = userData.profession;
 
       initializeNavigation();
+    } else {
+      console.log("userSnapshot is Empty");
     }
   } catch (error) {
     console.error("Error fetching user profession:", error);
@@ -185,15 +183,20 @@ const fetchUserProfession = async () => {
 
 onMounted(() => {
   if (typeof window !== "undefined" && window.localStorage) {
-    userEmail.value = window.localStorage.getItem("email");
+    const email = window.localStorage.getItem("email");
+    console.log("User email from localStorage:", email); // Ajoutez cette ligne
 
-    if (userEmail.value) {
+    if (email) {
+      userEmail.value = email;
       fetchUserProfession();
     } else {
       initializeNavigation();
     }
+  } else {
+    initializeNavigation();
   }
 });
+
 watch(
   () => route.name,
   () => {
