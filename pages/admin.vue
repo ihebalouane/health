@@ -56,8 +56,8 @@
 
     <!-- Modify form modal -->
     <div v-if="isFormVisible" class="modal-overlay" @click="closeForm">
-      <div class="modal-content show" @click.stop>
-        <h3>Modify User</h3>
+      <div class="modal-content show centered-modal" @click.stop>
+        <h3 class="modal-title">Modify User</h3>
         <form @submit.prevent="submitForm">
           <div class="form-group">
             <label for="first-name">First Name:</label>
@@ -133,24 +133,22 @@
       class="modal-overlay"
       @click="closeDeleteConfirm"
     >
-      <div class="modal-content show" @click.stop>
-        <h3>Confirm Deletion</h3>
+      <div class="modal-content show centered-modal" @click.stop>
+        <h3 class="modal-title">Confirm Deletion</h3>
         <p>Are you sure you want to delete this user?</p>
         <div class="form-buttons">
-          <button
-            type="button"
-            @click="deleteUser"
-            class="delete-confirm-button"
-          >
-            Yes, Delete
-          </button>
-          <button
-            type="button"
-            @click="closeDeleteConfirm"
-            class="cancel-button"
-          >
-            Cancel
-          </button>
+          <div class="form-buttons">
+            <button type="submit" @click="deleteUser" class="save-button">
+              Delete
+            </button>
+            <button
+              type="button"
+              @click="closeDeleteConfirm"
+              class="cancel-button"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -312,10 +310,23 @@ const deleteUser = async () => {
   align-items: center;
 }
 
+.centered-modal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 20%; /* Ajustez ceci selon vos besoins */
+}
+
 .modal-content {
   background: white;
   padding: 20px;
   border-radius: 5px;
+}
+
+.modal-title {
+  font-weight: bold; /* Mettre en gras */
+  margin-bottom: 20px; /* Ajouter un espace en bas */
 }
 
 .form-group {
@@ -324,7 +335,8 @@ const deleteUser = async () => {
 
 .form-buttons {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  margin-top: 10px;
 }
 
 .save-button,
