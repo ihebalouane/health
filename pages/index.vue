@@ -535,7 +535,7 @@ export default defineComponent({
 }
 
 .question {
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   font-weight: bold;
   color: #000;
   margin-bottom: 10px;
