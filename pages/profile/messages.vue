@@ -295,14 +295,14 @@ export default {
           this.senderProfession = data.profession;
           this.senderFirstName = data.firstName;
           if (this.senderProfession === "Client") {
-            const filteredList = this.filteredProfileList("Coach");
+            const filteredList = this.filteredProfileList();
             this.profileList = filteredList.filter((profile) => {
               if (data.coach) {
                 return profile.userEmail === data.coach;
               }
             });
           } else if (this.senderProfession === "Coach") {
-            const filteredList = this.filteredProfileList("Client");
+            const filteredList = this.filteredProfileList();
             this.profileList = filteredList.filter((profile) => {
               return profile.coach === email;
             });
