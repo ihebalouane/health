@@ -9,48 +9,107 @@
         <div class="chat-app">
           <div class="user-list-box">
             <div class="user-list">
-              <div class="title-container">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="w-6 h-6"
+              <div v-if="senderProfession !== 'Coach'">
+                <div class="title-container">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"
+                    />
+                  </svg>
+                  Coach
+                </div>
+                <div
+                  v-for="(profile, index) in filteredProfileList('Coach')"
+                  :key="'profile-' + index"
+                  class="user"
+                  @click="selectUser(profile)"
+                  :class="{ 'selected-user': profile === selectedProfile }"
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"
-                  />
-                </svg>
-                {{ senderProfession === "Coach" ? "Client" : "Coach" }}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z"
+                    />
+                  </svg>
+                  {{ profile.firstName }} {{ profile.lastName }}
+                  <span v-if="profile.unreadCount > 0" class="unread-count">
+                    &nbsp;({{ profile.unreadCount }})
+                  </span>
+                </div>
               </div>
-              <div
-                v-for="(profile, index) in filteredProfileList()"
-                :key="'coach' + index"
-                class="user"
-                @click="selectUser(profile)"
-                :class="{ 'selected-user': profile === selectedProfile }"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="w-6 h-6"
+              <div v-else>
+                <div class="title-container">Clients</div>
+                <div
+                  v-for="(profile, index) in filteredProfileList('Client')"
+                  :key="'client-' + index"
+                  class="user"
+                  @click="selectUser(profile)"
+                  :class="{ 'selected-user': profile === selectedProfile }"
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z"
-                  />
-                </svg>
-                {{ profile.firstName }} {{ profile.lastName }}
-                <span v-if="profile.unreadCount > 0" class="unread-count">
-                  &nbsp;({{ profile.unreadCount }})
-                </span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z"
+                    />
+                  </svg>
+                  {{ profile.firstName }} {{ profile.lastName }}
+                  <span v-if="profile.unreadCount > 0" class="unread-count">
+                    &nbsp;({{ profile.unreadCount }})
+                  </span>
+                </div>
+
+                <div class="title-container">Admin</div>
+                <div
+                  v-for="(profile, index) in filteredProfileList('Admin')"
+                  :key="'admin-' + index"
+                  class="user"
+                  @click="selectUser(profile)"
+                  :class="{ 'selected-user': profile === selectedProfile }"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z"
+                    />
+                  </svg>
+                  {{ profile.firstName }} {{ profile.lastName }}
+                  <span v-if="profile.unreadCount > 0" class="unread-count">
+                    &nbsp;({{ profile.unreadCount }})
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -295,17 +354,24 @@ export default {
           this.senderProfession = data.profession;
           this.senderFirstName = data.firstName;
           if (this.senderProfession === "Client") {
-            const filteredList = this.filteredProfileList();
+            const filteredList = this.filteredProfileList("Coach");
             this.profileList = filteredList.filter((profile) => {
               if (data.coach) {
                 return profile.userEmail === data.coach;
               }
             });
+          } else if (this.senderProfession === "Admin") {
+            this.profileList = this.filteredProfileList("Coach");
           } else if (this.senderProfession === "Coach") {
-            const filteredList = this.filteredProfileList();
-            this.profileList = filteredList.filter((profile) => {
-              return profile.coach === email;
+            const allClients = this.filteredProfileList("Client");
+            const filteredListClients = allClients.filter((profile) => {
+              if (profile) {
+                return profile.coach === email;
+              }
             });
+            console.log("filtered clients:", filteredListClients);
+            const filteredListAdmin = this.filteredProfileList("Admin");
+            this.profileList = [...filteredListClients, ...filteredListAdmin];
           }
         });
       } catch (error) {
@@ -355,9 +421,9 @@ export default {
         }
       );
     },
-    filteredProfileList() {
+    filteredProfileList(profession) {
       return this.profileList.filter(
-        (profile) => profile.profession !== this.senderProfession
+        (profile) => profile.profession === profession
       );
     },
   },
