@@ -187,15 +187,11 @@ const fetchUserProfession = async () => {
 onMounted(() => {
   if (typeof window !== "undefined" && window.localStorage) {
     const email = window.localStorage.getItem("email");
+    initializeNavigation();
 
     if (email) {
       userEmail.value = email;
-      fetchUserProfession();
-    } else {
-      initializeNavigation();
     }
-  } else {
-    initializeNavigation();
   }
 });
 
