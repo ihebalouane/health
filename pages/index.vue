@@ -33,12 +33,12 @@
     <div id="section-2" class="home-section-2">
       <div class="program-box">
         <img
-          src="~/assets/images/program2.jpg"
+          src="~/assets/images/Bulk.png"
           alt="Program 1"
           class="program-image"
         />
         <h2 class="program-title">Bulk Edition</h2>
-        <p class="program-description">Bulk Edition Description</p>
+        <p class="program-description">Gain muscle mass through specialized workout routines and nutrition plans tailored for effective muscle growth.</p>
         <button
           @click="handleProgramRedirect('/form/bulk/qst0')"
           class="get-started-button"
@@ -48,12 +48,19 @@
       </div>
       <div class="program-box">
         <img
-          src="~/assets/images/program2.jpg"
+          src="~/assets/images/cut.jpg"
           alt="Program 2"
           class="program-image"
         />
         <h2 class="program-title">Cut Edition</h2>
-        <p class="program-description">Cut Edition Description</p>
+        <p class="program-description">Loss and muscle definition, providing targeted workout programs and dietary guidance to help users achieve a leaner physique.
+
+
+
+
+
+
+</p>
         <button
           @click="handleProgramRedirect('/form/cut/qst0')"
           class="get-started-button"
@@ -75,7 +82,6 @@
         <div class="description-container">
           <h2 class="program-title">Start your program</h2>
           <div class="program-description">
-            <p class="description-title">Program Description:</p>
             <p>
               Aliquam erat volutpat. Nulla facilisi. Suspendisse potenti.
               Vestibulum ante ipsum primis in faucibus orci luctus et ultrices
