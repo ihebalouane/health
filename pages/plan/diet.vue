@@ -1,38 +1,41 @@
 <template>
-  <div class="container">
-    <!-- Meal list on the left side -->
-    <div class="meal-list-section">
-      <ul class="meal-list">
-        <!-- Loop through the filtered list of meals -->
-        <li v-for="(meal, index) in filteredMeals" :key="index" @click="selectMeal(meal)" :class="{ selected: selectedMeal === meal }">
-          <span class="meal-text">{{ meal }}</span>
-          <hr /> <!-- Line separator -->
-        </li>
-      </ul>
-    </div>
-
-    <!-- Image and description display in the middle -->
-    <div class="image-display-section" v-if="showData">
-      <!-- Image container -->
-      <div class="image-container">
-        <img v-if="selectedImage" :src="selectedImage" alt="Selected Meal" class="meal-image" @click="openModal" />
+  <div class="green-box">
+    <div class="container">
+      <!-- Meal list on the left side -->
+      <div class="meal-list-section">
+        <ul class="meal-list">
+          <!-- Loop through the filtered list of meals -->
+          <li v-for="(meal, index) in filteredMeals" :key="index" @click="selectMeal(meal)" :class="{ selected: selectedMeal === meal }">
+            <span class="meal-text">{{ meal }}</span>
+            <hr class="line-separator" /> <!-- Line separator -->
+          </li>
+        </ul>
       </div>
-    </div>
 
-    <!-- Modal overlay -->
-    <div v-if="isModalOpen" class="modal-overlay" @click="closeModal">
-      <div class="modal-content" @click.stop>
-        <h3>Description</h3>
-        <p>{{ selectedDescription }}</p>
+      <!-- Image and description display in the middle -->
+      <div class="image-display-section" v-if="showData">
+        <!-- Image container -->
+        <div class="image-container">
+          <img v-if="selectedImage" :src="selectedImage" alt="Selected Meal" class="meal-image" @click="openModal" />
+        </div>
+      </div>
 
-        <h3>Advice</h3>
-        <p>{{ advice }}</p>
+      <!-- Modal overlay -->
+      <div v-if="isModalOpen" class="modal-overlay" @click="closeModal">
+        <div class="modal-content" @click.stop>
+          <h3>Description</h3>
+          <p>{{ selectedDescription }}</p>
 
-        <button @click="closeModal">Close</button>
+          <h3>Advice</h3>
+          <p>{{ advice }}</p>
+
+          <button @click="closeModal">Close</button>
+        </div>
       </div>
     </div>
   </div>
 </template>
+
 
 
 <script>
@@ -222,6 +225,15 @@ export default {
   padding: 20px;
 }
 
+.green-box {
+  background: linear-gradient(to bottom left, #2ecc71, #ffffff); /* Background gradient */
+  padding: 20px;
+  border-radius: 20px;
+  justify-content: center;
+  align-items: center;
+  width: 100%; 
+}
+
 .meal-list-section {
   flex: 1;
   margin-right: 20px;
@@ -247,7 +259,7 @@ export default {
 
 .meal-text {
   font-size: 16px;
-  color: #2ecc71;
+  color: Black;
 }
 
 .image-display-section {
@@ -309,3 +321,4 @@ export default {
   cursor: pointer;
 }
 </style>
+

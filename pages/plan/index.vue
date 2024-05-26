@@ -222,9 +222,7 @@ export default {
         selectedItems.value = [];
       } else if (day === 'Saturday') { //Arms
         selectedItems.value = ['Squat', 'Front squat', 'Goblet', 'Deficit Reverse Lunge'];
-    }   else if (day === 'Sunday') { //Legs
-        selectedItems.value = ['Walking Lunge', 'Sumo squat','Split squats','Deficit Reverse Lunge'];
-    }   
+    }  
   }
 
     
@@ -457,3 +455,4 @@ export default {
 }
 
 </style>
+

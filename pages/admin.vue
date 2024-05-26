@@ -165,7 +165,6 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { projectFirestore } from "@/firebase/config.js";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 const users = ref([]);
 const selectedUser = ref(null);
