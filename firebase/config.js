@@ -21,18 +21,18 @@ const userEmail = ref(null);
 
 onAuthStateChanged(auth, (user) => {
   isAuthenticated.value = !!user;
-  userEmail.value = isAuthenticated.value ? user.email : null; // Update user's email
+  userEmail.value = isAuthenticated.value ? user.email : null; 
   if (isAuthenticated.value) {
-    localStorage.setItem('email', user.email); // Save email to local storage
+    localStorage.setItem('email', user.email); 
   } else {
-    localStorage.removeItem('email'); // Remove email from local storage
+    localStorage.removeItem('email');
   }
 });
 
 const logout = async () => {
   try {
     await signOut(auth);
-    localStorage.removeItem('email'); // Remove email from local storage
+    localStorage.removeItem('email'); 
   } catch (error) {
     console.error('Error signing out:', error.message);
   }
