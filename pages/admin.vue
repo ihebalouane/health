@@ -30,12 +30,13 @@
         <div class="user-table-header-item">Gender</div>
         <div class="user-table-header-item">Birth Date</div>
         <div class="user-table-header-item">Profession</div>
+        <div class="user-table-header-item">Coach</div>
         <div class="user-table-header-item">Actions</div>
       </div>
       <div
         v-for="(user, index) in filteredUsers"
         :key="index"
-        class="user-table-row"
+        :class="['user-table-row', { 'highlight': user.profession === 'Client' && !user.coach }]"
       >
         <div class="user-table-row-item">{{ user.userEmail }}</div>
         <div class="user-table-row-item">{{ user.firstName }}</div>
@@ -43,6 +44,10 @@
         <div class="user-table-row-item">{{ user.gender }}</div>
         <div class="user-table-row-item">{{ user.birthDate }}</div>
         <div class="user-table-row-item">{{ user.profession }}</div>
+        <div class="user-table-row-item">
+          <span v-if="user.profession === 'Client'">{{ getCoachName(user.coach) }}</span>
+          <span v-else>N/A</span>
+        </div>
         <div class="user-table-row-item actions">
           <button @click="openModifyForm(user)" class="modify-button">
             <img src="@/assets/images/pen.jpg" alt="Modify" />
@@ -106,7 +111,7 @@
           <!-- Display Coach field only for users with profession 'Client' -->
           <div class="form-group" v-if="selectedUser.profession === 'Client'">
             <label for="coach">Coach:</label>
-            <select id="coach" v-model="selectedUser.coach">
+            <select id="coach" v-model="selectedUser.coach" required>
               <option value="">Select a Coach</option>
               <option
                 v-for="coach in coaches"
@@ -236,6 +241,11 @@ const deleteUser = async () => {
   users.value = users.value.filter((u) => u.id !== userToDelete.value.id);
   closeDeleteConfirm();
 };
+
+const getCoachName = (coachId) => {
+  const coach = coaches.value.find(coach => coach.id === coachId);
+  return coach ? `${coach.firstName} ${coach.lastName}` : 'Unassigned';
+};
 </script>
 
 <style scoped>
@@ -314,7 +324,7 @@ const deleteUser = async () => {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 20%; /* Ajustez ceci selon vos besoins */
+  min-height: 20%; /* Adjust this as needed */
 }
 
 .modal-content {
@@ -324,8 +334,8 @@ const deleteUser = async () => {
 }
 
 .modal-title {
-  font-weight: bold; /* Mettre en gras */
-  margin-bottom: 20px; /* Ajouter un espace en bas */
+  font-weight: bold; /* Bold */
+  margin-bottom: 20px; /* Spacing below */
 }
 
 .form-group {
@@ -355,5 +365,9 @@ const deleteUser = async () => {
   background-color: #f44336;
   color: white;
   border: none;
+}
+
+.highlight {
+  background-color: #ffcccc; /* Light red background */
 }
 </style>

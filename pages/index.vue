@@ -37,7 +37,7 @@
           alt="Program 1"
           class="program-image"
         />
-        <h2 class="program-title">Bulk Edition</h2>
+        <h3 class="program-title">Bulk Edition</h3>
         <p class="program-description">Gain muscle mass through specialized workout routines and nutrition plans tailored for effective muscle growth.</p>
         <button
           @click="handleProgramRedirect('/form/bulk/qst0')"
@@ -52,14 +52,8 @@
           alt="Program 2"
           class="program-image"
         />
-        <h2 class="program-title">Cut Edition</h2>
+        <h3 class="program-title">Cut Edition</h3>
         <p class="program-description">Loss and muscle definition, providing targeted workout programs and dietary guidance to help users achieve a leaner physique.
-
-
-
-
-
-
 </p>
         <button
           @click="handleProgramRedirect('/form/cut/qst0')"
@@ -75,19 +69,15 @@
     <div id="section-3" class="home-section-3">
       <div class="program-box">
         <img
-          src="~/assets/images/program3.jpg"
+          src="~/assets/images/start.jpg"
           alt="Program 3"
           class="program-image"
         />
         <div class="description-container">
-          <h2 class="program-title">Start your program</h2>
+          <h3 class="program-title">Start your program</h3>
           <div class="program-description">
             <p>
-              Aliquam erat volutpat. Nulla facilisi. Suspendisse potenti.
-              Vestibulum ante ipsum primis in faucibus orci luctus et ultrices
-              posuere cubilia Curae; Pellentesque habitant morbi tristique
-              senectus et netus et malesuada fames ac turpis egestas. Morbi at
-              varius felis.
+              Step into your fitness journey with us. Our bespoke programs cater to your goals. Our tailored services are designed to help you achieve your desired level of fitness. Here you can find your program for your fitness goals
             </p>
           </div>
           <button
@@ -438,7 +428,7 @@ export default defineComponent({
 }
 
 .program-title {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: bold;
   color: #000;
 }

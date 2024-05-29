@@ -24,7 +24,6 @@
             <p><strong>Address:</strong> 123 Gym Street, Fitness City, FG 56789</p>
             <p><strong>Phone:</strong> +1 (123) 456-7890</p>
             <p><strong>Email:</strong> contact@coachinggym.com</p>
-            <div class="map" id="map">Map goes here</div>
         </div>
     </div>
 </template>

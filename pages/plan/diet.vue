@@ -16,22 +16,24 @@
       <div class="image-display-section" v-if="showData">
         <!-- Image container -->
         <div class="image-container">
+          <div class="meal-name" v-if="selectedMeal">{{ selectedMeal }}</div>
           <img v-if="selectedImage" :src="selectedImage" alt="Selected Meal" class="meal-image" @click="openModal" />
         </div>
       </div>
 
       <!-- Modal overlay -->
-      <div v-if="isModalOpen" class="modal-overlay" @click="closeModal">
-        <div class="modal-content" @click.stop>
-          <h3>Description</h3>
-          <p>{{ selectedDescription }}</p>
+<div v-if="isModalOpen" class="modal-overlay" @click="closeModal">
+  <div class="modal-content" @click.stop>
+    <h3>Description</h3>
+    <p>{{ selectedDescription }}</p>
 
-          <h3>Advice</h3>
-          <p>{{ advice }}</p>
+    <h3>Advice</h3>
+    <p>{{ advice }}</p>
 
-          <button @click="closeModal">Close</button>
-        </div>
-      </div>
+    <button @click="closeModal">Close</button>
+  </div>
+</div>
+
     </div>
   </div>
 </template>
@@ -92,6 +94,41 @@ export default {
     const advice = ref('');
     const isModalOpen = ref(false);
 
+    const mealDescriptions = {
+  // Meal 1 Bulk
+  'Grilled chicken': 'A lean source of protein, perfect for muscle building and recovery.',
+  'Greek yogurt': 'Rich in protein and probiotics, great for digestive health and muscle repair.',
+  'Whole wheat toast': 'A healthy source of complex carbohydrates, providing sustained energy.',
+  'Scrambled eggs': 'Packed with protein and essential vitamins, ideal for a nutritious breakfast.',
+  'Baked salamon': 'High in omega-3 fatty acids, excellent for heart health and inflammation reduction.',
+  // Meal 2 Vegan
+  'Cereale': 'Whole grain cereal rich in fiber and essential nutrients, perfect for a nutritious start.',
+  'Edamame beans': 'A great plant-based protein source, high in fiber and essential amino acids.',
+  'Grilled tofu with stir-fried vegetables': 'A balanced vegan meal, rich in protein, vitamins, and minerals.',
+  'Hummus scaled': 'Creamy and nutritious, made from chickpeas, high in fiber and plant-based protein.',
+  'Lentil soup with whole grain bread and a side salad': 'Rich in protein, fiber, and essential nutrients, perfect for a hearty meal.',
+  // Meal 3 High Blood Pressure
+  'Protein oatmeal with sliced bananas': 'A heart-healthy breakfast option rich in fiber and potassium.',
+  'Cottage cheese with pineapple chunks': 'A high-protein, low-fat option with a touch of natural sweetness.',
+  'Turkey and avocado wrap': 'A balanced meal with lean protein, healthy fats, and fiber.',
+  'Protein bar': 'Convenient and nutritious, great for muscle repair and energy boost.',
+  'Beef stir-fry with mixed': 'High in protein and packed with vitamins from fresh vegetables.',
+  // Meal 4 Diabetes
+  'A small apple with a tablespoon of almond butter': 'A balanced snack with fiber, healthy fats, and protein.',
+  'A side of quinoa or brown rice': 'Complex carbohydrates providing sustained energy without spiking blood sugar.',
+  'Carrot sticks with hummus': 'A healthy snack with fiber and plant-based protein.',
+  'Steamed broccoli or asparagus': 'Low-calorie, nutrient-dense vegetables great for overall health.',
+  // Meal 5 Cut
+  'Steel cut oats': 'A nutritious breakfast option rich in fiber and slow-digesting carbohydrates.',
+  'Salad chicken': 'A low-calorie, high-protein meal perfect for lean muscle maintenance.',
+  'Omelet made with egg': 'Packed with protein and essential nutrients, ideal for muscle repair.',
+  // Meal 6 Cholesterol
+  'Oatmeal made with rolled oats': 'Heart-healthy, rich in fiber and can help lower cholesterol levels.',
+  'Walnuts or almonds': 'High in healthy fats and can improve heart health.',
+  'Quinoa or wild rice pilaf': 'A nutritious side rich in fiber, protein, and essential nutrients.',
+  'Mixed salad': 'A fresh and nutrient-dense option great for overall health.'
+};
+    
     // Advice recommendations based on deficiencies
     const deficiencyAdvice = {
       iron: 'Increase intake of iron-rich foods such as red meat, leafy greens, and legumes.',
@@ -133,11 +170,14 @@ export default {
     });
 
     const selectMeal = (mealName) => {
-      selectedMeal.value = mealName;
-      if (mealImages[mealName]) {
-        selectedImage.value = mealImages[mealName];
-      }
-    };
+  selectedMeal.value = mealName;
+  if (mealImages[mealName]) {
+    selectedImage.value = mealImages[mealName];
+  }
+  if (mealDescriptions[mealName]) {
+    selectedDescription.value = mealDescriptions[mealName];
+  }
+};
 
     // Open and close the modal
     const openModal = () => {
@@ -270,9 +310,23 @@ export default {
 }
 
 .image-container {
+  position: relative;
   border: 2px solid #2ecc71;
   border-radius: 10px;
   overflow: hidden;
+}
+
+.meal-name {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .meal-image {
@@ -321,4 +375,3 @@ export default {
   cursor: pointer;
 }
 </style>
-
