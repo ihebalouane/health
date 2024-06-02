@@ -33,7 +33,6 @@
         <div class="section gym-details-section">
   <div class="section-content">
     <h2>Workout Details</h2>
-    <p>{{ userEmail }}</p>
     <p v-if="selectedExerciseDescription">{{ selectedExerciseDescription }}</p> <!-- Display the exercise description -->
 
     <!-- Recommendations for Clients -->
@@ -203,9 +202,9 @@ export default {
       if (day === 'Monday') { //Chest day
         selectedItems.value = ['Squat', 'Deadlift', 'Front squat', 'Lunge', 'Sumo squat'];
       } else if (day === 'Tuesday') { //Back day
-        selectedItems.value = ['Dumbbell Press', 'Dumbbell Flye', 'Cable Pull', 'Triceps'];
+        selectedItems.value = ['Dumbbell press', 'Dumbell flye', 'Cable pull', 'Triceps'];
       } else if (day === 'Wednesday') { //Shoulders + Cardio
-        selectedItems.value = ['Hold Up', 'Lying Lateral', 'Barbell Bent-Over', 'Trap Raise'];
+        selectedItems.value = ['Hold up', 'Lying Lateral', 'Barbell Bent-Over', 'Trap Raise'];
       } else if (day === 'Friday') { //Arms
         selectedItems.value = ['Squat', 'Deadlift', 'Front Squat', 'Lunge', 'Sumo Squat'];
     }   else if (day === 'Sunday') { //Legs
