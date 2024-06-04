@@ -35,7 +35,6 @@
     <h2>Workout Details</h2>
     <p v-if="selectedExerciseDescription">{{ selectedExerciseDescription }}</p> <!-- Display the exercise description -->
 
-    <!-- Recommendations for Clients -->
     <div class="recommendations">
       <h3>Recommendations:</h3>
       <ul>
@@ -43,7 +42,6 @@
         <li>Avoid alcohol consumption as it can hinder muscle recovery and performance.</li>
         <li>Avoid tobacco use to maintain optimal lung function and overall health.</li>
         <li>Manage stress through relaxation techniques like meditation or yoga.</li>
-        <!-- Add more recommendations as needed -->
       </ul>
     </div>
   </div>
@@ -59,7 +57,7 @@
 import { ref, onMounted } from 'vue';
 import { projectFirestore } from '@/firebase/config';
 import { collection, getDocs, query, where } from 'firebase/firestore';
-import { videosMap } from './video'; // Importing the videos map
+import { videosMap } from './video'; 
 
 export default {
   middleware: 'auth',
@@ -77,15 +75,12 @@ export default {
       'Bench Press': 'A strength training exercise that works your chest muscles. Performed lying flat on a bench.',
       'Lat Pulldowns': 'A back exercise focusing on the latissimus dorsi muscles. Done using a lat pulldown machine.',
       'Squat': 'A lower body exercise that targets the quads, glutes, and hamstrings. Performed standing and bending at the knees.',
-      // Add more exercises and their descriptions as needed
     };
 
-    // Fetch user's email when the component is mounted
     onMounted(() => {
       userEmail.value = localStorage.getItem('email') || '';
     });
 
-    // Function to fetch user responses from Firestore
     const getUserResponses = async () => {
       try {
         const localEmail = localStorage.getItem('email');
@@ -144,80 +139,80 @@ export default {
 
     // Function for the specific program 1: Beginner's muscle building
     const program1 = (day) => {
-      if (day === 'Monday') { //Chest day + Triceps
+      if (day === 'Monday') { 
         selectedItems.value = ['Bench Press','Dumbbell press', 'Cable Crossover','Landmine Press'];
-      } else if (day === 'Tuesday') { //Back day + Biceps
+      } else if (day === 'Tuesday') { 
         selectedItems.value = ['Lat Pulldowns','Dumbell Single','Pull ups', 'Pulls', ];
-      } else if (day === 'Friday') { //Legs day
+      } else if (day === 'Friday') { 
         selectedItems.value = ['Squat','Deadlift','Front squat', 'Goblet', 'Lunge'];
-      } else if (day === 'Thursday') { //Shoulders day
+      } else if (day === 'Thursday') { 
         selectedItems.value = ['Cable pull','Front raise','Face Pull', 'High Pull', 'Raise'];
       }
     };
 
     // Function for the specific program2: Fat loss program
     const program2 = (day) => {
-      if (day === 'Monday') { //Chest day + triceps + Cardio
+      if (day === 'Monday') {  + Cardio
         selectedItems.value = ['Upper Chest', 'Dumbell flye','Lying triceps','Triceps','Cardio','Cardio-t'];
-      } else if (day === 'Tuesday') { //Back day + Biceps
+      } else if (day === 'Tuesday') { 
         selectedItems.value = ['Lying Lateral','Trap Raise','Dips','Bar triceps','Cardio legs','Cardio ex'];
-      } else if (day === 'Wednesday') { //Cardio
+      } else if (day === 'Wednesday') { 
         selectedItems.value = [];
-      } else if (day === 'Thursday') { //Shoulders + Cardio
+      } else if (day === 'Thursday') { 
         selectedItems.value = ['Seated Dumbbell Clean', 'Raise', 'High Pull', 'Cable pull'];
-    }   else if (day === 'Friday') { //Back day + Biceps
+    }   else if (day === 'Friday') { 
         selectedItems.value = ['Walking Lunge', 'Sumo squat','Split squats','Deficit Reverse Lunge'];
     }   
   }
 
   const program3 = (day) => {
-      if (day === 'Monday') { //Chest day
+      if (day === 'Monday') { 
         selectedItems.value = ['Bench Press', 'Dumbell flye','Lying triceps','Triceps','Cardio','Cardio 2'];
-      } else if (day === 'Tuesday') { //Back day
+      } else if (day === 'Tuesday') {
         selectedItems.value = ['Lying Lateral','Trap Raise','Dips','Bar Triceps','Cardio legs','Cardio ex'];
-      } else if (day === 'Wednesday') { //Shoulders + Cardio
+      } else if (day === 'Wednesday') { 
         selectedItems.value = [];
-      } else if (day === 'Friday') { //Arms
+      } else if (day === 'Friday') { 
         selectedItems.value = ['Seated Dumbbell Clean', 'Raise', 'High Pull', 'Cable pull'];
-    }   else if (day === 'Sunday') { //Legs
+    }   else if (day === 'Sunday') { 
         selectedItems.value = ['Walking Lunge', 'Sumo squat','Split squats','Deficit Reverse Lunge'];
     }   
   }
 
   const program4 = (day) => {
-      if (day === 'Monday') { //Chest day
+      if (day === 'Monday') { 
         selectedItems.value = ['Cardio', 'Cardio Legs', 'Cardio Breath'];
-      } else if (day === 'Tuesday') { //Back day
+      } else if (day === 'Tuesday') { 
         selectedItems.value = [];
-      } else if (day === 'Wednesday') { //Shoulders + Cardio
+      } else if (day === 'Wednesday') { 
         selectedItems.value =  ['Cardio-t', 'Cardio Breath', 'Cardio Legs'];
-      } else if (day === 'Friday') { //Arms
+      } else if (day === 'Friday') { 
         selectedItems.value = ['Cardio Breath', 'Cardio Legs', 'Cardio-t'];
-    }   else if (day === 'Sunday') { //Legs
+    }   else if (day === 'Sunday') { 
         selectedItems.value = [];
     }   
   }
 
   const program5 = (day) => {
-      if (day === 'Monday') { //Chest day
+      if (day === 'Monday') { 
         selectedItems.value = ['Squat', 'Deadlift', 'Front squat', 'Lunge', 'Sumo squat'];
-      } else if (day === 'Tuesday') { //Back day
+      } else if (day === 'Tuesday') { 
         selectedItems.value = ['Dumbbell press', 'Dumbell flye', 'Cable pull', 'Triceps'];
-      } else if (day === 'Wednesday') { //Shoulders + Cardio
+      } else if (day === 'Wednesday') { 
         selectedItems.value = ['Hold up', 'Lying Lateral', 'Barbell Bent-Over', 'Trap Raise'];
-      } else if (day === 'Friday') { //Arms
-        selectedItems.value = ['Squat', 'Deadlift', 'Front Squat', 'Lunge', 'Sumo Squat'];
-    }   else if (day === 'Sunday') { //Legs
+      } else if (day === 'Friday') { 
+        selectedItems.value = ['Squat', 'Deadlift', 'Front squat', 'Lunge', 'Sumo squat'];
+    }   else if (day === 'Sunday') { 
         selectedItems.value = [];
     }   
   }
 
   const program6 = (day) => {
-      if (day === 'Monday') { //Chest day
+      if (day === 'Monday') { 
         selectedItems.value = [];
-      } else if (day === 'Tuesday') { //Back day
+      } else if (day === 'Tuesday') {
         selectedItems.value = ['Bench Press', 'Pull ups', 'Cable pull', 'Bicep curl', 'Triceps'];
-      } else if (day === 'Wednesday') { //Shoulders + Cardio
+      } else if (day === 'Wednesday') { 
         selectedItems.value = [];
       } else if (day === 'Saturday') { //Arms
         selectedItems.value = ['Squat', 'Front squat', 'Goblet', 'Deficit Reverse Lunge'];
