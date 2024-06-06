@@ -7,7 +7,7 @@
           <!-- Loop through the filtered list of meals -->
           <li v-for="(meal, index) in filteredMeals" :key="index" @click="selectMeal(meal)" :class="{ selected: selectedMeal === meal }">
             <span class="meal-text">{{ meal }}</span>
-            <hr class="line-separator" /> <!-- Line separator -->
+           
           </li>
         </ul>
       </div>
@@ -259,11 +259,11 @@ export default {
 </script>
 <style scoped>
 .container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  padding: 20px;
+    display: flex;
+    justify-content: center;
+    /* height: 100vh; */
+    padding: 20px;
+    align-items: center;
 }
 
 .green-box {
@@ -286,11 +286,15 @@ export default {
 }
 
 .meal-list li {
-  padding: 12px;
-  margin-bottom: 8px;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: background-color 0.2s;
+    padding: 12px;
+    display: flex;
+    margin-bottom: 8px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+    border: 1px solid #000000;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .meal-list li.selected,
@@ -299,8 +303,9 @@ export default {
 }
 
 .meal-text {
-  font-size: 16px;
-  color: Black;
+    font-size: 20px;
+    font-weight: 600;
+    color: black;
 }
 
 .image-display-section {

@@ -1,52 +1,66 @@
 <template>
-  <div class="center-container">
-    <div class="container">
-      <div class="section day-list-section">
-        <div class="section-content">
-          <ul class="day-list">
+  <div class="center-container no-margin">
+    <div class="container-d no-margin">
+      <div class="section day-list-section no-margin">
+        <div class="cof no-margin">
+          <span>Workout Plan</span>
+        </div>
+
+        <div class="section-content no-margin">
+          <ul class="day-list no-margin">
             <li v-for="(day, index) in days" :key="index"
                 :class="{ 'selected': selectedDay === day.name }"
-                @click="showItems(day.name)">
+                @click="toggleDay(day.name)">
               <span class="day-text">{{ day.name }} - {{ day.date }}</span>
             </li>
           </ul>
         </div>
       </div>
-      <div class="section items-list-section">
-        <div class="section-content">
-          <ul class="items-list">
-            <li v-for="(item, index) in selectedItems" :key="index" @click="loadVideo(item)">
-              <span class="item-text">{{ item }}</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="section video-section">
-        <div class="section-content">
-          <h3 class="exercise-title">{{ selectedExerciseTitle }}</h3> <!-- Display the exercise title -->
-          <video v-if="selectedVideo" controls loop :src="selectedVideo" class="video-player">
-            Your browser does not support the video tag.
-          </video>
-        </div>
-      </div>
-      <div class="section gym-details-section">
-        <div class="section gym-details-section">
-  <div class="section-content">
-    <h2>Workout Details</h2>
-    <p v-if="selectedExerciseDescription">{{ selectedExerciseDescription }}</p> <!-- Display the exercise description -->
 
-    <div class="recommendations">
-      <h3>Recommendations:</h3>
-      <ul>
-        <li>Sleep 7-9 hours every night for proper recovery and muscle growth.</li>
-        <li>Avoid alcohol consumption as it can hinder muscle recovery and performance.</li>
-        <li>Avoid tobacco use to maintain optimal lung function and overall health.</li>
-        <li>Manage stress through relaxation techniques like meditation or yoga.</li>
-      </ul>
-    </div>
-  </div>
-</div>
+      <div class="wrap-f" v-show="!selectedVideo && !selectedExerciseTitle">
+        <transition-group name="fade" tag="div" class="items-list-section">
+          <!-- <div class="chooseoptions">Choose Options</div> -->
+          <div v-for="(day, index) in days" :key="index" class="section-content" v-show="selectedDay === day.name">
+            <ul class="items-list no-margin">
+              <li v-for="(item, index) in selectedItems" :key="index" @click="loadVideo(item)" class="item-option">
+                <span class="item-text">{{ item }}</span>
+              </li>
+              <li class="rest-day" v-if="selectedItems.length === 0">
+                <img src="../../assets/images/rest-day.png" alt="">
+                <!-- <span class="item-text">Rest day</span> -->
+              </li>
+            </ul>
+          </div>
+        </transition-group>
+      </div>
 
+      <transition name="fade" mode="out-in">
+        <div class="section video-section no-margin" v-if="selectedVideo || selectedExerciseTitle">
+          <div class="section-content no-margin">
+            <h3 class="exercise-title">{{ selectedExerciseTitle }}</h3>
+            <video v-if="selectedVideo" controls loop :src="selectedVideo" class="video-player no-margin">
+              Your browser does not support the video tag.
+            </video>
+            <button class="back-button" @click="closeVideo">Back</button>
+          </div>
+        </div>
+      </transition>
+
+      <div class="section gym-details-section no-margin">
+        <div class="section-content no-margin">
+          <h2>Workout Details</h2>
+          <p v-if="selectedExerciseDescription">{{ selectedExerciseDescription }}</p>
+
+          <div class="recommendations no-margin">
+            <h3>Recommendations:</h3>
+            <ul class="no-margin">
+              <li>Sleep 7-9 hours every night for proper recovery and muscle growth.</li>
+              <li>Avoid alcohol consumption as it can hinder muscle recovery and performance.</li>
+              <li>Avoid tobacco use to maintain optimal lung function and overall health.</li>
+              <li>Manage stress through relaxation techniques like meditation or yoga.</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -69,8 +83,8 @@ export default {
     const selectedExerciseTitle = ref('');
     const selectedExerciseDescription = ref('');
     const days = ref([]);
+    const expandedDay = ref(null);
 
-    // Map of exercises to their descriptions
     const exerciseDescriptions = {
       'Bench Press': 'A strength training exercise that works your chest muscles. Performed lying flat on a bench.',
       'Lat Pulldowns': 'A back exercise focusing on the latissimus dorsi muscles. Done using a lat pulldown machine.',
@@ -97,7 +111,6 @@ export default {
           const daysE = data.exerciseFrequency;
           const risk = data.selectedRiskFactors;
 
-          // Program conditions
           const days = ['1', '2'];
           const relevantAgeRanges = ['under 20s', '20s', '30s'];
           const risk1 = ['bloodPressure', 'heartDisease'];
@@ -137,7 +150,6 @@ export default {
       }
     };
 
-    // Function for the specific program 1: Beginner's muscle building
     const program1 = (day) => {
       if (day === 'Monday') { 
         selectedItems.value = ['Bench Press','Dumbbell press', 'Cable Crossover','Landmine Press'];
@@ -147,12 +159,13 @@ export default {
         selectedItems.value = ['Squat','Deadlift','Front squat', 'Goblet', 'Lunge'];
       } else if (day === 'Thursday') { 
         selectedItems.value = ['Cable pull','Front raise','Face Pull', 'High Pull', 'Raise'];
+      } else {
+        selectedItems.value = [];
       }
     };
 
-    // Function for the specific program2: Fat loss program
     const program2 = (day) => {
-      if (day === 'Monday') {  + Cardio
+      if (day === 'Monday') { 
         selectedItems.value = ['Upper Chest', 'Dumbell flye','Lying triceps','Triceps','Cardio','Cardio-t'];
       } else if (day === 'Tuesday') { 
         selectedItems.value = ['Lying Lateral','Trap Raise','Dips','Bar triceps','Cardio legs','Cardio ex'];
@@ -160,12 +173,14 @@ export default {
         selectedItems.value = [];
       } else if (day === 'Thursday') { 
         selectedItems.value = ['Seated Dumbbell Clean', 'Raise', 'High Pull', 'Cable pull'];
-    }   else if (day === 'Friday') { 
+      } else if (day === 'Friday') { 
         selectedItems.value = ['Walking Lunge', 'Sumo squat','Split squats','Deficit Reverse Lunge'];
-    }   
-  }
+      } else {
+        selectedItems.value = [];
+      }
+    };
 
-  const program3 = (day) => {
+    const program3 = (day) => {
       if (day === 'Monday') { 
         selectedItems.value = ['Bench Press', 'Dumbell flye','Lying triceps','Triceps','Cardio','Cardio 2'];
       } else if (day === 'Tuesday') {
@@ -174,26 +189,28 @@ export default {
         selectedItems.value = [];
       } else if (day === 'Friday') { 
         selectedItems.value = ['Seated Dumbbell Clean', 'Raise', 'High Pull', 'Cable pull'];
-    }   else if (day === 'Sunday') { 
+      } else if (day === 'Sunday') { 
         selectedItems.value = ['Walking Lunge', 'Sumo squat','Split squats','Deficit Reverse Lunge'];
-    }   
-  }
+      } else {
+        selectedItems.value = [];
+      }
+    };
 
-  const program4 = (day) => {
+    const program4 = (day) => {
       if (day === 'Monday') { 
         selectedItems.value = ['Cardio', 'Cardio Legs', 'Cardio Breath'];
       } else if (day === 'Tuesday') { 
         selectedItems.value = [];
       } else if (day === 'Wednesday') { 
-        selectedItems.value =  ['Cardio-t', 'Cardio Breath', 'Cardio Legs'];
+        selectedItems.value = ['Cardio-t', 'Cardio Breath', 'Cardio Legs'];
       } else if (day === 'Friday') { 
         selectedItems.value = ['Cardio Breath', 'Cardio Legs', 'Cardio-t'];
-    }   else if (day === 'Sunday') { 
+      } else if (day === 'Sunday') { 
         selectedItems.value = [];
-    }   
-  }
+      }
+    };
 
-  const program5 = (day) => {
+    const program5 = (day) => {
       if (day === 'Monday') { 
         selectedItems.value = ['Squat', 'Deadlift', 'Front squat', 'Lunge', 'Sumo squat'];
       } else if (day === 'Tuesday') { 
@@ -202,35 +219,31 @@ export default {
         selectedItems.value = ['Hold up', 'Lying Lateral', 'Barbell Bent-Over', 'Trap Raise'];
       } else if (day === 'Friday') { 
         selectedItems.value = ['Squat', 'Deadlift', 'Front squat', 'Lunge', 'Sumo squat'];
-    }   else if (day === 'Sunday') { 
+      } else if (day === 'Sunday') { 
         selectedItems.value = [];
-    }   
-  }
+      }
+    };
 
-  const program6 = (day) => {
+    const program6 = (day) => {
       if (day === 'Monday') { 
         selectedItems.value = [];
       } else if (day === 'Tuesday') {
         selectedItems.value = ['Bench Press', 'Pull ups', 'Cable pull', 'Bicep curl', 'Triceps'];
       } else if (day === 'Wednesday') { 
         selectedItems.value = [];
-      } else if (day === 'Saturday') { //Arms
+      } else if (day === 'Saturday') { 
         selectedItems.value = ['Squat', 'Front squat', 'Goblet', 'Deficit Reverse Lunge'];
-    }  
-  }
-
-    
-
-    // Call the function when the component is mounted
-    getUserResponses();
-
-    // Function to update the selected day
-    const showItems = (day) => {
-      selectedDay.value = day;
-      getUserResponses(); // Call getUserResponses to update the items based on the selected day
+      } else {
+        selectedItems.value = [];
+      }
     };
 
-    // Function to load video and description based on the selected item
+    const toggleDay = (day) => {
+      selectedDay.value = day === expandedDay.value ? null : day;
+      expandedDay.value = day === expandedDay.value ? null : day;
+      getUserResponses();
+    };
+
     const loadVideo = (item) => {
       if (videosMap.hasOwnProperty(item)) {
         selectedVideo.value = videosMap[item];
@@ -241,32 +254,31 @@ export default {
       }
     };
 
-    // Function to calculate and set the days of the week starting from the next Monday
+    const closeVideo = () => {
+      selectedVideo.value = null;
+      selectedExerciseTitle.value = '';
+      selectedExerciseDescription.value = '';
+    };
+
     const calculateDays = () => {
-  const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-  const currentDate = new Date();
-  
-  // Calculate the starting day index as the day after the current day
-  const currentDayIndex = currentDate.getDay(); // 0 for Sunday, 1 for Monday, ..., 6 for Saturday
-  const nextDayDate = new Date(currentDate);
-  nextDayDate.setDate(currentDate.getDate() + 1); // Calculate the date for the next day
+      const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+      const currentDate = new Date();
+      const currentDayIndex = currentDate.getDay(); 
+      const nextDayDate = new Date(currentDate);
+      nextDayDate.setDate(currentDate.getDate() + 1);
 
-  for (let i = 0; i < daysOfWeek.length; i++) {
-    const dayDate = new Date(nextDayDate);
-    dayDate.setDate(nextDayDate.getDate() + i);
-    days.value.push({ name: daysOfWeek[(currentDayIndex + i) % 7], date: formatDate(dayDate) });
-  }
-};
+      for (let i = 0; i < daysOfWeek.length; i++) {
+        const dayDate = new Date(nextDayDate);
+        dayDate.setDate(nextDayDate.getDate() + i);
+        days.value.push({ name: daysOfWeek[(currentDayIndex + i) % 7], date: formatDate(dayDate) });
+      }
+    };
 
-
-
-    // Function to format date in a readable format
     const formatDate = (date) => {
       const options = { weekday: 'short', month: 'short', day: 'numeric' };
       return date.toLocaleDateString(undefined, options);
     };
 
-    // Calculate the days when the component is mounted
     calculateDays();
 
     return {
@@ -277,8 +289,9 @@ export default {
       selectedExerciseTitle,
       selectedExerciseDescription,
       days,
-      showItems,
+      toggleDay,
       loadVideo,
+      closeVideo,
     };
   },
 };
@@ -288,165 +301,266 @@ export default {
 /* General Styles */
 .center-container {
   display: flex;
-  border-radius: 20px;
+  border-radius: 14px;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background: linear-gradient(to bottom left, #2ecc71, #ffffff); /* Background gradient */
+  height: 80vh;
 }
 
-.container {
+.container-d {
   display: flex;
-  width: 95%;
-  max-width: 1500px;
-  align-items: stretch;
-  height: 600px;
-  background-color: #ffffff;
-  border-radius: 15px;
-  box-shadow: 0 20px 50px rgba(233, 228, 228, 0.1);
-  overflow: hidden;
+    width: 155vh;
+    max-width: 100%;
+    align-items: stretch;
+    height: 75vh;
+    border-radius: 12px;
+    background: linear-gradient(286deg, #0000009c -36.4%, #2ecc71 131.27%), radial-gradient(562.84% 91.43% at 104.01% 112.43%, rgb(255 255 255) 0%, rgba(0, 0, 0, 0.00) 100%);
+    box-shadow: 0 20px 50px rgba(233, 228, 228, 0.1);
+    overflow: hidden;
+    border: 1px solid #00000045;
+    padding: 10px;
+    margin: 90px 0px;
+
 }
 
 /* Section Styles */
 .section {
   flex: 1;
   overflow: auto;
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  justify-content: center;
 }
 
 .section-content {
   height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border-left: 1px solid #fafafa;
+}
+
+.wrap-f {
+  display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 50vh;
+    border-left: 1px solid #fafafa;
+    gap: 66px;
+}
+
+
+
+.cof {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cof > span {
+  font-size: 20px;
+  font-weight: bold;
+  color: #fff;
 }
 
 .day-list,
 .items-list {
-  padding: 0;
-  margin: 0;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    padding: 15px;
+    justify-content: center;
 }
 
 .day-list li,
 .items-list li {
-  margin: 0;
-  padding: 0;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 40px;
+  height: min-content;
   cursor: pointer;
-  border-radius: 10px;
-  transition: all 0.3s ease;
+  border-radius: 5px;
+  /* transition: all 0.3s ease; */
+  align-items: center;
+  padding: 15px;
+  text-align: center;
+  border: 1px solid #fafafafa;
 }
-
+.rest-day{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  border: none !important;
+  cursor: none;
+  background: none;
+  
+}
+.rest-day:hover{
+  background: none;
+}
+.rest-day > img {
+  width: 440px;
+    height: 470px;
+}
 .day-list li:hover,
-.items-list li:hover,
+.items-list >.item-option:hover,
 .day-list li.selected,
 .items-list li.selected {
   background-color: #2ecc71;
   color: white;
   opacity: 0.9;
-  transform: translateY(-5px);
+  /* transform: translateY(-5px); */
 }
 
 .day-list li:not(:last-child),
 .items-list li:not(:last-child) {
-  margin-bottom: 10px;
+  border: 1px solid #fafafafa;
 }
 
 .day-text,
 .item-text {
   font-weight: 500;
   font-size: 16px;
-  color: #424242;
+  color: #ffffff;
+}
+
+/* Select Options Styles */
+.item-option {
+  width: calc(50% - 10px); /* Two items per row, with a 10px gap */
+  margin: 5px;
+  box-sizing: border-box;
+}
+
+.items-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    flex-direction: row;
 }
 
 /* Exercise Title Styles */
 .exercise-title {
-  font-size: 20px; /* Increase the font size for better visibility */
-  font-weight: bold; /* Make the title bold */
-  color: #333333; /* Dark gray color for modern look */
-  margin-bottom: 20px; /* Add space below the title */
-  text-align: center; /* Center-align the title */
-  letter-spacing: 1px; /* Add slight spacing between letters for a cleaner look */
-  line-height: 1.5; /* Add a comfortable line height */
-  text-transform: capitalize; /* Capitalize each word for a neat appearance */
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 20px;
+  text-align: center;
+  letter-spacing: 1px;
+  line-height: 1.5;
+  text-transform: capitalize;
 }
 
-
-/* Gym Details Section Styles */
-/* Gym Details Section Styles */
 .gym-details-section {
-  background-color: #f9f9f9; /* Light background color */
-  padding: 20px; /* Padding around the content */
-  border-bottom-left-radius: 15px; /* Rounded corners */
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-bottom-left-radius: 15px;
   border-bottom-right-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Slight shadow */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  max-width: 40vh;
 }
 
 .gym-details-section h2 {
-  margin-bottom: 10px; /* Reduced margin for a compact look */
-  color: #222; /* Darker text color */
-  font-weight: bold; /* Maintain bold weight */
-  font-size: 22px; /* Slightly smaller font size */
-  text-transform: capitalize; /* Capitalize each word */
-  letter-spacing: 0.5px; /* Slight letter spacing */
+  margin-bottom: 10px;
+  color: #222;
+  font-weight: bold;
+  font-size: 22px;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
 }
 
 .gym-details-section p {
-  color: #555; /* Medium gray text color for a modern look */
-  font-size: 14px; /* Standard font size */
-  line-height: 1.4; /* Slightly reduced line height */
-  margin-bottom: 10px; /* Add margin below paragraphs for spacing */
+  color: #555;
+  font-size: 14px;
+  line-height: 1.4;
+  margin-bottom: 10px;
 }
 
+.flex-col {
+  flex-direction: column;
+  gap: 40px;
+}
+
+.chooseoptions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  font-weight: bold;
+  color: #fff;
+}
 
 /* Video Player Styles */
 .video-section {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 80px;
-  height: 100%; /* Make the height of the video section match the entire container height */
+  height: 100%;
 }
 
 .video-player {
-  max-width: 100%;
+  display: flex;
+  max-width: 60%;
   border-radius: 15px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  align-items: center;
+  justify-content: center;
+}
+
+.back-button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  /* transition: background-color 0.3s ease; */
+}
+
+.back-button:hover {
+  background-color: #27ae60;
 }
 
 /* Recommendations Section Styles */
 .recommendations {
-  margin-top: 20px; /* Add space above recommendations */
+  margin-top: 20px;
 }
 
 .recommendations h3 {
-  font-size: 18px; /* Increase font size for recommendation title */
-  margin-bottom: 10px; /* Add space below title */
-  color: #333; /* Dark gray text color */
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #333;
 }
 
 .recommendations ul {
-  list-style-type: disc; /* Use bullet points for recommendations */
-  padding-left: 20px; /* Indent the bullet points */
+  list-style-type: disc;
+  padding-left: 20px;
 }
 
 .recommendations ul li {
-  font-size: 14px; /* Set font size for recommendations */
-  line-height: 1.6; /* Increase line height for better readability */
-  color: #555; /* Medium gray text color */
+  font-size: 14px;
+  line-height: 1.6;
+  color: #555;
 }
 
 .recommendations ul li:first-child {
-  margin-top: 5px; /* Add a small margin at the top of the list */
+  margin-top: 5px;
 }
 
-.recommendations ul li:last-child {
-  margin-bottom: 0; /* Remove margin at the bottom of the list */
+recommedations ul li:last-child {
+  margin-bottom: 0;
+}
+
+/* Transition Styles */
+.fade-enter-active, .fade-leave-active {
+  /* transition: opacity 0.5s; */
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+  opacity: 0;
 }
 
 </style>
-
