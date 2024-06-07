@@ -35,7 +35,7 @@ export default {
         { value: 'heartDisease', label: 'Heart disease' },
         { value: 'depressionAnxiety', label: 'Depression/anxiety' },
         { value: 'cholesterol', label: 'High cholesterol' },
-        { value: 'none', label: 'None' }  // Added option for no sickness
+        { value: 'none', label: 'None' } 
 
       ]
     };
@@ -51,17 +51,14 @@ export default {
         const user = auth.currentUser;
         if (!user) {
           console.error("User not logged in.");
-          // Handle user not logged in
           return;
         }
 
-        // Query Firestore to find if there's an existing document with the user's email
         const userDocRef = collection(projectFirestore, "userResponses");
         const q = query(userDocRef, where("userEmail", "==", user.email));
         const querySnapshot = await getDocs(q);
         
         if (!querySnapshot.empty) {
-          // If document exists, update it with the new data
           const doc = querySnapshot.docs[0];
           await updateDoc(doc.ref, {
             selectedRiskFactors: this.selectedOptions,
@@ -69,7 +66,6 @@ export default {
           });
           console.log('Data updated in Firestore');
         } else {
-          // If document doesn't exist, create a new one with the provided data
           await addDoc(collection(projectFirestore, "userResponses"), {
             userEmail: user.email,
             selectedRiskFactors: this.selectedOptions,
@@ -78,7 +74,6 @@ export default {
           console.log('New document created in Firestore');
         }
 
-        // Redirect to the next question
         this.$router.push('/form/cut/qst7');
       } catch (error) {
         console.error("Error saving risk factors: ", error);
@@ -92,19 +87,19 @@ export default {
 
 <style scoped>
 .form-container {
-  max-width: 400px; /* Adjusted the max-width to make the form slightly larger */
+  max-width: 400px; 
   margin: 20px auto; 
-  background-color: #ffffff; /* Changed background color to white */
-  border: none; /* Removed border */
+  background-color: #ffffff; 
+  border: none;
   border-radius: 8px;
   padding: 20px;
 }
 
 .form-label {
-  font-size: 1.3rem; /* Increased font size */
-  margin-bottom: 15px; /* Increased margin bottom */
+  font-size: 1.3rem; 
+  margin-bottom: 15px; 
   display: block;
-  color: #333; /* Adjusted label color */
+  color: #333; 
 }
 
 .checkbox-group {
@@ -115,25 +110,25 @@ export default {
 .checkbox-label {
   display: flex;
   align-items: center;
-  margin-bottom: 15px; /* Increased margin bottom */
+  margin-bottom: 15px; 
   cursor: pointer;
 }
 
 .checkbox-custom {
-  width: 24px; /* Increased width */
-  height: 24px; /* Increased height */
-  border: 2px solid #2ecc71; /* Changed border color */
+  width: 24px; 
+  height: 24px; 
+  border: 2px solid #2ecc71; 
   border-radius: 4px;
-  margin-right: 12px; /* Increased margin right */
+  margin-right: 12px; 
   position: relative;
 }
 
 .checkbox-custom::after {
   content: '';
   display: block;
-  width: 12px; /* Increased width */
-  height: 12px; /* Increased height */
-  background-color: #2ecc71; /* Changed background color */
+  width: 12px; 
+  height: 12px; 
+  background-color: #2ecc71; 
   border-radius: 2px;
   position: absolute;
   top: 50%;
@@ -148,7 +143,7 @@ export default {
 }
 
 .checkbox-text {
-  font-size: 1.1rem; /* Increased font size */
+  font-size: 1.1rem; 
 }
 
 .checkbox-input {
@@ -163,10 +158,10 @@ export default {
 }
 
 .submit-button {
-  background-color: #2ecc71; /* Changed button color */
+  background-color: #2ecc71; 
   color: #fff;
-  padding: 12px 24px; /* Increased padding */
-  font-size: 1.1rem; /* Increased font size */
+  padding: 12px 24px; 
+  font-size: 1.1rem; 
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -174,6 +169,6 @@ export default {
 }
 
 .submit-button:hover {
-  background-color: #27ae60; /* Adjusted hover background color */
+  background-color: #27ae60;
 }
 </style>

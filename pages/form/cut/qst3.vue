@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { projectFirestore, auth } from '../../../firebase/config'; // Update the path as necessary
+import { projectFirestore, auth } from '../../../firebase/config';
 import { collection, query, where, getDocs, updateDoc, addDoc } from 'firebase/firestore';
 import { ref } from 'vue';
 
@@ -36,24 +36,20 @@ export default {
   },
   methods: {
     async submitForm() {
-      // Ensure there's a selected age before proceeding
       if (this.selectedAge === '') {
         alert('Please select an age range.');
         return;
       }
 
       try {
-        // Get the currently logged-in user's email
         const user = auth.currentUser;
-        const userEmail = user ? user.email : 'Unknown'; // Default to 'Unknown' if user is not logged in
+        const userEmail = user ? user.email : 'Unknown'; 
 
-        // Query Firestore to find if there's an existing document with the user's email
         const userDocRef = collection(projectFirestore, "userResponses");
         const q = query(userDocRef, where("userEmail", "==", userEmail));
         const querySnapshot = await getDocs(q);
         
         if (!querySnapshot.empty) {
-          // If document exists, update it with the new data
           const doc = querySnapshot.docs[0];
           await updateDoc(doc.ref, {
             ageRange: this.selectedAge,
@@ -61,7 +57,6 @@ export default {
           });
           console.log('Data updated in Firestore');
         } else {
-          // If document doesn't exist, create a new one with the provided data
           await addDoc(collection(projectFirestore, "users"), {
             userEmail: userEmail,
             ageRange: this.selectedAge,
@@ -70,7 +65,6 @@ export default {
           console.log('New document created in Firestore');
         }
 
-        // Redirect to the next question
         this.$router.push('/form/cut/qst4');
       } catch (error) {
         console.error("Error updating data in Firestore: ", error);
@@ -85,9 +79,9 @@ export default {
 .container {
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Adjust alignment to the top */
+  align-items: flex-start; 
   height: 100vh;
-  margin-top: 50px; /* Move the container closer to the top */
+  margin-top: 50px; 
 }
 
 .age-form {
@@ -95,7 +89,7 @@ export default {
   max-width: 400px;
   padding: 30px;
   border-radius: 10px;
-  background-color: #ffffff; /* Change background color to white */
+  background-color: #ffffff; 
 }
 
 .form-title {
@@ -130,7 +124,7 @@ export default {
   display: block;
   width: 100%;
   padding: 12px;
-  background-color: #2ecc71; /* Change button color to green */
+  background-color: #2ecc71; 
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -139,6 +133,6 @@ export default {
 }
 
 .submit-button:hover {
-  background-color: #27ae60; /* Adjust hover background color to a slightly darker shade of green */
+  background-color: #27ae60; 
 }
 </style>

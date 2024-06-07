@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { projectFirestore, auth } from '../../../firebase/config'; // Make sure the path is correct
+import { projectFirestore, auth } from '../../../firebase/config'; 
 import { collection, query, where, getDocs, updateDoc, addDoc } from 'firebase/firestore';
 
 export default {
@@ -47,17 +47,14 @@ export default {
         const user = auth.currentUser;
         if (!user) {
           console.error("User not logged in.");
-          // Handle user not logged in
           return;
         }
 
-        // Query Firestore to find if there's an existing document with the user's email
         const userDocRef = collection(projectFirestore, "userResponses");
         const q = query(userDocRef, where("userEmail", "==", user.email));
         const querySnapshot = await getDocs(q);
         
         if (!querySnapshot.empty) {
-          // If document exists, update it with the new data
           const doc = querySnapshot.docs[0];
           await updateDoc(doc.ref, {
             alcoholFrequency: this.selectedOption,
@@ -65,7 +62,6 @@ export default {
           });
           console.log('Data updated in Firestore');
         } else {
-          // If document doesn't exist, create a new one with the provided data
           await addDoc(collection(projectFirestore, "userResponses"), {
             userEmail: user.email,
             alcoholFrequency: this.selectedOption,
@@ -74,7 +70,6 @@ export default {
           console.log('New document created in Firestore');
         }
 
-        // Redirect to the next question
         this.$router.push('/form/cut/qst9');
       } catch (error) {
         console.error("Error saving alcohol consumption frequency: ", error);
@@ -91,10 +86,10 @@ export default {
 .form-container {
   max-width: 400px;
   margin: 20px auto;
-  background-color: #fff; /* Changed background color to white */
-  border-radius: 8px; /* Removed border */
+  background-color: #fff; 
+  border-radius: 8px; 
   padding: 20px;
-  box-shadow: none; /* Removed box shadow */
+  box-shadow: none; 
 }
 
 .form-label {
@@ -118,7 +113,7 @@ cursor: pointer;
 .radio-custom {
 width: 20px;
 height: 20px;
-border: 2px solid #2ecc71; /* Changed border color */
+border: 2px solid #2ecc71;
 border-radius: 50%;
 margin-right: 10px;
 position: relative;
@@ -129,7 +124,7 @@ content: '';
 display: block;
 width: 10px;
 height: 10px;
-background-color: #2ecc71; /* Changed background color */
+background-color: #2ecc71; 
 border-radius: 50%;
 position: absolute;
 top: 50%;
@@ -153,7 +148,7 @@ transform: translate(-50%, -50%) scale(1);
 }
 
 .submit-button {
-background-color: #2ecc71; /* Changed button color */
+background-color: #2ecc71; 
 color: #fff;
 padding: 10px 20px;
 font-size: 1rem;
@@ -164,6 +159,6 @@ transition: background-color 0.3s ease;
 }
 
 .submit-button:hover {
-background-color: #27ae60; /* Adjusted hover background color */
+background-color: #27ae60; 
 }
 </style>

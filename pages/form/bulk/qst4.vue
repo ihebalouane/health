@@ -18,7 +18,6 @@
           </form>
         </div>
 
-        <!-- Explanation Box -->
         <div class="explanation-box">
           <div class="info-icon">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -27,14 +26,13 @@
           </div>
           <p>We ask for this information to help you achieve your goal weight more effectively.</p>
         </div>
-        <!-- End of Explanation Box -->
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { projectFirestore, auth } from '../../../firebase/config'; // Make sure the path is correct
+import { projectFirestore, auth } from '../../../firebase/config'; 
 import { collection, query, where, getDocs, updateDoc, addDoc } from 'firebase/firestore';
 
 export default {
@@ -54,17 +52,14 @@ export default {
         const user = auth.currentUser;
         if (!user) {
           console.error("User not logged in.");
-          // Handle user not logged in
           return;
         }
 
-        // Query Firestore to find if there's an existing document with the user's email
         const userDocRef = collection(projectFirestore, "userResponses");
         const q = query(userDocRef, where("userEmail", "==", user.email));
         const querySnapshot = await getDocs(q);
         
         if (!querySnapshot.empty) {
-          // If document exists, update it with the new data
           const doc = querySnapshot.docs[0];
           await updateDoc(doc.ref, {
             goalWeight: this.weight,
@@ -72,7 +67,6 @@ export default {
           });
           console.log('Data updated in Firestore');
         } else {
-          // If document doesn't exist, create a new one with the provided data
           await addDoc(collection(projectFirestore, "userResponses"), {
             userEmail: user.email,
             goalWeight: this.weight,
@@ -81,7 +75,6 @@ export default {
           console.log('New document created in Firestore');
         }
 
-        // Redirect to the next question
         this.$router.push('/form/bulk/qst5');
       } catch (error) {
         console.error("Error saving goal weight: ", error);
@@ -96,54 +89,54 @@ export default {
 .page-container {
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Align items to the top */
+  align-items: flex-start; 
   height: 100vh;
 }
 
 .form-container {
   width: 100%;
-  max-width: 400px; /* Reduce max-width for a smaller form */
-  margin-top: 20px; /* Added space between the top and the form */
+  max-width: 400px; 
+  margin-top: 20px; 
 }
 
 .modern-box {
-  background-color: #ffffff; /* Change background color to white */
-  border: none; /* Remove border */
+  background-color: #ffffff; 
+  border: none; 
   border-radius: 10px;
-  padding: 20px; /* Reduce padding for a smaller form */
+  padding: 20px; 
 }
 
 .form-title {
-  font-size: 1.5rem; /* Reduce font size for the title */
+  font-size: 1.5rem; 
   font-weight: bold;
   margin-bottom: 20px;
   text-align: center;
-  color: #333; /* Adjust title color */
+  color: #333; 
 }
 
 .form-group {
-  margin-bottom: 15px; /* Reduce margin for a more compact form */
+  margin-bottom: 15px; 
 }
 
 .form-label {
-  font-size: 1.1rem; /* Reduce font size for labels */
+  font-size: 1.1rem; 
   margin-bottom: 5px;
   display: block;
-  color: #555; /* Adjust label color */
+  color: #555; 
 }
 
 .form-input {
   width: 100%;
-  padding: 12px; /* Reduce padding for input fields */
-  font-size: 1rem; /* Reduce font size for input fields */
-  border: 1px solid #ccc; /* Adjust border color */
+  padding: 12px; 
+  font-size: 1rem; 
+  border: 1px solid #ccc; 
   border-radius: 5px;
 }
 
 .submit-button {
-  padding: 12px 20px; /* Reduce padding for the submit button */
-  font-size: 1.1rem; /* Reduce font size for the submit button */
-  background-color: #2ecc71; /* Change button color to green */
+  padding: 12px 20px; 
+  font-size: 1.1rem; 
+  background-color: #2ecc71; 
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -153,7 +146,7 @@ export default {
 }
 
 .submit-button:hover {
-  background-color: #27ae60; /* Adjust hover background color to a slightly darker shade of green */
+  background-color: #27ae60; 
 }
 
 .explanation-box {
@@ -161,18 +154,18 @@ export default {
   margin: 20px auto;
   padding: 10px;
   border-radius: 8px;
-  backdrop-filter: blur(10px); /* Add a blur effect for modernity */
-  background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent background color */
+  backdrop-filter: blur(10px); 
+  background-color: rgba(255, 255, 255, 0.5); 
   color: #333;
   font-size: 1rem;
   text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for modernity */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
   display: flex;
-  align-items: center; /* Center content vertically */
-  justify-content: center; /* Center content horizontally */
+  align-items: center; 
+  justify-content: center; 
 }
 
 .info-icon {
-  margin-right: 10px; /* Space between the icon and text */
+  margin-right: 10px;
 }
 </style>

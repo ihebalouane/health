@@ -20,7 +20,6 @@
           </button>
         </form>
 
-        <!-- Explanation box under the form -->
         <div class="explanation-box">
           <div class="info-icon">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -149,8 +148,8 @@ input[type="number"] {
   margin: 20px auto;
   padding: 10px;
   border-radius: 8px;
-  backdrop-filter: blur(10px); /* Add a blur effect */
-  background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent background color */
+  backdrop-filter: blur(10px); 
+  background-color: rgba(255, 255, 255, 0.5); 
   color: #333;
   font-size: 1rem;
   text-align: center;
@@ -161,6 +160,6 @@ input[type="number"] {
 }
 
 .info-icon {
-  margin-right: 10px; /* Space between the icon and text */
+  margin-right: 10px; 
 }
 </style>

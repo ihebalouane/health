@@ -19,15 +19,13 @@
 
       <div class="wrap-f" v-show="!selectedVideo && !selectedExerciseTitle">
         <transition-group name="fade" tag="div" class="items-list-section">
-          <!-- <div class="chooseoptions">Choose Options</div> -->
           <div v-for="(day, index) in days" :key="index" class="section-content" v-show="selectedDay === day.name">
             <ul class="items-list no-margin">
               <li v-for="(item, index) in selectedItems" :key="index" @click="loadVideo(item)" class="item-option">
                 <span class="item-text">{{ item }}</span>
               </li>
               <li class="rest-day" v-if="selectedItems.length === 0">
-                <img src="../../assets/images/rest-day.png" alt="">
-                <!-- <span class="item-text">Rest day</span> -->
+                <img src="../../assets/images/zzzz.png" alt="">
               </li>
             </ul>
           </div>
@@ -298,7 +296,6 @@ export default {
 </script>
 
 <style>
-/* General Styles */
 .center-container {
   display: flex;
   border-radius: 14px;
@@ -323,7 +320,6 @@ export default {
 
 }
 
-/* Section Styles */
 .section {
   flex: 1;
   overflow: auto;
@@ -382,7 +378,6 @@ export default {
   height: min-content;
   cursor: pointer;
   border-radius: 5px;
-  /* transition: all 0.3s ease; */
   align-items: center;
   padding: 15px;
   text-align: center;
@@ -403,8 +398,8 @@ export default {
   background: none;
 }
 .rest-day > img {
-  width: 440px;
-    height: 470px;
+  width: 380px;
+    height: 380px;
 }
 .day-list li:hover,
 .items-list >.item-option:hover,
@@ -413,7 +408,6 @@ export default {
   background-color: #2ecc71;
   color: white;
   opacity: 0.9;
-  /* transform: translateY(-5px); */
 }
 
 .day-list li:not(:last-child),
@@ -428,9 +422,8 @@ export default {
   color: #ffffff;
 }
 
-/* Select Options Styles */
 .item-option {
-  width: calc(50% - 10px); /* Two items per row, with a 10px gap */
+  width: calc(50% - 10px); 
   margin: 5px;
   box-sizing: border-box;
 }
@@ -493,7 +486,6 @@ export default {
   color: #fff;
 }
 
-/* Video Player Styles */
 .video-section {
   display: flex;
   justify-content: center;
@@ -518,14 +510,12 @@ export default {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  /* transition: background-color 0.3s ease; */
 }
 
 .back-button:hover {
   background-color: #27ae60;
 }
 
-/* Recommendations Section Styles */
 .recommendations {
   margin-top: 20px;
 }
@@ -555,11 +545,9 @@ recommedations ul li:last-child {
   margin-bottom: 0;
 }
 
-/* Transition Styles */
 .fade-enter-active, .fade-leave-active {
-  /* transition: opacity 0.5s; */
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+.fade-enter, .fade-leave-to  {
   opacity: 0;
 }
 

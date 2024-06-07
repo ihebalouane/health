@@ -82,14 +82,12 @@ export default {
         const userDocSnap = await getDoc(userDocRef);
 
         if (userDocSnap.exists()) {
-          // If document exists, update it with the new data
           await updateDoc(userDocRef, {
             diet: dietDescription,
             timestamp: new Date()
           });
           console.log("Diet description updated!");
         } else {
-          // If document doesn't exist, create a new one with the provided data
           await addDoc(collection(projectFirestore, "Bulk"), {
             diet: dietDescription,
             userEmail: user.email,
@@ -106,18 +104,18 @@ export default {
     },
     handleRadioClick(option) {
       if (option.value !== 'Other') {
-        this.otherDescription = ''; // Clear the otherDescription if a non-Other option is selected
+        this.otherDescription = ''; 
       }
     },
     checkValidity() {
       if (this.selectedOption !== 'Other') {
-        return; // No need to check validity if other option is not selected
+        return; 
       }
       const submitButton = this.$refs.submitButton;
       if (submitButton && this.otherDescription.trim() !== '') {
-        submitButton.removeAttribute('disabled'); // Enable submit button if text is entered
+        submitButton.removeAttribute('disabled'); 
       } else {
-        submitButton.setAttribute('disabled', 'true'); // Disable submit button if text is empty
+        submitButton.setAttribute('disabled', 'true'); 
       }
     }
   }

@@ -1,10 +1,8 @@
 <template>
   <div class="green-box">
     <div class="container">
-      <!-- Meal list on the left side -->
       <div class="meal-list-section">
         <ul class="meal-list">
-          <!-- Loop through the filtered list of meals -->
           <li v-for="(meal, index) in filteredMeals" :key="index" @click="selectMeal(meal)" :class="{ selected: selectedMeal === meal }">
             <span class="meal-text">{{ meal }}</span>
            
@@ -12,16 +10,13 @@
         </ul>
       </div>
 
-      <!-- Image and description display in the middle -->
       <div class="image-display-section" v-if="showData">
-        <!-- Image container -->
         <div class="image-container">
           <div class="meal-name" v-if="selectedMeal">{{ selectedMeal }}</div>
           <img v-if="selectedImage" :src="selectedImage" alt="Selected Meal" class="meal-image" @click="openModal" />
         </div>
       </div>
 
-      <!-- Modal overlay -->
 <div v-if="isModalOpen" class="modal-overlay" @click="closeModal">
   <div class="modal-content" @click.stop>
     <h3>Description</h3>
@@ -48,7 +43,6 @@ import { collection, getDocs, query, where } from 'firebase/firestore';
 
 export default {
   setup() {
-    // Define the list of meals with images and descriptions for different program types
     const mealImages = {
       //Meal 1 Bulk
       'Grilled chicken': 'https://firebasestorage.googleapis.com/v0/b/health-6b124.appspot.com/o/Diet%2FMeal%201%2FGrilled%20chicken%20breast.jpg?alt=media&token=f1dbb2cf-aa85-4acf-b38b-d35c42294633',
@@ -90,7 +84,7 @@ export default {
     const showData = ref(false);
     const programType = ref('');
     const diet = ref('');
-    const selectedRiskFactors = ref([]); // Assuming selectedRiskFactors is fetched from user data
+    const selectedRiskFactors = ref([]); 
     const deficiencies = ref([]);
     const advice = ref('');
     const isModalOpen = ref(false);
@@ -130,7 +124,6 @@ export default {
   'Mixed salad': 'A fresh and nutrient-dense option great for overall health.'
 };
     
-    // Advice recommendations based on deficiencies
     const deficiencyAdvice = {
       iron: 'Increase intake of iron-rich foods such as red meat, leafy greens, and legumes.',
       vitaminA: 'Consider consuming more foods like sweet potatoes, carrots, and spinach for vitamin A.',
@@ -141,7 +134,6 @@ export default {
       zinc: 'Include more zinc-rich foods like shellfish, meat, and legumes in your diet.',
     };
 
-    // Filter meals based on the conditions
     const filteredMeals = computed(() => {
       if (diet.value === 'Vegetarian' || diet.value === 'Vegan') {
         console.log ('Meal 1')
@@ -180,7 +172,6 @@ export default {
   }
 };
 
-    // Open and close the modal
     const openModal = () => {
       isModalOpen.value = true;
     };
@@ -188,7 +179,6 @@ export default {
       isModalOpen.value = false;
     };
 
-    // Fetch user data and set deficiencies, advice, and diet
     const fetchUserData = async () => {
       try {
         const userEmail = localStorage.getItem('email');
@@ -197,16 +187,12 @@ export default {
         querySnapshot.forEach((doc) => {
           const data = doc.data();
 
-          // Store the program type
           programType.value = data.programType;
 
-          // Show data if program type is either "Bulk" or "Cut"
           showData.value = ['Bulk', 'Cut'].includes(programType.value);
-          // Retrieve selectedRiskFactors and set filtered meals accordingly
           if (data.selectedRiskFactors) {
             selectedRiskFactors.value = data.selectedRiskFactors;
           }
-          // Retrieve deficiencies and set advice accordingly
           if (data.deficiencies) {
             deficiencies.value = data.deficiencies;
             setAdviceBasedOnDeficiencies();
@@ -221,7 +207,6 @@ export default {
       }
     };
 
-    // Set advice based on the user's deficiencies
     const setAdviceBasedOnDeficiencies = () => {
       const userDeficiencies = deficiencies.value;
       let adviceArray = [];
@@ -261,13 +246,12 @@ export default {
 .container {
     display: flex;
     justify-content: center;
-    /* height: 100vh; */
     padding: 20px;
     align-items: center;
 }
 
 .green-box {
-  background: linear-gradient(to bottom left, #2ecc71, #ffffff); /* Background gradient */
+  background: linear-gradient(to bottom left, #2ecc71, #ffffff); 
   padding: 20px;
   border-radius: 20px;
   justify-content: center;

@@ -60,25 +60,20 @@ export default {
   },
   methods: {
     async submitForm() {
-      // Show loading animation
       this.isLoading = true;
 
       try {
-        // Simulate loading for 6 seconds
         await new Promise(resolve => setTimeout(resolve, 6000));
 
-        // Prepare data for Firestore
         const formData = {
           reasons: this.selectedOptions,
           ...(this.selectedOptions.includes('Other') && { otherReason: this.otherReason }),
           timestamp: new Date()
         };
 
-        // Save the form data to Firestore
         const user = auth.currentUser;
         if (!user) {
           console.error("User not logged in.");
-          // Handle user not logged in
           return;
         }
         
@@ -86,14 +81,12 @@ export default {
         const userDocSnap = await getDoc(userDocRef);
 
         if (userDocSnap.exists()) {
-          // If document exists, update it with the new data
           await updateDoc(userDocRef, {
             weightGainReasons: formData,
             timestamp: new Date()
           });
           console.log("Weight gain reasons updated!");
         } else {
-          // If document doesn't exist, create a new one with the provided data
           await addDoc(collection(projectFirestore, "Bulk"), {
             weightGainReasons: formData,
             userEmail: user.email,
@@ -102,20 +95,15 @@ export default {
           console.log("New weight gain reasons saved!");
         }
 
-        // After 6 seconds, navigate to the next page
         this.$router.push('/plan');
       } catch (error) {
-        // Handle errors
         console.error("Error saving form data: ", error);
         alert('There was an error submitting your form. Please try again.');
       } finally {
-        // Hide loading animation after form submission logic completes
         this.isLoading = false;
       }
     },
     checkValidity() {
-      // Additional method to handle form validation if needed
-      // Adjusted to enable/disable the submit button based on form data
       const submitButton = this.$refs.submitButton;
       if (submitButton) {
         submitButton.disabled = this.selectedOptions.includes('Other') && this.otherReason.trim() === '';

@@ -37,26 +37,21 @@ export default {
   methods: {
     async handleSubmit() {
       try {
-        // Check if user is logged in
         const user = auth.currentUser;
         if (!user) {
           console.error("User not logged in.");
-          // Handle user not logged in
           return;
         }
 
-        // Query Firestore to find the document with the user's email
         const userDocRef = collection(projectFirestore, "userResponses");
         const q = query(userDocRef, where("userEmail", "==", user.email));
         const querySnapshot = await getDocs(q);
         
         if (querySnapshot.empty) {
           console.error("User document not found.");
-          // Handle user document not found
           return;
         }
 
-        // Update the existing document with the new data
         const doc = querySnapshot.docs[0];
         await updateDoc(doc.ref, {
           height: this.height,
@@ -65,11 +60,9 @@ export default {
         });
 
         console.log('Data updated in', user.email, 'account');
-        // Redirect to the next question
         this.$router.push('/form/cut/qst3');
       } catch (error) {
         console.error("Error updating data in Firestore: ", error);
-        // Handle error
       }
     }
   }

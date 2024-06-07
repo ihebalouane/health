@@ -55,7 +55,7 @@ const submitGender = async () => {
     if (user) {
       await addDoc(collection(projectFirestore, "Bulk"), {
         gender: userGender,
-        programType: 'Bulk', // Set programType to 'Bulk' regardless of gender
+        programType: 'Bulk', 
         userEmail: user.email,
         timestamp: new Date() 
       });
@@ -190,7 +190,7 @@ h1 {
 }
 
 .next-button:hover {
-  background-color: #27ae60; /* Changed hover background color to a slightly darker shade of green */
+  background-color: #27ae60; 
   color: #fff;
 }
 
@@ -199,18 +199,18 @@ h1 {
   margin: 20px auto;
   padding: 10px;
   border-radius: 8px;
-  backdrop-filter: blur(10px); /* Add a blur effect for modernity */
-  background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent background color */
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.5); 
   color: #333;
   font-size: 1rem;
   text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for modernity */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
   display: flex;
-  align-items: center; /* Center content vertically */
-  justify-content: center; /* Center content horizontally */
+  align-items: center; 
+  justify-content: center; 
 }
 
 .info-icon {
-  margin-right: 10px; /* Space between the icon and text */
+  margin-right: 10px;
 }
 </style>

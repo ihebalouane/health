@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { projectFirestore, auth } from '../../../firebase/config'; // Make sure the path is correct
+import { projectFirestore, auth } from '../../../firebase/config'; 
 import { collection, query, where, getDocs, updateDoc, addDoc } from 'firebase/firestore';
 
 export default {
@@ -42,17 +42,14 @@ export default {
         const user = auth.currentUser;
         if (!user) {
           console.error("User not logged in.");
-          // Handle user not logged in
           return;
         }
 
-        // Query Firestore to find if there's an existing document with the user's email
         const userDocRef = collection(projectFirestore, "userResponses");
         const q = query(userDocRef, where("userEmail", "==", user.email));
         const querySnapshot = await getDocs(q);
         
         if (!querySnapshot.empty) {
-          // If document exists, update it with the new data
           const doc = querySnapshot.docs[0];
           await updateDoc(doc.ref, {
             goalWeight: this.weight,
@@ -60,7 +57,6 @@ export default {
           });
           console.log('Data updated in Firestore');
         } else {
-          // If document doesn't exist, create a new one with the provided data
           await addDoc(collection(projectFirestore, "userResponses"), {
             userEmail: user.email,
             goalWeight: this.weight,
@@ -69,7 +65,6 @@ export default {
           console.log('New document created in Firestore');
         }
 
-        // Redirect to the next question
         this.$router.push('/form/cut/qst5');
       } catch (error) {
         console.error("Error saving goal weight: ", error);
@@ -85,54 +80,54 @@ export default {
 .page-container {
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Align items to the top */
+  align-items: flex-start;
   height: 100vh;
 }
 
 .form-container {
   width: 100%;
-  max-width: 400px; /* Reduce max-width for a smaller form */
-  margin-top: 20px; /* Added space between the top and the form */
+  max-width: 400px; 
+  margin-top: 20px; 
 }
 
 .modern-box {
-  background-color: #ffffff; /* Change background color to white */
-  border: none; /* Remove border */
+  background-color: #ffffff; 
+  border: none; 
   border-radius: 10px;
-  padding: 20px; /* Reduce padding for a smaller form */
+  padding: 20px; 
 }
 
 .form-title {
-  font-size: 1.5rem; /* Reduce font size for the title */
+  font-size: 1.5rem; 
   font-weight: bold;
   margin-bottom: 20px;
   text-align: center;
-  color: #333; /* Adjust title color */
+  color: #333; 
 }
 
 .form-group {
-  margin-bottom: 15px; /* Reduce margin for a more compact form */
+  margin-bottom: 15px; 
 }
 
 .form-label {
-  font-size: 1.1rem; /* Reduce font size for labels */
+  font-size: 1.1rem; 
   margin-bottom: 5px;
   display: block;
-  color: #555; /* Adjust label color */
+  color: #555; 
 }
 
 .form-input {
   width: 100%;
-  padding: 12px; /* Reduce padding for input fields */
-  font-size: 1rem; /* Reduce font size for input fields */
-  border: 1px solid #ccc; /* Adjust border color */
+  padding: 12px; 
+  font-size: 1rem; 
+  border: 1px solid #ccc; 
   border-radius: 5px;
 }
 
 .submit-button {
-  padding: 12px 20px; /* Reduce padding for the submit button */
-  font-size: 1.1rem; /* Reduce font size for the submit button */
-  background-color: #2ecc71; /* Change button color to green */
+  padding: 12px 20px;
+  font-size: 1.1rem; 
+  background-color: #2ecc71; 
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -142,6 +137,6 @@ export default {
 }
 
 .submit-button:hover {
-  background-color: #27ae60; /* Adjust hover background color to a slightly darker shade of green */
+  background-color: #27ae60;
 }
 </style>

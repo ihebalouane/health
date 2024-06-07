@@ -48,17 +48,14 @@ export default {
         const user = auth.currentUser;
         if (!user) {
           console.error("User not logged in.");
-          // Handle user not logged in
           return;
         }
 
-        // Query Firestore to find if there's an existing document with the user's email
         const userDocRef = collection(projectFirestore, "userResponses");
         const q = query(userDocRef, where("userEmail", "==", user.email));
         const querySnapshot = await getDocs(q);
         
         if (!querySnapshot.empty) {
-          // If document exists, update it with the new data
           const doc = querySnapshot.docs[0];
           await updateDoc(doc.ref, {
             exerciseFrequency: this.exerciseFrequency,
@@ -66,7 +63,6 @@ export default {
           });
           console.log('Data updated in Firestore');
         } else {
-          // If document doesn't exist, create a new one with the provided data
           await addDoc(collection(projectFirestore, "userResponses"), {
             userEmail: user.email,
             exerciseFrequency: this.exerciseFrequency,
@@ -75,7 +71,6 @@ export default {
           console.log('New document created in Firestore');
         }
 
-        // Redirect to the next question
         this.$router.push('/form/cut/qst6');
       } catch (error) {
         console.error("Error saving exercise frequency: ", error);
@@ -113,25 +108,25 @@ export default {
 .radio-label {
   display: flex;
   align-items: center;
-  margin-bottom: 15px; /* Increased margin */
+  margin-bottom: 15px;
   cursor: pointer;
 }
 
 .radio-custom {
-  width: 24px; /* Increased size */
-  height: 24px; /* Increased size */
-  border: 2px solid #2ecc71; /* Changed border color */
+  width: 24px; 
+  height: 24px; 
+  border: 2px solid #2ecc71;
   border-radius: 50%;
-  margin-right: 12px; /* Increased margin */
+  margin-right: 12px;
   position: relative;
 }
 
 .radio-custom::after {
   content: '';
   display: block;
-  width: 12px; /* Increased size */
-  height: 12px; /* Increased size */
-  background-color: #2ecc71; /* Changed background color */
+  width: 12px; 
+  height: 12px; 
+  background-color: #2ecc71; 
   border-radius: 50%;
   position: absolute;
   top: 50%;
@@ -141,7 +136,7 @@ export default {
 }
 
 .radio-text {
-  font-size: 1.2rem; /* Increased font size */
+  font-size: 1.2rem;
 }
 
 input[type="radio"] {
@@ -155,10 +150,10 @@ input[type="radio"]:checked + .radio-custom::after {
 }
 
 .submit-button {
-  background-color: #2ecc71; /* Changed button color */
+  background-color: #2ecc71; 
   color: #fff;
-  padding: 12px 24px; /* Increased padding */
-  font-size: 1.2rem; /* Increased font size */
+  padding: 12px 24px; 
+  font-size: 1.2rem; 
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -166,6 +161,6 @@ input[type="radio"]:checked + .radio-custom::after {
 }
 
 .submit-button:hover {
-  background-color: #27ae60; /* Adjusted hover background color */
+  background-color: #27ae60;
 }
 </style>

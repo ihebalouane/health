@@ -17,7 +17,6 @@
           Next
         </button>
 
-        <!-- Explanation Box -->
         <div class="explanation-box">
           <div class="info-icon">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -26,7 +25,6 @@
           </div>
           <p>This information will help us better understand your activity levels and tailor your plan accordingly.</p>
         </div>
-        <!-- End of Explanation Box -->
       </div>
     </div>
   </div>
@@ -60,17 +58,14 @@ export default {
         const user = auth.currentUser;
         if (!user) {
           console.error("User not logged in.");
-          // Handle user not logged in
           return;
         }
 
-        // Query Firestore to find if there's an existing document with the user's email
         const userDocRef = collection(projectFirestore, "userResponses");
         const q = query(userDocRef, where("userEmail", "==", user.email));
         const querySnapshot = await getDocs(q);
         
         if (!querySnapshot.empty) {
-          // If document exists, update it with the new data
           const doc = querySnapshot.docs[0];
           await updateDoc(doc.ref, {
             exerciseFrequency: this.exerciseFrequency,
@@ -78,7 +73,6 @@ export default {
           });
           console.log('Data updated in Firestore');
         } else {
-          // If document doesn't exist, create a new one with the provided data
           await addDoc(collection(projectFirestore, "userResponses"), {
             userEmail: user.email,
             exerciseFrequency: this.exerciseFrequency,
@@ -87,7 +81,6 @@ export default {
           console.log('New document created in Firestore');
         }
 
-        // Redirect to the next question
         this.$router.push('/form/bulk/qst6');
       } catch (error) {
         console.error("Error saving exercise frequency: ", error);
@@ -128,9 +121,9 @@ export default {
 }
 
 .radio-custom {
-  width: 24px; /* Increased size */
-  height: 24px; /* Increased size */
-  border: 2px solid #2ecc71; /* Changed border color */
+  width: 24px; 
+  height: 24px; 
+  border: 2px solid #2ecc71; 
   border-radius: 50%;
   margin-right: 12px;
   position: relative;
@@ -141,7 +134,7 @@ export default {
   display: block;
   width: 12px;
   height: 12px;
-  background-color: #2ecc71; /* Changed background color */
+  background-color: #2ecc71; 
   border-radius: 50%;
   position: absolute;
   top: 50%;
@@ -165,7 +158,7 @@ input[type="radio"]:checked + .radio-custom::after {
 }
 
 .submit-button {
-  background-color: #2ecc71; /* Changed button color */
+  background-color: #2ecc71; 
   color: #fff;
   padding: 12px 24px;
   font-size: 1.2rem;
@@ -176,7 +169,7 @@ input[type="radio"]:checked + .radio-custom::after {
 }
 
 .submit-button:hover {
-  background-color: #27ae60; /* Adjusted hover background color */
+  background-color: #27ae60; 
 }
 
 .explanation-box {
@@ -184,18 +177,18 @@ input[type="radio"]:checked + .radio-custom::after {
   margin: 20px auto;
   padding: 10px;
   border-radius: 8px;
-  backdrop-filter: blur(10px); /* Add a blur effect */
+  backdrop-filter: blur(10px); 
   background-color: rgba(255, 255, 255, 0.5);
   color: #333;
   font-size: 1rem;
   text-align: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   display: flex;
-  align-items: center; /* Center content vertically */
-  justify-content: center; /* Center content horizontally */
+  align-items: center; 
+  justify-content: center; 
 }
 
 .info-icon {
-  margin-right: 10px; /* Space between the icon and text */
+  margin-right: 10px; 
 }
 </style>

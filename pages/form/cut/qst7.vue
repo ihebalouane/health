@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { projectFirestore, auth } from '../../../firebase/config'; // Make sure the path is correct
+import { projectFirestore, auth } from '../../../firebase/config'; 
 import { collection, query, where, getDocs, updateDoc, addDoc } from 'firebase/firestore';
 
 export default {
@@ -51,17 +51,14 @@ export default {
         const user = auth.currentUser;
         if (!user) {
           console.error("User not logged in.");
-          // Handle user not logged in
           return;
         }
 
-        // Query Firestore to find if there's an existing document with the user's email
         const userDocRef = collection(projectFirestore, "userResponses");
         const q = query(userDocRef, where("userEmail", "==", user.email));
         const querySnapshot = await getDocs(q);
         
         if (!querySnapshot.empty) {
-          // If document exists, update it with the new data
           const doc = querySnapshot.docs[0];
           await updateDoc(doc.ref, {
             bloodType: this.selectedBloodType,
@@ -69,7 +66,6 @@ export default {
           });
           console.log('Data updated in Firestore');
         } else {
-          // If document doesn't exist, create a new one with the provided data
           await addDoc(collection(projectFirestore, "userResponses"), {
             userEmail: user.email,
             bloodType: this.selectedBloodType,
@@ -78,7 +74,6 @@ export default {
           console.log('New document created in Firestore');
         }
 
-        // Redirect to the next question
         this.$router.push('/form/cut/qst8');
       } catch (error) {
         console.error("Error saving blood type: ", error);

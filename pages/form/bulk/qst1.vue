@@ -58,13 +58,11 @@ export default {
           return;
         }
 
-        // Query Firestore to find if there's an existing document with the user's email
         const userDocRef = collection(projectFirestore, "userResponses");
         const q = query(userDocRef, where("userEmail", "==", user.email));
         const querySnapshot = await getDocs(q);
 
         if (!querySnapshot.empty) {
-          // If document exists, update it with the new data
           const doc = querySnapshot.docs[0];
           await updateDoc(doc.ref, {
             experienceLevel: this.selectedOption,
@@ -72,7 +70,6 @@ export default {
           });
           console.log('Data updated in Firestore');
         } else {
-          // If document doesn't exist, create a new one with the provided data
           await addDoc(collection(projectFirestore, "users"), {
             userEmail: user.email,
             experienceLevel: this.selectedOption,
@@ -81,7 +78,6 @@ export default {
           console.log('New document created in Firestore');
         }
 
-        // Redirect to the next page or perform another action
         this.$router.push('/form/bulk/qst2');
       } catch (error) {
         console.error("Error saving experience level: ", error);
@@ -183,18 +179,18 @@ export default {
   margin: 20px auto;
   padding: 10px;
   border-radius: 8px;
-  backdrop-filter: blur(10px); /* Add a blur effect for modernity */
-  background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent background color */
+  backdrop-filter: blur(10px); 
+  background-color: rgba(255, 255, 255, 0.5); 
   color: #333;
   font-size: 1rem;
   text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for modernity */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
   display: flex;
-  align-items: center; /* Center content vertically */
-  justify-content: center; /* Center content horizontally */
+  align-items: center; 
+  justify-content: center; 
 }
 
 .info-icon {
-  margin-right: 10px; /* Space between the icon and text */
+  margin-right: 10px; 
 }
 </style>
