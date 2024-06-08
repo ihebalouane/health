@@ -192,9 +192,6 @@ const initializeNavigation = () => {
   }
 };
 
-
-
-// Function to log out the user
 const logoutUser = async () => {
   try {
     await logout();
@@ -205,7 +202,6 @@ const logoutUser = async () => {
   }
 };
 
-// Function to fetch the user's profession
 const fetchUserProfession = async () => {
   try {
     const userQuery = query(
@@ -227,12 +223,10 @@ const fetchUserProfession = async () => {
   }
 };
 
-// Toggle dropdown menu
 const toggleDropdown = () => {
   dropdownOpen.value = !dropdownOpen.value;
 };
 
-// Toggle profile dropdown
 const toggleProfileDropdown = () => {
   profileDropdownOpen.value = !profileDropdownOpen.value;
 };
@@ -244,6 +238,7 @@ onMounted(() => {
 
     if (email) {
       userEmail.value = email;
+      fetchUserProfession();  // Ensure this runs after setting the email
     }
   }
 });

@@ -296,6 +296,7 @@ export default {
 </script>
 
 <style>
+/* General Styles */
 .center-container {
   display: flex;
   border-radius: 14px;
@@ -320,13 +321,13 @@ export default {
 
 }
 
+/* Section Styles */
 .section {
   flex: 1;
-  overflow: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  justify-content: center;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
 }
 
 .section-content {
@@ -367,7 +368,7 @@ export default {
   height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    gap: 5px;
     padding: 15px;
     justify-content: center;
 }
@@ -375,13 +376,15 @@ export default {
 .day-list li,
 .items-list li {
   display: flex;
-  height: min-content;
-  cursor: pointer;
-  border-radius: 5px;
-  align-items: center;
-  padding: 15px;
-  text-align: center;
-  border: 1px solid #fafafafa;
+    height: -moz-min-content;
+    height: min-content;
+    cursor: pointer;
+    border-radius: 5px;
+    /* transition: all 0.3s ease; */
+    align-items: center;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #fafafafa;
 }
 .rest-day{
   display: flex;
@@ -398,8 +401,8 @@ export default {
   background: none;
 }
 .rest-day > img {
-  width: 380px;
-    height: 380px;
+  width: 440px;
+    height: 470px;
 }
 .day-list li:hover,
 .items-list >.item-option:hover,
@@ -408,6 +411,7 @@ export default {
   background-color: #2ecc71;
   color: white;
   opacity: 0.9;
+  /* transform: translateY(-5px); */
 }
 
 .day-list li:not(:last-child),
@@ -422,8 +426,9 @@ export default {
   color: #ffffff;
 }
 
+/* Select Options Styles */
 .item-option {
-  width: calc(50% - 10px); 
+  width: calc(50% - 10px); /* Two items per row, with a 10px gap */
   margin: 5px;
   box-sizing: border-box;
 }
@@ -486,6 +491,7 @@ export default {
   color: #fff;
 }
 
+/* Video Player Styles */
 .video-section {
   display: flex;
   justify-content: center;
@@ -510,20 +516,22 @@ export default {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  /* transition: background-color 0.3s ease; */
 }
 
 .back-button:hover {
   background-color: #27ae60;
 }
 
+/* Recommendations Section Styles */
 .recommendations {
   margin-top: 20px;
 }
 
 .recommendations h3 {
-  font-size: 18px;
-  margin-bottom: 10px;
-  color: #333;
+  font-size: 16px;
+    margin-bottom: 10px;
+    color: #333;
 }
 
 .recommendations ul {
@@ -532,9 +540,9 @@ export default {
 }
 
 .recommendations ul li {
-  font-size: 14px;
-  line-height: 1.6;
-  color: #555;
+  font-size: 12px;
+    line-height: 1.6;
+    color: #555;
 }
 
 .recommendations ul li:first-child {
@@ -545,9 +553,11 @@ recommedations ul li:last-child {
   margin-bottom: 0;
 }
 
+/* Transition Styles */
 .fade-enter-active, .fade-leave-active {
+  /* transition: opacity 0.5s; */
 }
-.fade-enter, .fade-leave-to  {
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
   opacity: 0;
 }
 
