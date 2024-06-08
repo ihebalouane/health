@@ -1,13 +1,12 @@
 <template>
-  <div class="center-container no-margin">
-    <div class="container-d no-margin">
-      <div class="section day-list-section no-margin">
-        <div class="cof no-margin">
+  <div class="center-container">
+    <div class="container-d">
+      <div class="section day-list-section">
+        <div class="cof">
           <span>Workout Plan</span>
         </div>
-
-        <div class="section-content no-margin">
-          <ul class="day-list no-margin">
+        <div class="section-content">
+          <ul class="day-list">
             <li v-for="(day, index) in days" :key="index"
                 :class="{ 'selected': selectedDay === day.name }"
                 @click="toggleDay(day.name)">
@@ -20,12 +19,12 @@
       <div class="wrap-f" v-show="!selectedVideo && !selectedExerciseTitle">
         <transition-group name="fade" tag="div" class="items-list-section">
           <div v-for="(day, index) in days" :key="index" class="section-content" v-show="selectedDay === day.name">
-            <ul class="items-list no-margin">
+            <ul class="items-list">
               <li v-for="(item, index) in selectedItems" :key="index" @click="loadVideo(item)" class="item-option">
                 <span class="item-text">{{ item }}</span>
               </li>
               <li class="rest-day" v-if="selectedItems.length === 0">
-                <img src="../../assets/images/zzzz.png" alt="">
+                <img src="../../assets/images/zzzz.png" alt="Rest Day">
               </li>
             </ul>
           </div>
@@ -33,10 +32,10 @@
       </div>
 
       <transition name="fade" mode="out-in">
-        <div class="section video-section no-margin" v-if="selectedVideo || selectedExerciseTitle">
-          <div class="section-content no-margin">
+        <div class="section video-section" v-if="selectedVideo || selectedExerciseTitle">
+          <div class="section-content">
             <h3 class="exercise-title">{{ selectedExerciseTitle }}</h3>
-            <video v-if="selectedVideo" controls loop :src="selectedVideo" class="video-player no-margin">
+            <video v-if="selectedVideo" controls loop :src="selectedVideo" class="video-player">
               Your browser does not support the video tag.
             </video>
             <button class="back-button" @click="closeVideo">Back</button>
@@ -44,14 +43,13 @@
         </div>
       </transition>
 
-      <div class="section gym-details-section no-margin">
-        <div class="section-content no-margin">
+      <div class="section gym-details-section">
+        <div class="section-content">
           <h2>Workout Details</h2>
           <p v-if="selectedExerciseDescription">{{ selectedExerciseDescription }}</p>
-
-          <div class="recommendations no-margin">
+          <div class="recommendations">
             <h3>Recommendations:</h3>
-            <ul class="no-margin">
+            <ul>
               <li>Sleep 7-9 hours every night for proper recovery and muscle growth.</li>
               <li>Avoid alcohol consumption as it can hinder muscle recovery and performance.</li>
               <li>Avoid tobacco use to maintain optimal lung function and overall health.</li>
@@ -62,17 +60,15 @@
       </div>
     </div>
   </div>
-  <br>
 </template>
 
 <script>
 import { ref, onMounted } from 'vue';
 import { projectFirestore } from '@/firebase/config';
 import { collection, getDocs, query, where } from 'firebase/firestore';
-import { videosMap } from './video'; 
+import { videosMap } from './video';
 
 export default {
-  middleware: 'auth',
   setup() {
     const userEmail = ref('');
     const selectedItems = ref([]);
@@ -149,87 +145,87 @@ export default {
     };
 
     const program1 = (day) => {
-      if (day === 'Monday') { 
-        selectedItems.value = ['Bench Press','Dumbbell press', 'Cable Crossover','Landmine Press'];
-      } else if (day === 'Tuesday') { 
-        selectedItems.value = ['Lat Pulldowns','Dumbell Single','Pull ups', 'Pulls', ];
-      } else if (day === 'Friday') { 
-        selectedItems.value = ['Squat','Deadlift','Front squat', 'Goblet', 'Lunge'];
-      } else if (day === 'Thursday') { 
-        selectedItems.value = ['Cable pull','Front raise','Face Pull', 'High Pull', 'Raise'];
+      if (day === 'Monday') {
+        selectedItems.value = ['Bench Press', 'Dumbbell press', 'Cable Crossover', 'Landmine Press'];
+      } else if (day === 'Tuesday') {
+        selectedItems.value = ['Lat Pulldowns', 'Dumbell Single', 'Pull ups', 'Pulls'];
+      } else if (day === 'Friday') {
+        selectedItems.value = ['Squat', 'Deadlift', 'Front squat', 'Goblet', 'Lunge'];
+      } else if (day === 'Thursday') {
+        selectedItems.value = ['Cable pull', 'Front raise', 'Face Pull', 'High Pull', 'Raise'];
       } else {
         selectedItems.value = [];
       }
     };
 
     const program2 = (day) => {
-      if (day === 'Monday') { 
-        selectedItems.value = ['Upper Chest', 'Dumbell flye','Lying triceps','Triceps','Cardio','Cardio-t'];
-      } else if (day === 'Tuesday') { 
-        selectedItems.value = ['Lying Lateral','Trap Raise','Dips','Bar triceps','Cardio legs','Cardio ex'];
-      } else if (day === 'Wednesday') { 
+      if (day === 'Monday') {
+        selectedItems.value = ['Upper Chest', 'Dumbell flye', 'Lying triceps', 'Triceps', 'Cardio', 'Cardio-t'];
+      } else if (day === 'Tuesday') {
+        selectedItems.value = ['Lying Lateral', 'Trap Raise', 'Dips', 'Bar triceps', 'Cardio legs', 'Cardio ex'];
+      } else if (day === 'Wednesday') {
         selectedItems.value = [];
-      } else if (day === 'Thursday') { 
+      } else if (day === 'Thursday') {
         selectedItems.value = ['Seated Dumbbell Clean', 'Raise', 'High Pull', 'Cable pull'];
-      } else if (day === 'Friday') { 
-        selectedItems.value = ['Walking Lunge', 'Sumo squat','Split squats','Deficit Reverse Lunge'];
+      } else if (day === 'Friday') {
+        selectedItems.value = ['Walking Lunge', 'Sumo squat', 'Split squats', 'Deficit Reverse Lunge'];
       } else {
         selectedItems.value = [];
       }
     };
 
     const program3 = (day) => {
-      if (day === 'Monday') { 
-        selectedItems.value = ['Bench Press', 'Dumbell flye','Lying triceps','Triceps','Cardio','Cardio 2'];
+      if (day === 'Monday') {
+        selectedItems.value = ['Bench Press', 'Dumbell flye', 'Lying triceps', 'Triceps', 'Cardio', 'Cardio 2'];
       } else if (day === 'Tuesday') {
-        selectedItems.value = ['Lying Lateral','Trap Raise','Dips','Bar Triceps','Cardio legs','Cardio ex'];
-      } else if (day === 'Wednesday') { 
+        selectedItems.value = ['Lying Lateral', 'Trap Raise', 'Dips', 'Bar Triceps', 'Cardio legs', 'Cardio ex'];
+      } else if (day === 'Wednesday') {
         selectedItems.value = [];
-      } else if (day === 'Friday') { 
+      } else if (day === 'Friday') {
         selectedItems.value = ['Seated Dumbbell Clean', 'Raise', 'High Pull', 'Cable pull'];
-      } else if (day === 'Sunday') { 
-        selectedItems.value = ['Walking Lunge', 'Sumo squat','Split squats','Deficit Reverse Lunge'];
+      } else if (day === 'Sunday') {
+        selectedItems.value = ['Walking Lunge', 'Sumo squat', 'Split squats', 'Deficit Reverse Lunge'];
       } else {
         selectedItems.value = [];
       }
     };
 
     const program4 = (day) => {
-      if (day === 'Monday') { 
+      if (day === 'Monday') {
         selectedItems.value = ['Cardio', 'Cardio Legs', 'Cardio Breath'];
-      } else if (day === 'Tuesday') { 
+      } else if (day === 'Tuesday') {
         selectedItems.value = [];
-      } else if (day === 'Wednesday') { 
+      } else if (day === 'Wednesday') {
         selectedItems.value = ['Cardio-t', 'Cardio Breath', 'Cardio Legs'];
-      } else if (day === 'Friday') { 
+      } else if (day === 'Friday') {
         selectedItems.value = ['Cardio Breath', 'Cardio Legs', 'Cardio-t'];
-      } else if (day === 'Sunday') { 
+      } else if (day === 'Sunday') {
         selectedItems.value = [];
       }
     };
 
     const program5 = (day) => {
-      if (day === 'Monday') { 
+      if (day === 'Monday') {
         selectedItems.value = ['Squat', 'Deadlift', 'Front squat', 'Lunge', 'Sumo squat'];
-      } else if (day === 'Tuesday') { 
+      } else if (day === 'Tuesday') {
         selectedItems.value = ['Dumbbell press', 'Dumbell flye', 'Cable pull', 'Triceps'];
-      } else if (day === 'Wednesday') { 
+      } else if (day === 'Wednesday') {
         selectedItems.value = ['Hold up', 'Lying Lateral', 'Barbell Bent-Over', 'Trap Raise'];
-      } else if (day === 'Friday') { 
+      } else if (day === 'Friday') {
         selectedItems.value = ['Squat', 'Deadlift', 'Front squat', 'Lunge', 'Sumo squat'];
-      } else if (day === 'Sunday') { 
+      } else if (day === 'Sunday') {
         selectedItems.value = [];
       }
     };
 
     const program6 = (day) => {
-      if (day === 'Monday') { 
+      if (day === 'Monday') {
         selectedItems.value = [];
       } else if (day === 'Tuesday') {
         selectedItems.value = ['Bench Press', 'Pull ups', 'Cable pull', 'Bicep curl', 'Triceps'];
-      } else if (day === 'Wednesday') { 
+      } else if (day === 'Wednesday') {
         selectedItems.value = [];
-      } else if (day === 'Saturday') { 
+      } else if (day === 'Saturday') {
         selectedItems.value = ['Squat', 'Front squat', 'Goblet', 'Deficit Reverse Lunge'];
       } else {
         selectedItems.value = [];
@@ -261,7 +257,7 @@ export default {
     const calculateDays = () => {
       const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
       const currentDate = new Date();
-      const currentDayIndex = currentDate.getDay(); 
+      const currentDayIndex = currentDate.getDay();
       const nextDayDate = new Date(currentDate);
       nextDayDate.setDate(currentDate.getDate() + 1);
 
@@ -295,39 +291,60 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 /* General Styles */
 .center-container {
   display: flex;
-  border-radius: 14px;
   justify-content: center;
   align-items: center;
-  height: 80vh;
+  height: 100vh;
+  padding: 20px;
+  background-color: #f4f4f4;
 }
-
-.container-d {
+.item-option{
   display: flex;
-    width: 155vh;
-    max-width: 100%;
-    align-items: stretch;
-    height: 75vh;
-    border-radius: 12px;
-    background: linear-gradient(286deg, #0000009c -36.4%, #2ecc71 131.27%), radial-gradient(562.84% 91.43% at 104.01% 112.43%, rgb(255 255 255) 0%, rgba(0, 0, 0, 0.00) 100%);
-    box-shadow: 0 20px 50px rgba(233, 228, 228, 0.1);
-    overflow: hidden;
-    border: 1px solid #00000045;
-    padding: 10px;
-    margin: 90px 0px;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 
 }
+.wrap-f{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  width: 40vh;
+}
+.container-d {
+display: flex;
+    width: 100%;
+    max-width: 1200px;
+    height: 85vh;
+    border-radius: 12px;
+    background: linear-gradient(145deg, #81f390, #ffffff);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    padding: 20px;
+}
 
-/* Section Styles */
 .section {
   flex: 1;
-    overflow: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 0px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  margin-right: 20px;
+}
+
+.section:last-child {
+  margin-right: 0;
 }
 
 .section-content {
@@ -336,202 +353,131 @@ export default {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  border-left: 1px solid #fafafa;
+      gap: 12px;
 }
-
-.wrap-f {
-  display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    justify-content: center;
-    width: 50vh;
-    border-left: 1px solid #fafafa;
-    gap: 66px;
-}
-
-
 
 .cof {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 20px;
 }
 
 .cof > span {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: bold;
-  color: #fff;
+  color: #333;
 }
 
 .day-list,
 .items-list {
-  height: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    padding: 15px;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
 }
 
 .day-list li,
 .items-list li {
   display: flex;
-    height: -moz-min-content;
-    height: min-content;
-    cursor: pointer;
-    border-radius: 5px;
-    /* transition: all 0.3s ease; */
-    align-items: center;
-    padding: 10px;
-    text-align: center;
-    border: 1px solid #fafafafa;
-}
-.rest-day{
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  align-items: center;
   justify-content: center;
-  border: none !important;
-  cursor: none;
-  background: none;
-  
-}
-.rest-day:hover{
-  background: none;
-}
-.rest-day > img {
-  width: 440px;
-    height: 470px;
-}
-.day-list li:hover,
-.items-list >.item-option:hover,
-.day-list li.selected,
-.items-list li.selected {
-  background-color: #2ecc71;
-  color: white;
-  opacity: 0.9;
-  /* transform: translateY(-5px); */
+  align-items: center;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.day-list li:not(:last-child),
-.items-list li:not(:last-child) {
-  border: 1px solid #fafafafa;
+.day-list li:hover,
+.items-list li:hover {
+  background-color: #2ecc71;
+  color: white;
+  transform: translateY(-3px);
+}
+
+.day-list li.selected {
+  background-color: #2ecc71;
+  color: white;
 }
 
 .day-text,
 .item-text {
-  font-weight: 500;
   font-size: 16px;
-  color: #ffffff;
+  font-weight: 500;
+  color: #333;
 }
 
-/* Select Options Styles */
-.item-option {
-  width: calc(50% - 10px); /* Two items per row, with a 10px gap */
-  margin: 5px;
-  box-sizing: border-box;
-}
-
-.items-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    flex-direction: row;
-}
-
-/* Exercise Title Styles */
-.exercise-title {
-  font-size: 22px;
-  font-weight: bold;
-  color: #ffffff;
-  margin-bottom: 20px;
-  text-align: center;
-  letter-spacing: 1px;
-  line-height: 1.5;
-  text-transform: capitalize;
-}
-
-.gym-details-section {
-  background-color: #f9f9f9;
-  padding: 20px;
-  border-bottom-left-radius: 15px;
-  border-bottom-right-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  max-width: 40vh;
-}
-
-.gym-details-section h2 {
-  margin-bottom: 10px;
-  color: #222;
-  font-weight: bold;
-  font-size: 22px;
-  text-transform: capitalize;
-  letter-spacing: 0.5px;
-}
-
-.gym-details-section p {
-  color: #555;
-  font-size: 14px;
-  line-height: 1.4;
-  margin-bottom: 10px;
-}
-
-.flex-col {
-  flex-direction: column;
-  gap: 40px;
-}
-
-.chooseoptions {
+.rest-day {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  font-size: 20px;
-  font-weight: bold;
-  color: #fff;
+  justify-content: center;
+  gap: 10px;
 }
 
-/* Video Player Styles */
+.rest-day img {
+  width: 200px;
+  height: auto;
+}
+
 .video-section {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
 }
 
 .video-player {
-  display: flex;
-  max-width: 60%;
-  border-radius: 15px;
+  width: 100%;
+  max-width: 30vh;
+  border-radius: 12px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  align-items: center;
-  justify-content: center;
 }
 
 .back-button {
-  margin-top: 10px;
+  margin-top: 20px;
   padding: 10px 20px;
   background-color: #2ecc71;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  /* transition: background-color 0.3s ease; */
+  transition: background-color 0.3s ease;
 }
 
 .back-button:hover {
   background-color: #27ae60;
 }
 
-/* Recommendations Section Styles */
+.gym-details-section {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.gym-details-section h2 {
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.gym-details-section p {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 20px;
+}
+
 .recommendations {
   margin-top: 20px;
 }
 
 .recommendations h3 {
-  font-size: 16px;
-    margin-bottom: 10px;
-    color: #333;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
 }
 
 .recommendations ul {
@@ -540,25 +486,15 @@ export default {
 }
 
 .recommendations ul li {
-  font-size: 12px;
-    line-height: 1.6;
-    color: #555;
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 10px;
 }
 
-.recommendations ul li:first-child {
-  margin-top: 5px;
-}
-
-recommedations ul li:last-child {
-  margin-bottom: 0;
-}
-
-/* Transition Styles */
 .fade-enter-active, .fade-leave-active {
-  /* transition: opacity 0.5s; */
+  transition: opacity 0.5s;
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
   opacity: 0;
 }
-
 </style>

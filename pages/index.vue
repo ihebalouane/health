@@ -240,31 +240,31 @@ export default defineComponent({
       ],
       faqList: [
         {
-          question: "Question 1: What are the benefits of regular exercise?",
+          question: "What are the benefits of regular exercise?",
           answer:
             "Regular exercise has numerous benefits, including improved cardiovascular health, increased muscle strength and flexibility, better mood and mental health, and weight management.",
           expanded: false,
         },
         {
-          question: "Question 2: How often should I exercise?",
+          question: "How often should I exercise?",
           answer:
             "It's recommended to engage in at least 150 minutes of moderate-intensity aerobic exercise or 75 minutes of vigorous-intensity aerobic exercise per week, along with muscle-strengthening activities on two or more days a week.",
           expanded: false,
         },
         {
-          question: "Question 3: Can I exercise if I have a medical condition?",
+          question: "Can I exercise if I have a medical condition?",
           answer:
             "In most cases, yes. However, it's important to consult with your healthcare provider before starting any new exercise program, especially if you have a medical condition or are taking medications.",
           expanded: false,
         },
         {
-          question: "Question 4: What should I eat before and after exercise?",
+          question: "What should I eat before and after exercise?",
           answer:
             "Before exercise, choose a meal or snack that provides carbohydrates for energy and a small amount of protein. After exercise, refuel with a meal or snack that contains protein and carbohydrates to support recovery and muscle repair.",
           expanded: false,
         },
         {
-          question: "Question 5: How can I stay motivated to exercise?",
+          question: "How can I stay motivated to exercise?",
           answer:
             "Setting realistic goals, tracking your progress, varying your routine, and finding a workout buddy can help you stay motivated to exercise regularly.",
           expanded: false,
@@ -287,59 +287,50 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* Your existing styles */
+/* General Styles */
 .page {
   overflow-x: hidden;
+  font-family: 'Arial', sans-serif;
+      background: #f4f4f400;
 }
-/* Styles for Section 1 */
+
+/* Section 1 */
 .home-section-1 {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 100px;
-}
-
-.messages-circle {
-  position: fixed;
-  bottom: 10px; /* Adjust as needed */
-  right: 20px; /* Adjust as needed */
-  width: 90px; /* Adjust as needed */
-  height: 90px; /* Adjust as needed */
-  background-color: #2ecc71; /* Example color */
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #fff; /* Example text color */
-  font-weight: bold;
-  font-size: 1.2rem; /* Example font size */
-  text-decoration: none; /* Remove underline from router-link */
-}
-
-.messages-circle svg {
-  fill: #fff; /* Example icon color */
-  width: 24px; /* Keep SVG icon size */
-  height: 24px; /* Keep SVG icon size */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 100px;
+    background: linear-gradient(45deg, #22a45ad4, #27ae6078);
+    color: white;
+    border-radius: 10px 10px 0px 0px;
 }
 
 .left-content {
   flex: 1;
+  animation: fadeInLeft 1s;
+}
+
+.right-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeInRight 1s;
 }
 
 .title {
-  font-size: 3rem;
+  font-size: 4rem;
   font-weight: bold;
-  color: #2ecc71;
+  margin-bottom: 20px;
 }
 
 .description {
   font-size: 1.5rem;
-  margin-top: 20px;
-  color: #444;
+  margin-bottom: 40px;
 }
 
 .buttons {
-  margin-top: 40px;
+  display: flex;
 }
 
 .get-started-button,
@@ -350,59 +341,45 @@ export default defineComponent({
   border-radius: 27px;
   margin-right: 20px;
   cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  border: 2px solid white;
 }
 
 .get-started-button {
-  background-color: transparent;
-  background-color: #2ecc71;
-  color: #fff;
+  background-color: #fff;
+  color: #2ecc71;
 }
 
 .learn-more-button {
   background-color: transparent;
-  color: black;
-  border: 1.5px solid black;
+  color: white;
+  border: 2px solid white;
 }
 
 .get-started-button:hover {
   background-color: #27ae60;
-  border-color: #27ae60;
   color: #fff;
 }
+
 .learn-more-button:hover {
   background-color: white;
-  border-color: #27ae60;
   color: #27ae60;
-}
-
-.right-content {
-  flex: 1;
 }
 
 .placeholder-image {
   width: 100%;
-  max-width: 400px;
+  max-width: 500px;
   height: auto;
   border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Styles for Separator */
-.separator {
-  height: 2px;
-  background-color: #2ecc71;
-  margin: 50px auto;
-  width: 80%;
-}
-
-/* Styles for Section 2 */
+/* Section 2 */
 .home-section-2 {
   display: flex;
   justify-content: space-between;
   padding: 100px;
+  background-color: #f9f9f900;
 }
 
 .program-box {
@@ -411,8 +388,13 @@ export default defineComponent({
   border: 2px solid #2ecc71;
   border-radius: 10px;
   padding: 20px;
-  background-color: #f9f9f9;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.program-box:hover {
+  transform: translateY(-10px);
 }
 
 .program-box:not(:last-child) {
@@ -430,88 +412,86 @@ export default defineComponent({
 .program-title {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #000;
-}
-
-/* Styles for Section 3 */
-.home-section-3 {
-  display: flex;
-  justify-content: space-between;
-  padding: 100px;
-}
-
-.description-container {
-  flex: 1;
-}
-
-.program-description {
-  font-size: 1.2rem;
-  color: #000;
   margin-bottom: 20px;
 }
 
-.description-title {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #000;
-  margin-bottom: 10px;
+.program-description {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 20px;
 }
 
 .get-started-button {
-  padding: 12px 24px;
-  font-size: 1.2rem;
-  border: none;
-  border-radius: 25px;
   background-color: #2ecc71;
-  color: #fff;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  color: white;
 }
 
 .get-started-button:hover {
   background-color: #27ae60;
 }
 
-/* Styles for Carousel */
+/* Section 3 */
+.home-section-3 {
+  display: flex;
+  justify-content: space-between;
+  padding: 100px;
+  background-color: #f4f4f4;
+}
+
+.description-container {
+  flex: 1;
+}
+
+.carousel__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: transform 0.3s ease;
+}
+
+.carousel__item:hover {
+  transform: translateY(-10px);
+}
+
 .carousel-image {
   width: 100%;
   max-height: 200px;
   object-fit: cover;
   border-radius: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .carousel-description {
-  padding: 10px;
   text-align: center;
 }
 
 .carousel-description h3 {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #000;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 
 .carousel-description p {
   font-size: 1rem;
-  color: #444;
+  color: #555;
 }
 
-/* Styles for FAQ Section */
+/* FAQ Section */
 .faq-section {
   padding: 100px;
-  border-width: 2px;
-  margin-top: 60px;
-  margin-bottom: 60px;
-  border-color: #2ecc71;
+  background-color: white;
 }
 
 .faq-title {
   font-size: 2.5rem;
   font-weight: bold;
-  color: #000;
-  margin-bottom: 70px;
+  color: #2ecc71;
+  margin-bottom: 50px;
   text-align: center;
 }
 
@@ -533,20 +513,20 @@ export default defineComponent({
 .question {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #000;
+  color: #333;
   margin-bottom: 10px;
 }
 
 .answer {
   font-size: 1.2rem;
-  color: #444;
+  color: #555;
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease;
 }
 
 .answer.expanded {
-  max-height: 1000px; /* Adjust as needed */
+  max-height: 1000px;
 }
 
 .expand-icon {
@@ -556,7 +536,7 @@ export default defineComponent({
 }
 
 .expand-icon svg {
-  fill: #444;
+  fill: #555;
   width: 24px;
   height: 24px;
   transition: transform 0.3s ease;
@@ -564,5 +544,55 @@ export default defineComponent({
 
 .rotate {
   transform: rotate(180deg);
+}
+
+/* Messages Circle */
+.messages-circle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  background-color: #2ecc71;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.messages-circle:hover {
+  transform: scale(1.1);
+}
+
+.messages-circle svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Keyframe Animations */
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 </style>
