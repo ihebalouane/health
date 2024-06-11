@@ -1,4 +1,5 @@
 <template>
+    <title>Log In</title>
   <div class="login-container">
     <BgAnimations />
     <div class="login-form">

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <site-header/>
     <qstHeader />
     <BgAnimations/>
     <div class="form-container">
@@ -16,12 +17,21 @@
           Next
         </button>
       </div>
+      
+      <div class="explanation-box">
+        <div class="info-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189m-1.5.189a6.01 6.01 0 0 1-1.5-.189m3.75 7.478a12.06 12.06 0 0 1-4.5 0m3.75 2.383a14.406 14.406 0 0 1-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 1 0-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />
+          </svg>
+        </div>
+        <p>Please select the risk factors that apply to you. This information will help us tailor our recommendations to your specific health needs.</p>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { projectFirestore, auth } from '../../../firebase/config'; 
+import { projectFirestore, auth } from '../../../firebase/config';
 import { collection, query, where, getDocs, updateDoc, addDoc } from 'firebase/firestore';
 
 export default {
@@ -35,7 +45,7 @@ export default {
         { value: 'heartDisease', label: 'Heart disease' },
         { value: 'depressionAnxiety', label: 'Depression/anxiety' },
         { value: 'cholesterol', label: 'High cholesterol' },
-        { value: 'none', label: 'None' } 
+        { value: 'none', label: 'None' },
 
       ]
     };
@@ -66,7 +76,7 @@ export default {
           });
           console.log('Data updated in Firestore');
         } else {
-          await addDoc(collection(projectFirestore, "userResponses"), {
+          await addDoc(collection(projectFirestore, "users"), {
             userEmail: user.email,
             selectedRiskFactors: this.selectedOptions,
             timestamp: new Date()
@@ -84,22 +94,20 @@ export default {
 };
 </script>
 
-
 <style scoped>
 .form-container {
-  max-width: 400px; 
-  margin: 20px auto; 
-  background-color: #ffffff; 
-  border: none;
+  max-width: 400px;
+  margin: 20px auto;
+  background-color: #ffffff;
   border-radius: 8px;
   padding: 20px;
 }
 
 .form-label {
-  font-size: 1.3rem; 
-  margin-bottom: 15px; 
+  font-size: 1.3rem;
+  margin-bottom: 15px;
   display: block;
-  color: #333; 
+  color: #333;
 }
 
 .checkbox-group {
@@ -110,25 +118,25 @@ export default {
 .checkbox-label {
   display: flex;
   align-items: center;
-  margin-bottom: 15px; 
+  margin-bottom: 15px;
   cursor: pointer;
 }
 
 .checkbox-custom {
-  width: 24px; 
-  height: 24px; 
-  border: 2px solid #2ecc71; 
+  width: 24px;
+  height: 24px;
+  border: 2px solid #2ecc71;
   border-radius: 4px;
-  margin-right: 12px; 
+  margin-right: 12px;
   position: relative;
 }
 
 .checkbox-custom::after {
   content: '';
   display: block;
-  width: 12px; 
-  height: 12px; 
-  background-color: #2ecc71; 
+  width: 12px;
+  height: 12px;
+  background-color: #2ecc71;
   border-radius: 2px;
   position: absolute;
   top: 50%;
@@ -143,7 +151,7 @@ export default {
 }
 
 .checkbox-text {
-  font-size: 1.1rem; 
+  font-size: 1.1rem;
 }
 
 .checkbox-input {
@@ -158,10 +166,10 @@ export default {
 }
 
 .submit-button {
-  background-color: #2ecc71; 
-  color: #fff;
-  padding: 12px 24px; 
-  font-size: 1.1rem; 
+  background-color: #2ecc71;
+  color: white;
+  padding: 12px 24px;
+  font-size: 1.1rem;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -170,5 +178,25 @@ export default {
 
 .submit-button:hover {
   background-color: #27ae60;
+}
+
+.explanation-box {
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 10px;
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.5);
+  color: #333;
+  font-size: 1rem;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.info-icon {
+  margin-right: 10px;
 }
 </style>

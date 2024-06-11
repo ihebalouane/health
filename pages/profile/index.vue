@@ -1,4 +1,5 @@
 <template>
+    <title>Profile</title>
   <profile-header />
   <div class="profile">
     <BgAnimations />

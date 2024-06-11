@@ -1,4 +1,5 @@
 <template>
+    <title>Contact us</title>
     <div class="contact-page">
         <div class="contact-form">
             <h1>Contact Us</h1>

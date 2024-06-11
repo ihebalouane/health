@@ -1,4 +1,5 @@
 <template>
+  <title>Diet</title>
   <div class="page-container">
     <h1 class="page-title">Personalized Meal Plan</h1>
     <div class="green-box">
@@ -233,7 +234,7 @@ export default {
 .page-title {
   font-size: 2.5rem;
   font-weight: bold;
-  color: #2ecc71;
+  color: black;
   margin-bottom: 20px;
 }
 

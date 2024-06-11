@@ -1,4 +1,5 @@
 <template>
+  <title>Admin</title>
   <div class="admin-page">
     <h2>All Users</h2>
 

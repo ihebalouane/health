@@ -1,4 +1,5 @@
 <template>
+  <title>About us</title>
     <div class="about-us">
       <h1 class="section-title">About Us</h1>
       <div class="website-info">

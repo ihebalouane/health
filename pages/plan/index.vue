@@ -1,4 +1,5 @@
 <template>
+  <title>Program</title>
   <div class="center-container">
     <div class="container-d">
       <div class="section day-list-section">
@@ -176,17 +177,15 @@ export default {
 
     const program3 = (day) => {
       if (day === 'Monday') {
-        selectedItems.value = ['Bench Press', 'Dumbell flye', 'Lying triceps', 'Triceps', 'Cardio', 'Cardio 2'];
+        selectedItems.value = ['Bench Press', 'Dumbell flye', 'Pec Deck', 'Upper Chest'];
       } else if (day === 'Tuesday') {
-        selectedItems.value = ['Lying Lateral', 'Trap Raise', 'Dips', 'Bar Triceps', 'Cardio legs', 'Cardio ex'];
+        selectedItems.value = ['Barbell Bent-Over', 'Trap Raise', 'Dumbell Single', 'Hold up'];
       } else if (day === 'Wednesday') {
-        selectedItems.value = [];
-      } else if (day === 'Friday') {
-        selectedItems.value = ['Seated Dumbbell Clean', 'Raise', 'High Pull', 'Cable pull'];
+        selectedItems.value = ['Cable pull', 'Face Pull', 'Front raise', 'Raise'];
+      } else if (day === 'Saturday') {
+        selectedItems.value = ['Deadlift', 'Front squat', 'Lunge', 'Squat', 'Walking Lunge'];
       } else if (day === 'Sunday') {
-        selectedItems.value = ['Walking Lunge', 'Sumo squat', 'Split squats', 'Deficit Reverse Lunge'];
-      } else {
-        selectedItems.value = [];
+        selectedItems.value = ['Bicep curl', 'Barbell curl', 'Incline dumbbell curl', 'Triceps', 'Dips'];
       }
     };
 
@@ -299,7 +298,7 @@ export default {
   align-items: center;
   height: 100vh;
   padding: 20px;
-  background-color: #f4f4f4;
+  background-color: white;
 }
 .item-option{
   display: flex;

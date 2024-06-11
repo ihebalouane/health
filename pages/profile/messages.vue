@@ -1,4 +1,5 @@
 <template>
+    <title>Chat</title>
   <div>
     <profile-header />
     <div v-if="loading" class="spinner">Loading...</div>

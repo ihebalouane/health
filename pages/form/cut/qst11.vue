@@ -1,7 +1,8 @@
 <template>
   <div>
+    <site-header/>
     <qstHeader />
-    <BgAnimations/>
+    <BgAnimations />
     <div class="form-container">
       <div class="diet-form">
         <label class="form-label">How would you describe your current diet?</label>
@@ -16,8 +17,25 @@
           <label class="form-label">Please specify:</label>
           <input type="text" v-model="otherDescription" class="other-input" @input="checkValidity">
         </div>
-        <button class="submit-button transition ease-in-out delay-200 bg-green-500 hover:-translate-y-0.5 hover:scale-200 hover:bg-green-600 duration-300" 
-        @click="submitForm" :disabled="selectedOption === 'Other' && otherDescription.trim() === ''" ref="submitButton">Next</button>
+        <button
+          @click="submitForm"
+          class="submit-button transition ease-in-out delay-200 bg-green-500 hover:-translate-y-0.5 hover:scale-200 hover:bg-green-600 duration-300"
+          :disabled="selectedOption === 'Other' && otherDescription.trim() === ''"
+          ref="submitButton"
+        >
+          Next
+        </button>
+
+        <!-- Explanation box added here under the button -->
+        <div class="explanation-box">
+          <div class="info-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189m-1.5.189a6.01 6.01 0 0 1-1.5-.189m3.75 7.478a12.06 12.06 0 0 1-4.5 0m3.75 2.383a14.406 14.406 0 0 1-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 1 0-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />
+            </svg>
+          </div>
+          <p>Please choose the option that best describes your current diet. If you select "Other," please specify your diet in the text box provided.</p>
+        </div>
+
       </div>
     </div>
   </div>
@@ -196,5 +214,25 @@ export default {
 
 .submit-button:hover {
   background-color: #27ae60;
+}
+
+.explanation-box {
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 10px;
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.5);
+  color: #333;
+  font-size: 1rem;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.info-icon {
+  margin-right: 10px;
 }
 </style>

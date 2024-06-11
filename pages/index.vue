@@ -1,4 +1,5 @@
 <template>
+  <title>Home</title>
   <div class="page">
     <BgAnimations />
     <div class="home-section-1">
